@@ -5,19 +5,19 @@ public class AnteilModel {
 	LagerModel lager;
 	
 	/**
-	 * gibt den Prozentsatz der auf das angegebene Lager gebucht wurde wieder
-	 * @return Prozentsatz
+	 * gibt den Prozentsatz, der auf das angegebene Lager gebucht wurde, wieder
+	 * @return Anteil der Buchung
 	 */
 	public int getAnteil() {
-		return anteil;
+		return this.anteil;
 	}
 
 	/**
-	 * gibt die LagerID wieder auf die der angegebene Anteil gebucht wurde
-	 * @return LagerID
+	 * gibt das Lager wieder auf die der angegebene Anteil gebucht wurde
+	 * @return Lager des Anteils
 	 */
 	public LagerModel getLager() {
-		return lager;
+		return this.lager;
 	}
 
 	/**
@@ -26,7 +26,7 @@ public class AnteilModel {
 	 * @param prozent Prozentsatz 
 	 * @param lagerID LagerID 
 	 */
-	public AnteilModel(int anteil, LagerModel lager) {
+	public AnteilModel(LagerModel lager, int anteil) {
 		this.anteil=anteil;
 		this.lager=lager;
 	}
