@@ -6,6 +6,10 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
@@ -13,7 +17,6 @@ import java.util.Observable;
 import java.util.Observer;
 
 import javax.imageio.ImageIO;
-import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -21,8 +24,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
-
-import model.LagerModel;
+import javax.swing.JTextField;
 
 public class DetailView extends JPanel implements Observer{
 	
@@ -34,8 +36,7 @@ public class DetailView extends JPanel implements Observer{
 		mengeKapazitaet="1000";
 		mengeBestand="300";
 		
-		//this.setPreferredSize(new Dimension(400,400));
-		this.setMaximumSize(new Dimension(10000,400));
+		this.setPreferredSize(new Dimension(515,400));
 		this.setBackground(Color.CYAN);
 		this.setLayout(new BorderLayout());
 		
@@ -57,27 +58,8 @@ public class DetailView extends JPanel implements Observer{
 		lagerInfo.add(standard);
 		
 		// Namensfeld + edit-Button erstellen
-		JPanel nameEdit = new JPanel();
-		nameEdit.setLayout(new BoxLayout(nameEdit, BoxLayout.LINE_AXIS));
-		JLabel name = new JLabel(lagerName);
-		name.setFont(new Font(name.getFont().getName(),Font.BOLD,20));
-		nameEdit.add(name);
-		JButton editieren = new JButton("");
-		try {
-		    Image img = ImageIO.read(new File("src/icons/edit.png"));
-		    editieren.setIcon(new ImageIcon(img));
-		  } catch (IOException ex) {
-			  ex.printStackTrace();
-		  }
-		editieren.setPreferredSize(new Dimension(30,30));
-		editieren.setBorder(BorderFactory.createEmptyBorder(5, 5, 10, 5));
-		editieren.setAlignmentX(RIGHT_ALIGNMENT);
-		nameEdit.add(Box.createRigidArea(new Dimension(10,0)));
-		nameEdit.add(editieren);
-		nameEdit.setAlignmentX(LEFT_ALIGNMENT);
-		
-		
-		lagerInfo.add(nameEdit);
+		final EditNameView editName = new EditNameView("Beispiel");
+		lagerInfo.add(editName);
 		JLabel kapazitaet = new JLabel("Maximale Kapazität: "+mengeKapazitaet);
 		lagerInfo.add(kapazitaet);
 		JLabel bestand = new JLabel("Aktueller Bestand: "+mengeBestand);
@@ -85,7 +67,7 @@ public class DetailView extends JPanel implements Observer{
 		JLabel platzhalter = new JLabel("\t");
 		lagerInfo.add(platzhalter);
 		JLabel buchungInfo = new JLabel("Buchungen im Detail:");
-		buchungInfo.setFont(new Font(name.getFont().getName(),Font.BOLD,20));
+		buchungInfo.setFont(new Font(this.getFont().getName(),Font.BOLD,20));
 		lagerInfo.add(buchungInfo);
 		JLabel platzhalter2 = new JLabel("\t");
 		lagerInfo.add(platzhalter2);
@@ -102,7 +84,6 @@ public class DetailView extends JPanel implements Observer{
 		this.add(tabelle,BorderLayout.CENTER);
 		
 		JPanel buttonGroup = new JPanel();
-		//buttonGroup.setLayout(new BoxLayout(buttonGroup, BoxLayout.LINE_AXIS));
 		buttonGroup.setLayout(new FlowLayout());
 		JButton loeschen = new JButton("Lager löschen");
 		try {
@@ -129,6 +110,14 @@ public class DetailView extends JPanel implements Observer{
 		  } catch (IOException ex) {
 			  ex.printStackTrace();
 		  }
+		umbennen.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				editName.edit();
+			}
+		});
 		buttonGroup.add(umbennen);
 		buttonGroup.setPreferredSize(new Dimension(515,50));
 		
