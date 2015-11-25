@@ -3,18 +3,39 @@ package view;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Image;
+import java.io.File;
+import java.io.IOException;
 import java.util.Date;
+import java.util.Observable;
+import java.util.Observer;
 
+import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 
-public class DetailView extends JPanel{
+import model.LagerModel;
+
+public class DetailView extends JPanel implements Observer{
+	
+	String lagerName, mengeKapazitaet, mengeBestand;
 
 	public DetailView() {
-		this.setPreferredSize(new Dimension(400,400));
+		
+		lagerName="Beispiel";
+		mengeKapazitaet="1000";
+		mengeBestand="300";
+		
+		//this.setPreferredSize(new Dimension(400,400));
+		this.setMaximumSize(new Dimension(10000,400));
 		this.setBackground(Color.CYAN);
 		this.setLayout(new BorderLayout());
 		
@@ -30,23 +51,36 @@ public class DetailView extends JPanel{
 			    	 ""+10+"%", 20}
 			};
 
-		JTable buchungen = new JTable(data, columnNames);
-		
-		JPanel tabelle = new JPanel(new BorderLayout());
-		tabelle.add(buchungen.getTableHeader(),BorderLayout.PAGE_START);
-		tabelle.add(buchungen,BorderLayout.CENTER);
-		tabelle.setPreferredSize(new Dimension(400,100));
-		
 		JPanel lagerInfo = new JPanel();
 		lagerInfo.setLayout(new BoxLayout(lagerInfo, BoxLayout.PAGE_AXIS));
 		JLabel standard = new JLabel("Lagerinfo:");
 		lagerInfo.add(standard);
-		JLabel name = new JLabel("Lagername");
+		
+		// Namensfeld + edit-Button erstellen
+		JPanel nameEdit = new JPanel();
+		nameEdit.setLayout(new BoxLayout(nameEdit, BoxLayout.LINE_AXIS));
+		JLabel name = new JLabel(lagerName);
 		name.setFont(new Font(name.getFont().getName(),Font.BOLD,20));
-		lagerInfo.add(name);
-		JLabel kapazitaet = new JLabel("Maximale Kapazität: 1000");
+		nameEdit.add(name);
+		JButton editieren = new JButton("");
+		try {
+		    Image img = ImageIO.read(new File("src/icons/edit.png"));
+		    editieren.setIcon(new ImageIcon(img));
+		  } catch (IOException ex) {
+			  ex.printStackTrace();
+		  }
+		editieren.setPreferredSize(new Dimension(30,30));
+		editieren.setBorder(BorderFactory.createEmptyBorder(5, 5, 10, 5));
+		editieren.setAlignmentX(RIGHT_ALIGNMENT);
+		nameEdit.add(Box.createRigidArea(new Dimension(10,0)));
+		nameEdit.add(editieren);
+		nameEdit.setAlignmentX(LEFT_ALIGNMENT);
+		
+		
+		lagerInfo.add(nameEdit);
+		JLabel kapazitaet = new JLabel("Maximale Kapazität: "+mengeKapazitaet);
 		lagerInfo.add(kapazitaet);
-		JLabel bestand = new JLabel("Aktueller Bestand: 500");
+		JLabel bestand = new JLabel("Aktueller Bestand: "+mengeBestand);
 		lagerInfo.add(bestand);
 		JLabel platzhalter = new JLabel("\t");
 		lagerInfo.add(platzhalter);
@@ -59,6 +93,67 @@ public class DetailView extends JPanel{
 		
 		this.add(lagerInfo,BorderLayout.NORTH);
 		
+		JTable buchungen = new JTable(data, columnNames);
+		JPanel tabelle = new JPanel(new BorderLayout());
+		tabelle.add(buchungen.getTableHeader(),BorderLayout.PAGE_START);
+		tabelle.add(buchungen,BorderLayout.CENTER);
+		//tabelle.setPreferredSize(new Dimension(400,100));
+		
 		this.add(tabelle,BorderLayout.CENTER);
+		
+		JPanel buttonGroup = new JPanel();
+		//buttonGroup.setLayout(new BoxLayout(buttonGroup, BoxLayout.LINE_AXIS));
+		buttonGroup.setLayout(new FlowLayout());
+		JButton loeschen = new JButton("Lager löschen");
+		try {
+		    Image img = ImageIO.read(new File("src/icons/delete.png"));
+		    loeschen.setIcon(new ImageIcon(img));
+		  } catch (IOException ex) {
+			  ex.printStackTrace();
+		  }
+		buttonGroup.add(loeschen);
+		buttonGroup.add(Box.createRigidArea(new Dimension(2,0)));
+		JButton neuesLager = new JButton("Unterlager erstellen");
+		try {
+		    Image img = ImageIO.read(new File("src/icons/new.png"));
+		    neuesLager.setIcon(new ImageIcon(img));
+		  } catch (IOException ex) {
+			  ex.printStackTrace();
+		  }
+		buttonGroup.add(neuesLager);
+		buttonGroup.add(Box.createRigidArea(new Dimension(2,0)));
+		JButton umbennen = new JButton("Lager umbennen");
+		try {
+		    Image img = ImageIO.read(new File("src/icons/edit2.png"));
+		    umbennen.setIcon(new ImageIcon(img));
+		  } catch (IOException ex) {
+			  ex.printStackTrace();
+		  }
+		buttonGroup.add(umbennen);
+		buttonGroup.setPreferredSize(new Dimension(515,50));
+		
+		this.add(buttonGroup,BorderLayout.PAGE_END);
 	}
+
+	@Override
+	public void update(Observable o, Object arg) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/**
+	 * Die View überwacht ein Lagermodel
+	 * wird dieses verändert aktualisiert die View sich auch
+	 */
+/*	@Override
+	public void update(Observable o, Object arg1) {
+		// TODO Auto-generated method stub
+		LagerModel lModel = (LagerModel)o;
+		mengeBestand=""+lModel.getBestand();
+		mengeKapazitaet=""+lModel.getMaxKapazitaet();
+		lagerName=lModel.getName();
+	}
+	*/
+	
+	
 }
