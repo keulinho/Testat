@@ -55,16 +55,15 @@ public class VerwaltungsView extends JFrame{
 		
 		this.add(toolbar,BorderLayout.PAGE_START);
 		
-		JPanel treePane = new JPanel(new BorderLayout());
-		JLabel demo = new JLabel("xdf");
-		treePane.setBackground(Color.cyan);
-		treePane.setPreferredSize(new Dimension(200, 100));
-		treePane.add(demo,BorderLayout.CENTER);
+		
+		
 		
 		DetailView detailPane = new DetailView();
 		detailPane.setBackground(Color.LIGHT_GRAY);
-		
 		this.add(detailPane, BorderLayout.EAST);
+			
+		TreeView treePane = new TreeView();
+		treePane.setBackground(Color.LIGHT_GRAY);
 		this.add(treePane, BorderLayout.WEST);
 		
 		this.setLocation(150, 100);
@@ -72,5 +71,10 @@ public class VerwaltungsView extends JFrame{
         this.setResizable(false);
         this.pack();
 		this.setVisible(true);	
+	
+		
+		
+		
+		
 	}
 }
