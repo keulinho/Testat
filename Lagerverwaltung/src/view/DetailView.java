@@ -43,7 +43,6 @@ public class DetailView extends JPanel implements Observer{
 		mengeBestand="300";
 		
 		this.setPreferredSize(new Dimension(515,400));
-		this.setBackground(Color.CYAN);
 		this.setLayout(new BorderLayout());
 		
 		columnNames = new String []{"Buchungstag",
@@ -92,7 +91,7 @@ public class DetailView extends JPanel implements Observer{
 		this.add(buchungen,BorderLayout.CENTER);
 		
 		optionenPanel = new OptionenPanel(editName);
-		optionenPanel.zeigeInfo();
+		optionenPanel.zeigeSlider();
 		this.add(optionenPanel,BorderLayout.PAGE_END);
 	}
 
