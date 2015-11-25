@@ -40,12 +40,28 @@ public class BuchungsModel {
 	}
 	
 	/**
-	 * Löscht den ersten Anteil von einem spezifischen Lager
+	 * Löscht alle Anteile von einem Lager
 	 * @param lager	Lager, dessen Anteil gelöscht werden soll
 	 */
 	public void anteilLoeschen(LagerModel lager) {
 		for (AnteilModel anteil : anteile) {
 			if(lager == anteil.getLager()){
+				anteile.remove(anteile.indexOf(anteil));
+				verteilteMenge -= anteil.getAnteil();
+			}
+		}
+	}
+	
+	//TODO löschen eines bestimmten Anteils(über Lager und Menge) z.B. anteilLoeschen(LagerModel lager, int menge)
+	// und des Commands(auch über Lager und Menge nutzt funktion s. anteilLoeschen(lager, menge)); löschen des RedoStacks
+	/**
+	 * löscht den ersten Anteil, der ein bestimmtes Lager und eine bestimmte Menge beinhaltet
+	 * @param lager das in dem Anteil entalten sein soll
+	 * @param menge	die in dem Anteil sein soll
+	 */
+	public void anteilLoeschen(LagerModel lager, int menge) {
+		for (AnteilModel anteil : anteile) {
+			if(anteil.getLager() == lager && anteil.getAnteil() == menge){
 				anteile.remove(anteile.indexOf(anteil));
 				verteilteMenge -= anteil.getAnteil();
 				break;
@@ -69,6 +85,14 @@ public class BuchungsModel {
 	 */
 	public int getMenge() {
 		return this.menge;
+	}
+	
+	/**
+	 * gibt die restliche zu verteilende Menge zurück
+	 * @return Menge, die noch zu verteilen ist
+	 */
+	public int getFreienPlatz(){
+		return this.menge - this.verteilteMenge;
 	}
 	
 	/**
