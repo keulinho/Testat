@@ -23,7 +23,7 @@ public class BuchungsModel {
 	/**
 	 * fügt der Buchung einen Anteil hinzu
 	 * @param lager		Lager an das der Anteil geht
-	 * @param anteil	prozentualer Anteil an der Buchung
+	 * @param anteil	absoluter Anteil an der Buchung
 	 */
 	public void anteilHinzufuegen(LagerModel lager, int anteil){
 		AnteilModel anteilModel = new AnteilModel(lager, anteil);
