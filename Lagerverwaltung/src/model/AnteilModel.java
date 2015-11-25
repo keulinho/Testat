@@ -3,7 +3,29 @@ package model;
 public class AnteilModel {
 	int anteil;
 	LagerModel lager;
+
+	//Konstruktor
+	/**
+	 * Konstruktor für ein AnteilModel
+	 * speichert einen Prozentsatz der gesamten Buchung und das zugehörige Lager
+	 * @param prozent Prozentsatz 
+	 * @param lagerID LagerID 
+	 */
+	public AnteilModel(LagerModel lager, int anteil) {
+		this.anteil=anteil;
+		this.lager=lager;
+	}
 	
+	//Methoden
+	/**
+	 * gibt den Prozentsatz, der auf das angegebene Lager gebucht wurde, wieder
+	 * @return Anteil der Buchung
+	 */
+	public void anteilErhoehen(int zusatz) {
+		this.anteil += zusatz;
+	}
+
+	//getter
 	/**
 	 * gibt den Prozentsatz, der auf das angegebene Lager gebucht wurde, wieder
 	 * @return Anteil der Buchung
@@ -18,17 +40,6 @@ public class AnteilModel {
 	 */
 	public LagerModel getLager() {
 		return this.lager;
-	}
-
-	/**
-	 * Konstruktor für ein AnteilModel
-	 * speichert einen Prozentsatz der gesamten Buchung und das zugehörige Lager
-	 * @param prozent Prozentsatz 
-	 * @param lagerID LagerID 
-	 */
-	public AnteilModel(LagerModel lager, int anteil) {
-		this.anteil=anteil;
-		this.lager=lager;
 	}
 	
 }
