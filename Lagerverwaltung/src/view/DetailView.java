@@ -8,8 +8,6 @@ import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
@@ -23,12 +21,20 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextField;
 
 public class DetailView extends JPanel implements Observer{
 	
 	String lagerName, mengeKapazitaet, mengeBestand;
+	EditNamePanel editName;
+	OptionenPanel optionenPanel;
+	JPanel lagerInfo;
+	JLabel bestand, kapazitaet;
+	JScrollPane buchungen;
+	JTable tabelle;
+	String[] columnNames;
+	Object[][] data;
 
 	public DetailView() {
 		
@@ -40,88 +46,54 @@ public class DetailView extends JPanel implements Observer{
 		this.setBackground(Color.CYAN);
 		this.setLayout(new BorderLayout());
 		
-		String[] columnNames = {"Buchungstag",
+		columnNames = new String []{"Buchungstag",
 				"Gesamte Menge",
                 "relativer Anteil",
                 "absoluter Anteil"};
 		
-		Object[][] data = {
-			    {new Date(2015,11,24), 1000,
+		data = new Object [][]{
+			    {new Date(115,10,24).toLocaleString(), 1000,
 			     ""+30+"%", 300},
-			    {new Date(2015,11,25), 200,
-			    	 ""+10+"%", 20}
+			    {new Date(115,11,25).toLocaleString(), 200,
+			    	 ""+10+"%", 20},
+			    {new Date(115,10,24).toLocaleString(), 1000,
+					 ""+30+"%", 300},
+			    {new Date(115,11,25).toLocaleString(), 200,
+					""+10+"%", 20},
+				{new Date(115,10,24).toLocaleString(), 1000,
+					""+30+"%", 300},
+				{new Date(115,11,25).toLocaleString(), 200,
+					""+10+"%", 20},
+				{new Date(115,10,24).toLocaleString(), 1000,
+					""+30+"%", 300},
+				{new Date(115,11,25).toLocaleString(), 200,
+					""+10+"%", 20},
+				{new Date(115,10,24).toLocaleString(), 1000,
+					""+30+"%", 300},
+				{new Date(115,11,25).toLocaleString(), 200,
+					""+10+"%", 20},
+				{new Date(115,10,24).toLocaleString(), 1000,
+					""+30+"%", 300},
+				{new Date(115,11,25).toLocaleString(), 200,
+					""+10+"%", 20},
+				{new Date(115,10,24).toLocaleString(), 1000,
+					""+30+"%", 300},
+				{new Date(115,11,25).toLocaleString(), 200,
+					""+10+"%", 20},
+				{new Date(115,10,24).toLocaleString(), 1000,
+					""+30+"%", 300},
+				{new Date(115,11,25).toLocaleString(), 200,
+					""+10+"%", 20}
 			};
-
-		JPanel lagerInfo = new JPanel();
-		lagerInfo.setLayout(new BoxLayout(lagerInfo, BoxLayout.PAGE_AXIS));
-		JLabel standard = new JLabel("Lagerinfo:");
-		lagerInfo.add(standard);
-		
-		// Namensfeld + edit-Button erstellen
-		final EditNameView editName = new EditNameView("Beispiel");
-		lagerInfo.add(editName);
-		JLabel kapazitaet = new JLabel("Maximale Kapazität: "+mengeKapazitaet);
-		lagerInfo.add(kapazitaet);
-		JLabel bestand = new JLabel("Aktueller Bestand: "+mengeBestand);
-		lagerInfo.add(bestand);
-		JLabel platzhalter = new JLabel("\t");
-		lagerInfo.add(platzhalter);
-		JLabel buchungInfo = new JLabel("Buchungen im Detail:");
-		buchungInfo.setFont(new Font(this.getFont().getName(),Font.BOLD,20));
-		lagerInfo.add(buchungInfo);
-		JLabel platzhalter2 = new JLabel("\t");
-		lagerInfo.add(platzhalter2);
-		
-		
+		lagerInfoErstellen();
 		this.add(lagerInfo,BorderLayout.NORTH);
+
+		buchungsTabelleErstellen();
+		this.add(buchungen,BorderLayout.CENTER);
 		
-		JTable buchungen = new JTable(data, columnNames);
-		JPanel tabelle = new JPanel(new BorderLayout());
-		tabelle.add(buchungen.getTableHeader(),BorderLayout.PAGE_START);
-		tabelle.add(buchungen,BorderLayout.CENTER);
-		//tabelle.setPreferredSize(new Dimension(400,100));
-		
-		this.add(tabelle,BorderLayout.CENTER);
-		
-		JPanel buttonGroup = new JPanel();
-		buttonGroup.setLayout(new FlowLayout());
-		JButton loeschen = new JButton("Lager löschen");
-		try {
-		    Image img = ImageIO.read(new File("src/icons/delete.png"));
-		    loeschen.setIcon(new ImageIcon(img));
-		  } catch (IOException ex) {
-			  ex.printStackTrace();
-		  }
-		buttonGroup.add(loeschen);
-		buttonGroup.add(Box.createRigidArea(new Dimension(2,0)));
-		JButton neuesLager = new JButton("Unterlager erstellen");
-		try {
-		    Image img = ImageIO.read(new File("src/icons/new.png"));
-		    neuesLager.setIcon(new ImageIcon(img));
-		  } catch (IOException ex) {
-			  ex.printStackTrace();
-		  }
-		buttonGroup.add(neuesLager);
-		buttonGroup.add(Box.createRigidArea(new Dimension(2,0)));
-		JButton umbennen = new JButton("Lager umbennen");
-		try {
-		    Image img = ImageIO.read(new File("src/icons/edit2.png"));
-		    umbennen.setIcon(new ImageIcon(img));
-		  } catch (IOException ex) {
-			  ex.printStackTrace();
-		  }
-		umbennen.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				editName.edit();
-			}
-		});
-		buttonGroup.add(umbennen);
-		buttonGroup.setPreferredSize(new Dimension(515,50));
-		
-		this.add(buttonGroup,BorderLayout.PAGE_END);
+		optionenPanel = new OptionenPanel(editName);
+		optionenPanel.zeigeInfo();
+		this.add(optionenPanel,BorderLayout.PAGE_END);
 	}
 
 	@Override
@@ -141,8 +113,57 @@ public class DetailView extends JPanel implements Observer{
 		mengeBestand=""+lModel.getBestand();
 		mengeKapazitaet=""+lModel.getMaxKapazitaet();
 		lagerName=lModel.getName();
+		lagerInfoAktualisieren()
+		lagerInfo.revalidate();
 	}
 	*/
 	
+	/**
+	 * erstellt ein JPanel, welches alle Infos über ein Lager enthält
+	 * es zeigt die in den Klassenvariablen gespeicherten Werte an
+	 * @return das erstellte JPanel mit den Lagerinfos
+	 */
+	public void lagerInfoErstellen(){
+		
+		lagerInfo = new JPanel();
+		lagerInfo.setLayout(new BoxLayout(lagerInfo, BoxLayout.PAGE_AXIS));
+		JLabel standard = new JLabel("Lagerinfo:");
+		lagerInfo.add(standard);
+		
+		// Namensfeld + edit-Button erstellen
+		lagerInfoAktualisieren();
+		
+		lagerInfo.add(editName);
+		lagerInfo.add(kapazitaet);
+		lagerInfo.add(bestand);
+		
+		JLabel platzhalter = new JLabel("\t");
+		lagerInfo.add(platzhalter);
+		JLabel buchungInfo = new JLabel("Buchungen im Detail:");
+		buchungInfo.setFont(new Font(this.getFont().getName(),Font.BOLD,20));
+		lagerInfo.add(buchungInfo);
+		JLabel platzhalter2 = new JLabel("\t");
+		lagerInfo.add(platzhalter2);
+	}
+	
+	/**
+	 * Aktualisiert alle variablen Texte der View auf die in den Klassenvariablen gespeicherten Werte
+	 */
+	public void lagerInfoAktualisieren(){
+		editName = new EditNamePanel(lagerName);
+		kapazitaet = new JLabel("Maximale Kapazität: "+mengeKapazitaet);
+		bestand = new JLabel("Aktueller Bestand: "+mengeBestand);
+	}
+	
+	/**
+	 * Erstellt ein JPanel mit einer Tabelle die die Buchungen anzeigt
+	 */
+	public void buchungsTabelleErstellen() {
+		tabelle = new JTable(data, columnNames);
+		tabelle.setEnabled(false);
+		tabelle.getTableHeader().setReorderingAllowed(false);
+		buchungen = new JScrollPane(tabelle);
+		buchungen.setPreferredSize(new Dimension(515,400));
+	}
 	
 }
