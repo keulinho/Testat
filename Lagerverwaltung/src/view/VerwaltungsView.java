@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -21,6 +22,7 @@ import controller.LagerVerwaltungsController;
 
 public class VerwaltungsView extends JFrame{
 
+	int restMenge;
 	public VerwaltungsView(int anzahlLager, LagerVerwaltungsController control){
 		this.setTitle("Lagerverwaltung");
 		JToolBar toolbar = new JToolBar();
@@ -40,17 +42,34 @@ public class VerwaltungsView extends JFrame{
 		  } catch (IOException ex) {
 			  ex.printStackTrace();
 		  }
-		JButton buchungButton= new JButton("Neue Buchung erstellen");
+		JButton zulieferungButton= new JButton("Neue Zulieferung");
 		try {
-		    Image img = ImageIO.read(new File("src/icons/newBuchung.png"));
-		    buchungButton.setIcon(new ImageIcon(img));
+		    Image img = ImageIO.read(new File("src/icons/zulieferung.png"));
+		    zulieferungButton.setIcon(new ImageIcon(img));
 		  } catch (IOException ex) {
 			  ex.printStackTrace();
 		  }
-		
+		JButton auslieferungButton= new JButton("Neue Auslieferung");
+		try {
+		    Image img = ImageIO.read(new File("src/icons/auslieferung.png"));
+		    auslieferungButton.setIcon(new ImageIcon(img));
+		  } catch (IOException ex) {
+			  ex.printStackTrace();
+		  }
+		restMenge=1000;
+		JLabel laufendeBuchung = new JLabel("<html>Es gibt eine laufende Buchung <br>"+restMenge+" Einheiten müssen noch verteilt werden</html>");
+		try {
+		    Image img = ImageIO.read(new File("src/icons/exclamation.png"));
+		    laufendeBuchung.setIcon(new ImageIcon(img));
+		  } catch (IOException ex) {
+			  ex.printStackTrace();
+		  }
 		toolbar.add(saveButton);
 		toolbar.add(openButton);
-		toolbar.add(buchungButton);
+		toolbar.add(zulieferungButton);
+		toolbar.add(auslieferungButton);
+		toolbar.add(Box.createRigidArea(new Dimension(10,0)));
+		toolbar.add(laufendeBuchung);
 		toolbar.setFloatable(false);
 		
 		this.add(toolbar,BorderLayout.PAGE_START);
