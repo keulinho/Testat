@@ -142,6 +142,15 @@ public class LagerVerwaltungsModel {
 		return false;
 	}
 	
+	/**
+	 * löscht den Anteil der dem Lager und der Menge entspricht
+	 * @param lager	das der Anteil hat
+	 * @param menge	die der Anteil hat
+	 */
+	public void anteilloeschen(LagerModel lager, int menge){
+		laufendeBuchung.anteilLoeschen(lager, menge);
+	}
+	
 	public void lagerLoeschen(LagerModel lager){
 		// TODO
 		/**
