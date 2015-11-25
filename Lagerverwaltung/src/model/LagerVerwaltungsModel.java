@@ -104,7 +104,7 @@ public class LagerVerwaltungsModel {
 					}
 				}
 				try {
-					anteil.getLager().bestandVerändern((anteil.getAnteil() * laufendeBuchung.getMenge() / 100));
+					anteil.getLager().bestandVerändern(anteil.getAnteil());
 					anteil.getLager().addBuchung(laufendeBuchung);
 				} catch (LagerUeberfuelltException e) {
 					//TODO ErrorHandler
@@ -135,7 +135,7 @@ public class LagerVerwaltungsModel {
 	 * @return true wenn der Anteil erfolgreich hinzugefügt wurde sonst false
 	 */
 	public boolean anteilHinzugegen(LagerModel lager, int anteil){
-		if((laufendeBuchung.getMenge()*anteil/100) <= laufendeBuchung.getFreienPlatz()){
+		if(anteil <= laufendeBuchung.getFreienPlatz()){
 			laufendeBuchung.anteilHinzufuegen(lager, anteil);
 			return true;
 		}
