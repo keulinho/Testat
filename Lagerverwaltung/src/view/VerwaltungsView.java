@@ -1,5 +1,8 @@
 package view;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
@@ -8,13 +11,17 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JToolBar;
+import javax.swing.LookAndFeel;
+import javax.swing.UIManager;
 
-import controller.Controller;
+import controller.LagerVerwaltungsController;
 
-public class LagerView extends JFrame{
+public class VerwaltungsView extends JFrame{
 
-	public LagerView(int anzahlLager, Controller control){
+	public VerwaltungsView(int anzahlLager, LagerVerwaltungsController control){
 		this.setTitle("Lagerverwaltung");
 		JToolBar toolbar = new JToolBar();
 		
@@ -44,10 +51,26 @@ public class LagerView extends JFrame{
 		toolbar.add(saveButton);
 		toolbar.add(openButton);
 		toolbar.add(buchungButton);
+		toolbar.setFloatable(false);
 		
-		this.add(toolbar);
-		this.setSize(200, 200);
+		this.add(toolbar,BorderLayout.PAGE_START);
+		
+		JPanel treePane = new JPanel(new BorderLayout());
+		JLabel demo = new JLabel("xdf");
+		treePane.setBackground(Color.cyan);
+		treePane.setPreferredSize(new Dimension(200, 100));
+		treePane.add(demo,BorderLayout.CENTER);
+		
+		DetailView detailPane = new DetailView();
+		detailPane.setBackground(Color.LIGHT_GRAY);
+		
+		this.add(detailPane, BorderLayout.EAST);
+		this.add(treePane, BorderLayout.WEST);
+		
+		this.setLocation(150, 100);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setResizable(false);
+        this.pack();
 		this.setVisible(true);	
-		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}
 }
