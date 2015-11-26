@@ -54,13 +54,13 @@ public class LagerModel extends Observable {
 	 * @param menge absolute Bestandsveränderung
 	 * @throws LagerUeberfuelltException 
 	 */
-	public void bestandVerändern(int menge) throws LagerUeberfuelltException{
+	public void veraendernBestand(int menge) throws LagerUeberfuelltException{
 		if(0 <= (this.bestand += menge) || (this.bestand += menge) > this.maxKapazitaet){
 			throw new LagerUeberfuelltException(this.name + " ist überfüllt.\n"
 					+ "Kapazität: \t" + this.bestand + "\nBestand: \t" + (this.bestand += menge));
 		}
 		this.bestand += menge;
-		this.oberlagerBestandAnpassen(menge);
+		this.anpassenOberlagerBestand(menge);
 	}
 	
 	/**
@@ -68,10 +68,10 @@ public class LagerModel extends Observable {
 	 * @param menge die auf den Bestand addiert wird
 	 * @throws LagerUeberfuelltException 
 	 */
-	public void oberlagerBestandAnpassen(int menge) throws LagerUeberfuelltException{
-		this.oberLager.bestandVerändern(menge);
+	public void anpassenOberlagerBestand(int menge) throws LagerUeberfuelltException{
+		this.oberLager.veraendernBestand(menge);
 		if (this.oberLager != null) {
-			this.oberLager.oberlagerBestandAnpassen(menge);
+			this.oberLager.anpassenOberlagerBestand(menge);
 		}
 	}
 	
@@ -84,10 +84,10 @@ public class LagerModel extends Observable {
 	}
 	
 	/**
-	 * erhöht die maxKapazität um den mitgegebenen Wert
+	 * ändert die maxKapazität um den mitgegebenen Wert
 	 * @param steigerung
 	 */
-	public void kapazitaetSteigern(int steigerung){
+	public void aendernkapazitaet(int steigerung){
 		this.maxKapazitaet += steigerung;
 	}
 	

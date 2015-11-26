@@ -21,13 +21,13 @@ public class AnteilModel {
 	 * erhöht den Anteil an der Buchung
 	 * @return zusatz an der Buchung
 	 */
-	public void anteilErhoehen(int zusatz) {
+	public void erhoehenAnteil(int zusatz) {
 		this.anteil += zusatz;
 	}
 
 	//getter
 	/**
-	 * gibt dAnteil, der auf das angegebene Lager gebucht wurde, wieder
+	 * gibt den Prozentsatz, der auf das angegebene Lager gebucht wurde, wieder
 	 * @return Anteil der Buchung
 	 */
 	public int getAnteil() {

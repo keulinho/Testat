@@ -40,13 +40,13 @@ public class LagerVerwaltungsModel {
 	 * @param name
 	 * @return true wenn das Lager erfolgreich erstellt wurde sonst false
 	 */
-	public boolean lagerHinzufuegen(LagerModel oberLager, int kapazitaet, String name){
+	public boolean hinzufuegenLAger(LagerModel oberLager, int kapazitaet, String name){
 		if(oberLager != null){
 			if(oberLager.getUnterLager().isEmpty() && oberLager.getBestand() < kapazitaet){
 				LagerModel lager = new LagerModel(kapazitaet, name, oberLager);
 				oberLager.addUnterlager(lager);
 				try {
-					lager.bestandVerändern(oberLager.getBestand());
+					lager.veraendernBestand(oberLager.getBestand());
 				} catch (LagerUeberfuelltException e) {
 					// TODO ErrorHandler und evtl. was rückhängig machen und evtl. false zurückgeben
 					e.printStackTrace();
@@ -54,7 +54,7 @@ public class LagerVerwaltungsModel {
 				return true;
 			} else if(!oberLager.getUnterLager().isEmpty()) {
 				oberLager.addUnterlager(new LagerModel(kapazitaet, name, oberLager));
-				oberLager.kapazitaetSteigern(kapazitaet);
+				oberLager.aendernkapazitaet(kapazitaet);
 				return true;
 			}
 			return false;
@@ -69,19 +69,31 @@ public class LagerVerwaltungsModel {
 	 * @param lager	Lager, das umbenannt wird
 	 * @param name	neuer Name des Lagers
 	 */
-	public void lagerUmbenennen(LagerModel lager, String name){
+	public void umbenennenLager(LagerModel lager, String name){
 		lager.setName(name);
 	}
 	
 	/**
-	 * erstellt eine neue Buchung und setzt diese als laufende Buchung, wenn kein Buchung läuft
+	 * erstellt eine neue Zubuchung und setzt diese als laufende Buchung, wenn kein Buchung läuft
 	 * @param 	buchungsTag 	Zeitpunkt der Buchung
 	 * @param 	menge			Menge der Buchung
 	 * @return 	boolean			true wenn eine Buchung erstellt wurde sonst false
 	 */
-	public boolean buchungErstellen(Date buchungsTag, int menge){
+	public boolean erstellenZuBuchung(Date buchungsTag, int menge){
 		if(laufendeBuchung == null) {
-			laufendeBuchung = new BuchungsModel(buchungsTag, menge);
+			laufendeBuchung = new ZuBuchungsModel(buchungsTag, menge);
+			return true;
+		}
+		return false;
+	}
+	/**
+	 * erstellt eine neue ABbuchung und setzt diese als laufende Buchung, wenn kein Buchung läuft
+	 * @param buchungsTag	Zeitpunkt der Buchung
+	 * @return				true wenn die erstelt wurde sonst false
+	 */
+	public boolean erstellenAbBuchung(Date buchungsTag){
+		if(laufendeBuchung == null) {
+			laufendeBuchung = new AbBuchungsModel(buchungsTag);
 			return true;
 		}
 		return false;
@@ -93,18 +105,18 @@ public class LagerVerwaltungsModel {
 	 * Die Mengen aus den Anteilen werden in die Lager gebucht
 	 * @return true wenn die Buchung abgeschlossen wurde sonst false
 	 */
-	public boolean buchungAbschliessen(){
-		if(laufendeBuchung.isVollVerteilt()){
+	public boolean abschliessenBuchung(){
+		if(laufendeBuchung.isFertig()){
 			List<AnteilModel> anteile = laufendeBuchung.getAnteile();
 			for(AnteilModel anteil: anteile){
 				for(int i = anteile.indexOf(anteil) + 1; i < anteile.size(); i++){
 					if(anteil.getLager() == anteile.get(i).getLager()){
-						anteil.anteilErhoehen(anteile.get(i).getAnteil());
+						anteil.erhoehenAnteil(anteile.get(i).getAnteil());
 						anteile.remove(i);
 					}
 				}
 				try {
-					anteil.getLager().bestandVerändern(anteil.getAnteil());
+					anteil.getLager().veraendernBestand(anteil.getAnteil());
 					anteil.getLager().addBuchung(laufendeBuchung);
 				} catch (LagerUeberfuelltException e) {
 					//TODO ErrorHandler
@@ -113,7 +125,7 @@ public class LagerVerwaltungsModel {
 						try {
 							//TODO ErrorHandler
 							anteile.get(i).getLager().entfernenBuchung(laufendeBuchung);
-							anteile.get(i).getLager().bestandVerändern(-anteile.get(i).getAnteil());
+							anteile.get(i).getLager().veraendernBestand(-anteile.get(i).getAnteil());
 						} catch (LagerUeberfuelltException e1) {
 							e1.printStackTrace();
 						}
@@ -131,12 +143,12 @@ public class LagerVerwaltungsModel {
 	
 	/**
 	 * fügt einen Anteil zu der laufenden Buchung
-	 * @param anteil	der Anteil
+	 * @param lager 	das den Anteil erhält
+	 * @param anteil	der Buchung
 	 * @return true wenn der Anteil erfolgreich hinzugefügt wurde sonst false
 	 */
-	public boolean anteilHinzugegen(LagerModel lager, int anteil){
-		if(anteil <= laufendeBuchung.getFreienPlatz()){
-			laufendeBuchung.anteilHinzufuegen(lager, anteil);
+	public boolean hinzugegenAnteil(LagerModel lager, int anteil){
+		if(laufendeBuchung.hinzufuegenAnteil(lager, anteil)){
 			return true;
 		}
 		return false;
@@ -147,11 +159,11 @@ public class LagerVerwaltungsModel {
 	 * @param lager	das der Anteil hat
 	 * @param menge	die der Anteil hat
 	 */
-	public void anteilloeschen(LagerModel lager, int menge){
-		laufendeBuchung.anteilLoeschen(lager, menge);
+	public void loeschenAnteil(LagerModel lager, int menge){
+		laufendeBuchung.loeschenAnteil(lager, menge);
 	}
 	
-	public void lagerLoeschen(LagerModel lager){
+	public void loesschenLager(LagerModel lager){
 		// TODO
 		/**
 		 * Wenn kein Lager auf gleicher Ebene dann geht alles eine Ebene nach oben -- was passiert mit Anteilen in Buchungen
