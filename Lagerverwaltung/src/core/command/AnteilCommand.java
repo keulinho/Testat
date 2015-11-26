@@ -1,4 +1,4 @@
-package core.exception;
+package core.command;
 
 import java.util.Stack;
 
@@ -26,12 +26,12 @@ public class AnteilCommand extends Command {
 
 	@Override
 	public void execute() {
-		lagerVM.anteilHinzugegen(lager, anteil);
+		lagerVM.hinzugegenAnteil(lager, anteil);
 	}
 
 	@Override
 	public void undo() {
-		lagerVM.anteilloeschen(lager, anteil);
+		lagerVM.loeschenAnteil(lager, anteil);
 	}
 
 }
