@@ -3,47 +3,45 @@ package model;
 import java.util.Date;
 import java.util.List;
 
-public class BuchungsModel {
+abstract public class BuchungsModel {
 	Date buchungsTag;
-	int menge, verteilteMenge;
+	int verteilteMenge;
 	List<AnteilModel> anteile;
 	
-	//Kunstruktoren
-	/**
-	 * Konstruktor für eine Buchung, die den Buchungstag und die Menge anlegt
-	 * @param buchungsTag 	Tag der Buchung
-	 * @param menge 		Menge der Buchung
-	 */
-	public BuchungsModel(Date buchungsTag, int menge){
-		this.buchungsTag=buchungsTag;
-		this.menge=menge;
+	//Konstruktor
+	public BuchungsModel(Date buchungsTag) {
+		this.buchungsTag = buchungsTag;
 	}
+
+	//abstract Methoden
+	/**
+	 * gibt  zurück, ob eine Buchung bereit ist abgeschlossen zu werden
+	 * @ return true wenn die Menge einer Buchung voll verteilt ist
+	 */
+	abstract public boolean isFertig();
 	
-	//Methoden
 	/**
 	 * fügt der Buchung einen Anteil hinzu
 	 * @param lager		Lager an das der Anteil geht
 	 * @param anteil	absoluter Anteil an der Buchung
 	 */
-	public void anteilHinzufuegen(LagerModel lager, int anteil){
-		AnteilModel anteilModel = new AnteilModel(lager, anteil);
-		anteile.add(anteilModel);
-		verteilteMenge += anteilModel.getAnteil();
-	}
+	abstract public boolean hinzufuegenAnteil(LagerModel lager, int anteil);
+	
+	//Methoden
 	
 	/**
-	 * Die Aufteilung der Buchung wird gelöscht
+	 * Löscht alle Anteile der Buchung
 	 */
-	public void anteileLoeschen() {
+	public void loeschenAnteile() {
 		anteile.clear();
 		verteilteMenge = 0;
 	}
 	
 	/**
 	 * Löscht alle Anteile von einem Lager
-	 * @param lager	Lager, dessen Anteil gelöscht werden soll
+	 * @param lager dessen Anteil gelöscht werden soll
 	 */
-	public void anteilLoeschen(LagerModel lager) {
+	public void loeschenAnteil(LagerModel lager) {
 		for (AnteilModel anteil : anteile) {
 			if(lager == anteil.getLager()){
 				anteile.remove(anteile.indexOf(anteil));
@@ -59,7 +57,7 @@ public class BuchungsModel {
 	 * @param lager das in dem Anteil entalten sein soll
 	 * @param menge	die in dem Anteil sein soll
 	 */
-	public void anteilLoeschen(LagerModel lager, int menge) {
+	public void loeschenAnteil(LagerModel lager, int menge) {
 		for (AnteilModel anteil : anteile) {
 			if(anteil.getLager() == lager && anteil.getAnteil() == menge){
 				anteile.remove(anteile.indexOf(anteil));
@@ -68,7 +66,6 @@ public class BuchungsModel {
 			}
 		}
 	}
-	
 	
 	//getter
 	/**
@@ -80,37 +77,19 @@ public class BuchungsModel {
 	}
 	
 	/**
-	 * gibt die Menge der Buchung zurück
-	 * @return Menge
-	 */
-	public int getMenge() {
-		return this.menge;
-	}
-	
-	/**
-	 * gibt die restliche zu verteilende Menge zurück
-	 * @return Menge, die noch zu verteilen ist
-	 */
-	public int getFreienPlatz(){
-		return this.menge - this.verteilteMenge;
-	}
-	
-	/**
-	 * gibt zurück ob eine Buchung voll verteilt ist und somit bereit zum Abschluss
-	 * @ return true wenn die Menge einer Buchung voll verteilt ist
-	 */
-	public boolean isVollVerteilt(){
-		if(menge == verteilteMenge) {
-			return true;
-		}
-		return false;
-	}
-	
-	/**
 	 * Gibt die Liste der Anteile auf die die Buchung aufgeteilt wurde wieder
 	 * @return Liste der Anteile
 	 */
 	public List<AnteilModel> getAnteile() {
 		return this.anteile;
+	}
+	
+	/**
+	 * Gibt die verteilte Menge einer Zubuchung
+	 * bzw. die verteilte Menge einer Abbuchung
+	 * @return
+	 */
+	public int getVerteilteMenge(){
+		return this.verteilteMenge;
 	}
 }
