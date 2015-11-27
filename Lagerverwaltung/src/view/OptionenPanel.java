@@ -43,7 +43,7 @@ public class OptionenPanel extends JPanel{
 		//Button-Modus
 		loeschen = new JButton("Lager löschen");
 		try {
-		    Image img = ImageIO.read(new File("src/icons/delete.png"));
+		    Image img = ImageIO.read(new File("src/icons/trash.png"));
 		    loeschen.setIcon(new ImageIcon(img));
 		  } catch (IOException ex) {
 			  ex.printStackTrace();
@@ -116,6 +116,7 @@ public class OptionenPanel extends JPanel{
 		this.add(Box.createRigidArea(new Dimension(2,0)));
 		this.add(umbenennen);
 		this.revalidate();
+		this.repaint();
 	}
 	
 	/**
@@ -126,6 +127,7 @@ public class OptionenPanel extends JPanel{
 		this.removeAll();
 		this.add(infoText);
 		this.revalidate();
+		this.repaint();
 	}
 	
 	/**
@@ -140,6 +142,7 @@ public class OptionenPanel extends JPanel{
 		this.add(slider);
 		this.add(anteilBuchen);
 		this.revalidate();
+		this.repaint();
 	}
 	/**
 	 * Rechnet den aktuellen Wert des Sliders in ein auf zwei Stellen gerundete Prozentzahl um
