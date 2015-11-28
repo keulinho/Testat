@@ -2,27 +2,24 @@ package view;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.imageio.ImageIO;
-import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JToolBar;
-import javax.swing.LookAndFeel;
-import javax.swing.UIManager;
 
 import controller.LagerVerwaltungsController;
+import model.LagerVerwaltungsModel;
 
-public class VerwaltungsView extends JFrame{
+public class VerwaltungsView extends JFrame implements Observer{
 
 	int restMenge;
 	JButton openButton, zulieferungButton, saveButton, auslieferungButton;
@@ -30,6 +27,7 @@ public class VerwaltungsView extends JFrame{
 	BuchungBar buchungBar;
 	DetailView detailPane;
 	TreeView treePane;
+	LagerVerwaltungsModel lvModel;
 	public VerwaltungsView(int anzahlLager, LagerVerwaltungsController control){
 		this.setTitle("Lagerverwaltung");
 		
@@ -114,4 +112,18 @@ public class VerwaltungsView extends JFrame{
 		});
 		
 	}
+	@Override
+	public void update(Observable o, Object arg) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+/**	@Override
+	public void update(Observable o, Object arg) {
+		lvModel  = (LagerVerwaltungsModel) o;
+	}
+
+**/
+		
+	
 }

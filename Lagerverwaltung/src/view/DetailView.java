@@ -35,6 +35,7 @@ public class DetailView extends JPanel implements Observer{
 	JTable tabelle;
 	String[] columnNames;
 	Object[][] data;
+	boolean unterLager;
 
 	public DetailView() {
 		
@@ -113,7 +114,12 @@ public class DetailView extends JPanel implements Observer{
 		mengeKapazitaet=""+lModel.getMaxKapazitaet();
 		lagerName=lModel.getName();
 		lagerInfoAktualisieren()
-		lagerInfo.revalidate();
+		if (lModel.hatUnterlager) {
+			unterLager=false
+		} else {
+			unterLager=true
+		}
+		
 	}
 	*/
 	
@@ -152,6 +158,7 @@ public class DetailView extends JPanel implements Observer{
 		editName = new EditNamePanel(lagerName);
 		kapazitaet = new JLabel("Maximale Kapazität: "+mengeKapazitaet);
 		bestand = new JLabel("Aktueller Bestand: "+mengeBestand);
+		lagerInfo.revalidate();
 	}
 	
 	/**
@@ -165,4 +172,19 @@ public class DetailView extends JPanel implements Observer{
 		buchungen.setPreferredSize(new Dimension(515,400));
 	}
 	
+	/**
+	 * setzt das Optionen-Panel in den zeige Button Modus
+	 */
+	public void zeigeButton(){
+		optionenPanel.zeigeButton();
+	}
+	
+	public void zeigeBuchungsOptionen(){
+		if (unterLager) {
+			optionenPanel.zeigeSlider();		
+		} else {
+			optionenPanel.zeigeInfo();
+		}
+	}
 }
+
