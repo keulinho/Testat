@@ -18,13 +18,19 @@ import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import controller.LagerVerwaltungsController;
+
 public class OptionenPanel extends JPanel{
 	EditNamePanel editName;
 	JButton loeschen, neuesLager, umbenennen, anteilBuchen;
 	JLabel infoText,menge, anteil;
 	JSlider slider;
+	LagerVerwaltungsController controller;
+	int gesamtMenge, restMenge;
 
-	public OptionenPanel(EditNamePanel editName){
+	public OptionenPanel(EditNamePanel editName, LagerVerwaltungsController controller){
+		
+		this.controller=controller;
 		this.editName=editName;
 		
 		this.setPreferredSize(new Dimension(515,50));
@@ -85,7 +91,7 @@ public class OptionenPanel extends JPanel{
 		anteil.setPreferredSize(new Dimension(50, 30));
 		anteil.setMaximumSize(new Dimension(50, 30));
 		
-		slider = new JSlider(JSlider.HORIZONTAL,1,1327,5);
+		slider = new JSlider(JSlider.HORIZONTAL);
 		
 		slider.addChangeListener(new ChangeListener() {
 			
@@ -108,6 +114,7 @@ public class OptionenPanel extends JPanel{
 	 * löscht alle Elemente dieses Panels und fügt alle GUI-Elemente für die Button Anzeige hinzu
 	 */
 	public void zeigeButton() {
+		
 		this.setLayout(new FlowLayout());
 		this.removeAll();
 		this.add(loeschen);
@@ -130,15 +137,23 @@ public class OptionenPanel extends JPanel{
 		this.repaint();
 	}
 	
+	
 	/**
 	 * löscht alle Elemente dieses Panels und fügt alle GUI-Elemente für die Slider Anzeige hinzu
+	 * @param gesamtMenge gesamt Menge zu der der Prozentsatz ausgerrechnent wird
+	 * @param maximum maximum des Sliders
 	 */
-	public void zeigeSlider() {
-		
+	public void zeigeSlider(int gesamtMenge, int maximum) {
+		this.gesamtMenge=gesamtMenge;
+		this.restMenge=maximum;
 		this.removeAll();
 		this.add(menge);
+		slider.setMaximum(maximum);
+		slider.setValue(slider.getMaximum()/2);
 		anteil.setText("<html>"+slider.getValue()+"<br>"+rechneProzent()+"%</html>");
 		this.add(anteil);
+		slider.setMaximum(maximum);
+		slider.setValue(maximum/2);
 		this.add(slider);
 		this.add(anteilBuchen);
 		this.revalidate();
@@ -149,7 +164,8 @@ public class OptionenPanel extends JPanel{
 	 * @return Prozentzahl auf zwei Stellen gerundet
 	 */
 	public double rechneProzent() {
-		double prozent = (((double)slider.getValue()/slider.getMaximum())*100.00);
+		
+		double prozent = (((double)slider.getValue()/gesamtMenge)*100.00);
 		prozent = (prozent*1000)+5;
 		int temp = (int) (prozent/10);
 		prozent = (double)temp/100.00;

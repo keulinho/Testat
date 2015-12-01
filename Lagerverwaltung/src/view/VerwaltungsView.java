@@ -28,7 +28,11 @@ public class VerwaltungsView extends JFrame implements Observer{
 	DetailView detailPane;
 	TreeView treePane;
 	LagerVerwaltungsModel lvModel;
-	public VerwaltungsView(int anzahlLager, LagerVerwaltungsController control){
+	LagerVerwaltungsController controller;
+	
+	public VerwaltungsView(int anzahlLager, LagerVerwaltungsController controller){
+		
+		this.controller=controller;
 		this.setTitle("Lagerverwaltung");
 		
 		restMenge=1000;
@@ -44,14 +48,14 @@ public class VerwaltungsView extends JFrame implements Observer{
 		
 		this.add(toolbar,BorderLayout.PAGE_START);
 
-		detailPane = new DetailView();
+		detailPane = new DetailView(controller);
 		this.add(detailPane, BorderLayout.EAST);
 			
 		treePane = new TreeView();
 		treePane.setBackground(Color.LIGHT_GRAY);
 		this.add(treePane, BorderLayout.WEST);
 		
-		buchungBar = new BuchungBar();
+		buchungBar = new BuchungBar(controller);
 		buchungBar.setVisible(false);
 		this.add(buchungBar, BorderLayout.PAGE_END);
 
@@ -121,6 +125,7 @@ public class VerwaltungsView extends JFrame implements Observer{
 /**	@Override
 	public void update(Observable o, Object arg) {
 		lvModel  = (LagerVerwaltungsModel) o;
+		
 	}
 
 **/

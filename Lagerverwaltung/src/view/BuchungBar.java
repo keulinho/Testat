@@ -20,14 +20,19 @@ import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.text.NumberFormatter;
 
+import controller.LagerVerwaltungsController;
+
 public class BuchungBar extends JToolBar{
 	
 	JButton undo, redo, buchungVerwerfen,buchungAbschliessen,auslieferungErstellen,zulieferungErstellen;
 	JLabel laufendeBuchung, neueBuchung;
 	JFormattedTextField menge;
 	int restMenge;
+	LagerVerwaltungsController controller;
 	
-	public BuchungBar(){
+	public BuchungBar(LagerVerwaltungsController controller){
+		
+		this.controller=controller;
 		restMenge=100;
 		this.setFloatable(false);
 		guiElementeErstellen();

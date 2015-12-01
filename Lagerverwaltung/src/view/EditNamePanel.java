@@ -18,13 +18,17 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import controller.LagerVerwaltungsController;
+
 public class EditNamePanel extends JPanel{
 	
 	JLabel editieren, name, speichern;
 	JTextField neuerName;
+	LagerVerwaltungsController controller;
 	
-	public EditNamePanel(String lagerName){
+	public EditNamePanel(String lagerName, LagerVerwaltungsController controller){
 		
+		this.controller=controller;
 		this.setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
 		this.setPreferredSize(new Dimension(515,25));
 		

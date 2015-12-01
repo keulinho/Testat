@@ -1,28 +1,19 @@
 package view;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.Image;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.IOException;
 import java.util.Date;
 import java.util.Observable;
 import java.util.Observer;
 
-import javax.imageio.ImageIO;
-import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+
+import controller.LagerVerwaltungsController;
 
 public class DetailView extends JPanel implements Observer{
 	
@@ -36,9 +27,11 @@ public class DetailView extends JPanel implements Observer{
 	String[] columnNames;
 	Object[][] data;
 	boolean unterLager;
+	LagerVerwaltungsController controller;
 
-	public DetailView() {
+	public DetailView(LagerVerwaltungsController controller) {
 		
+		this.controller=controller;
 		lagerName="Beispiel";
 		mengeKapazitaet="1000";
 		mengeBestand="300";
@@ -91,8 +84,8 @@ public class DetailView extends JPanel implements Observer{
 		buchungsTabelleErstellen();
 		this.add(buchungen,BorderLayout.CENTER);
 		
-		optionenPanel = new OptionenPanel(editName);
-		optionenPanel.zeigeButton();
+		optionenPanel = new OptionenPanel(editName,controller);
+		optionenPanel.zeigeSlider(1327,1327);
 		this.add(optionenPanel,BorderLayout.PAGE_END);
 	}
 
@@ -155,7 +148,7 @@ public class DetailView extends JPanel implements Observer{
 	 * Aktualisiert alle variablen Texte der View auf die in den Klassenvariablen gespeicherten Werte
 	 */
 	public void lagerInfoAktualisieren(){
-		editName = new EditNamePanel(lagerName);
+		editName = new EditNamePanel(lagerName,controller);
 		kapazitaet = new JLabel("Maximale Kapazität: "+mengeKapazitaet);
 		bestand = new JLabel("Aktueller Bestand: "+mengeBestand);
 		lagerInfo.revalidate();
@@ -181,7 +174,7 @@ public class DetailView extends JPanel implements Observer{
 	
 	public void zeigeBuchungsOptionen(){
 		if (unterLager) {
-			optionenPanel.zeigeSlider();		
+			optionenPanel.zeigeSlider(1327,1327);		
 		} else {
 			optionenPanel.zeigeInfo();
 		}
