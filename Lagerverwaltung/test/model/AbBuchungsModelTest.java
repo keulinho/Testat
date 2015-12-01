@@ -2,8 +2,6 @@ package model;
 
 import java.util.Date;
 
-import org.junit.Test;
-
 import junit.framework.TestCase;
 
 public class AbBuchungsModelTest extends TestCase {
@@ -23,22 +21,19 @@ public class AbBuchungsModelTest extends TestCase {
 	}
 	
 	//TODO test klappen nicht weil Anteil nicht geaddet wird weil kein Bestand vorhanden ist
-	@Test
 	public void testHinzufuegenAnteil(){
-		boolean result = (abBuchung.hinzufuegenAnteil(lager1, 50) &&
+		boolean result = (abBuchung.hinzufuegenAnteil(lager1, 50) != null &&
 				(abBuchung.getAnteile().size() == 1 && 
 				abBuchung.getAnteile().get(0).getAnteil() == -50 && 
 				abBuchung.getAnteile().get(0).getLager() == lager1));
 		assertEquals(true, result);
 	}
 	
-	@Test
 	public void testHinzufuegenAnteilWenigerAlsImLager(){
 		abBuchung.hinzufuegenAnteil(lager1, 50);
 		assertEquals(false, abBuchung.hinzufuegenAnteil(lager1, 500));
 	}
 	
-	@Test
 	public void testloeschenAnteile(){
 		abBuchung.hinzufuegenAnteil(lager1, 50);
 		abBuchung.hinzufuegenAnteil(lager1, 50);
@@ -53,7 +48,6 @@ public class AbBuchungsModelTest extends TestCase {
 		assertEquals(true, abBuchung.getAnteile().isEmpty());
 	}
 
-	@Test
 	public void testloeschenAnteilLager(){
 		if(!abBuchung.getAnteile().isEmpty()){
 			abBuchung.loeschenAnteile();
@@ -67,7 +61,6 @@ public class AbBuchungsModelTest extends TestCase {
 		assertEquals(true, result);
 	}
 	
-	@Test
 	public void testloeschenAnteilSpezifisch(){
 		abBuchung.hinzufuegenAnteil(lager2, 50);
 		abBuchung.hinzufuegenAnteil(lager2, 100);

@@ -14,7 +14,6 @@ public class AnteilModelTest extends TestCase {
 		anteil = new AnteilModel(lager, 100);
 	}
 
-	@Test
 	public void testAnteilErhoehen() {
 		anteil.erhoehenAnteil(100);
 		assertEquals(200, anteil.getAnteil());

@@ -19,13 +19,11 @@ public class LagerModelTest extends TestCase{
 		lager3 = new LagerModel(1000, "Lager3", lager2);
 	}
 	
-	@Test
 	public void testVeraendernBestand() throws LagerUeberfuelltException{
 		lager1.veraendernBestand(100);
 		assertEquals(100, lager1.getBestand());
 	}
 	
-	@Test
 	public void testVeraendernBestandMehrAlsPlatzInLager(){
 		try {
 			lager1.veraendernBestand(1100);
@@ -35,13 +33,11 @@ public class LagerModelTest extends TestCase{
 		}
 	}
 	
-	@Test
 	public void testAnpassenOberlagerBestand() throws LagerUeberfuelltException{
 		lager3.anpassenOberlagerBestand(100);
 		assertEquals(100, lager3.getOberLager().getBestand());
 	}
 	
-	@Test
 	public void testAddUnterlager(){
 		LagerModel lagerNeu = lager1.addUnterlager(100, "LagerNeu");
 		boolean result = (lagerNeu.getOberLager() == lager1 &&
@@ -50,13 +46,11 @@ public class LagerModelTest extends TestCase{
 		assertEquals(true, result);
 	}
 	
-	@Test
 	public void testAendernKapazitaet(){
-		lager1.aendernkapazitaet(500);
+		lager1.aendernKapazitaet(500);
 		assertEquals(1500, lager1.getMaxKapazitaet());
 	}
 	
-	@Test
 	public void testAddBuchung(){
 		AbBuchungsModel ab = new AbBuchungsModel(new Date(1));
 		ZuBuchungsModel zu = new ZuBuchungsModel(new Date(1), 1);
@@ -65,7 +59,6 @@ public class LagerModelTest extends TestCase{
 		assertEquals(2, lager1.getBuchungen().size());
 	}
 	
-	@Test
 	public void testEntfernenBuchung(){
 		AbBuchungsModel ab = new AbBuchungsModel(new Date(1));
 		ZuBuchungsModel zu = new ZuBuchungsModel(new Date(1), 1);
