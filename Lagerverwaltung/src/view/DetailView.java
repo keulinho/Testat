@@ -14,10 +14,12 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
 import controller.LagerVerwaltungsController;
+import model.LagerModel;
 
 public class DetailView extends JPanel implements Observer{
 	
-	String lagerName, mengeKapazitaet, mengeBestand;
+	String lagerName;
+	int mengeKapazitaet, mengeBestand;
 	EditNamePanel editName;
 	OptionenPanel optionenPanel;
 	JPanel lagerInfo;
@@ -26,15 +28,19 @@ public class DetailView extends JPanel implements Observer{
 	JTable tabelle;
 	String[] columnNames;
 	Object[][] data;
-	boolean unterLager;
+	boolean isUnterLager;
 	LagerVerwaltungsController controller;
 
+	/**
+	 * erzeugt eine DetailView
+	 * @param controller Controller an den alle Befehle runtergereicht werden
+	 */
 	public DetailView(LagerVerwaltungsController controller) {
 		
 		this.controller=controller;
 		lagerName="Beispiel";
-		mengeKapazitaet="1000";
-		mengeBestand="300";
+		mengeKapazitaet=1000;
+		mengeBestand=300;
 		
 		this.setPreferredSize(new Dimension(515,400));
 		this.setLayout(new BorderLayout());
@@ -89,37 +95,30 @@ public class DetailView extends JPanel implements Observer{
 		this.add(optionenPanel,BorderLayout.PAGE_END);
 	}
 
-	@Override
-	public void update(Observable o, Object arg) {
-		// TODO Auto-generated method stub
-		
-	}
-
 	/**
 	 * Die View überwacht ein Lagermodel
 	 * wird dieses verändert aktualisiert die View sich auch
 	 */
-/*	@Override
+	@Override
 	public void update(Observable o, Object arg1) {
 		// TODO Auto-generated method stub
 		LagerModel lModel = (LagerModel)o;
-		mengeBestand=""+lModel.getBestand();
-		mengeKapazitaet=""+lModel.getMaxKapazitaet();
+		mengeBestand=lModel.getBestand();
+		mengeKapazitaet=lModel.getMaxKapazitaet();
 		lagerName=lModel.getName();
-		lagerInfoAktualisieren()
-		if (lModel.hatUnterlager) {
-			unterLager=false
+		lagerInfoAktualisieren();
+		if (lModel.hatUnterlager()) {
+			isUnterLager=false;
 		} else {
-			unterLager=true
+			isUnterLager=true;
 		}
 		
 	}
-	*/
+	
 	
 	/**
 	 * erstellt ein JPanel, welches alle Infos über ein Lager enthält
 	 * es zeigt die in den Klassenvariablen gespeicherten Werte an
-	 * @return das erstellte JPanel mit den Lagerinfos
 	 */
 	public void lagerInfoErstellen(){
 		
@@ -152,6 +151,7 @@ public class DetailView extends JPanel implements Observer{
 		kapazitaet = new JLabel("Maximale Kapazität: "+mengeKapazitaet);
 		bestand = new JLabel("Aktueller Bestand: "+mengeBestand);
 		lagerInfo.revalidate();
+		lagerInfo.repaint();
 	}
 	
 	/**
@@ -172,9 +172,20 @@ public class DetailView extends JPanel implements Observer{
 		optionenPanel.zeigeButton();
 	}
 	
-	public void zeigeBuchungsOptionen(){
-		if (unterLager) {
-			optionenPanel.zeigeSlider(1327,1327);		
+	/**
+	 * setzt das Optionen-Panel in den zeige Slider Modus
+	 * @param gesamtMenge gesamt Menge der Buchung zu der der Prozentsatz errechnet wird
+	 * @param maximum Maximum des Sliders
+	 * @param zulieferung true wenn zulieferung, sonst false
+	 */
+	public void zeigeBuchungsOptionen(int gesamtMenge, int maximum, boolean zulieferung){
+		if (isUnterLager) {
+			if (zulieferung) {
+				optionenPanel.zeigeSlider(gesamtMenge,maximum);
+			} else {
+				optionenPanel.zeigeSlider(gesamtMenge,mengeKapazitaet);	
+			}
+				
 		} else {
 			optionenPanel.zeigeInfo();
 		}

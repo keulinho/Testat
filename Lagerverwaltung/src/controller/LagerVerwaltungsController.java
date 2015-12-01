@@ -9,6 +9,6 @@ public class LagerVerwaltungsController {
 	}
 	
 	public LagerVerwaltungsController(int lageranzahl) {
-		VerwaltungsView view=new VerwaltungsView(lageranzahl,this);
+		VerwaltungsView view=new VerwaltungsView(this);
 	}
 }

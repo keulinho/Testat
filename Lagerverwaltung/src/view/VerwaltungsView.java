@@ -30,7 +30,11 @@ public class VerwaltungsView extends JFrame implements Observer{
 	LagerVerwaltungsModel lvModel;
 	LagerVerwaltungsController controller;
 	
-	public VerwaltungsView(int anzahlLager, LagerVerwaltungsController controller){
+	/**
+	 * erzeugt eine VerwaltungsView
+	 * @param controller der Controller an den alle Befehle runtergereicht werden
+	 */
+	public VerwaltungsView(LagerVerwaltungsController controller){
 		
 		this.controller=controller;
 		this.setTitle("Lagerverwaltung");

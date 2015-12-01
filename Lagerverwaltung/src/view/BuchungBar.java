@@ -25,15 +25,18 @@ import controller.LagerVerwaltungsController;
 public class BuchungBar extends JToolBar{
 	
 	JButton undo, redo, buchungVerwerfen,buchungAbschliessen,auslieferungErstellen,zulieferungErstellen;
-	JLabel laufendeBuchung, neueBuchung;
+	JLabel laufendeZulieferung, neueBuchung,laufendeAuslieferung;
 	JFormattedTextField menge;
-	int restMenge;
 	LagerVerwaltungsController controller;
+
 	
+	/**
+	 * erzeugt eine BuchungsBar
+	 * @param controller Controller an den alle Befehle runtergereicht werden
+	 */
 	public BuchungBar(LagerVerwaltungsController controller){
 		
 		this.controller=controller;
-		restMenge=100;
 		this.setFloatable(false);
 		guiElementeErstellen();
 
@@ -58,10 +61,17 @@ public class BuchungBar extends JToolBar{
 		  } catch (IOException ex) {
 			  ex.printStackTrace();
 		  }
-		laufendeBuchung = new JLabel();
+		laufendeZulieferung = new JLabel();
 		try {
 		    Image img = ImageIO.read(new File("src/icons/exclamation.png"));
-		    laufendeBuchung.setIcon(new ImageIcon(img));
+		    laufendeZulieferung.setIcon(new ImageIcon(img));
+		  } catch (IOException ex) {
+			  ex.printStackTrace();
+		  }
+		laufendeAuslieferung = new JLabel();
+		try {
+		    Image img = ImageIO.read(new File("src/icons/exclamation.png"));
+		    laufendeAuslieferung.setIcon(new ImageIcon(img));
 		  } catch (IOException ex) {
 			  ex.printStackTrace();
 		  }
@@ -101,18 +111,23 @@ public class BuchungBar extends JToolBar{
 			@Override
 			public void keyReleased(KeyEvent e) {
 				// TODO Auto-generated method stub
+				if(menge.getValue()==null){
+					zulieferungErstellen.setEnabled(false);
+				} else {
+					zulieferungErstellen.setEnabled(true);
+					if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+						zeigeLaufendeZulieferung((int) menge.getValue());
+					}
+					
+				}
 				
 			}
 			
 			@Override
 			public void keyPressed(KeyEvent e) {
 				// TODO Auto-generated method stub
-				if ((e.getKeyCode() == KeyEvent.VK_ENTER)&&(menge.getValue()!=null)) {
-					restMenge=(int) menge.getValue();
-					zeigeLaufendeZulieferung(false);
-				} else if(menge.getValue()!=null){
-					zulieferungErstellen.setEnabled(true);
-				} else {
+				if ((menge.getValue()!=null)&&(e.getKeyCode() == KeyEvent.VK_BACK_SPACE)&&((int)menge.getValue()<10)) {
+					menge.setValue(null);
 					zulieferungErstellen.setEnabled(false);
 				}
 			}
@@ -128,7 +143,7 @@ public class BuchungBar extends JToolBar{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				zeigeLaufendeAuslieferung(false);
+				zeigeLaufendeAuslieferung(0);
 				
 			}
 		});
@@ -143,22 +158,27 @@ public class BuchungBar extends JToolBar{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				zeigeLaufendeZulieferung(false);
+				zeigeLaufendeZulieferung((int)menge.getValue());
 				
 			}
 		});
 		
 	}
 	
-	public void zeigeLaufendeZulieferung(boolean vollständigVerteilt) {
+	
+	/**
+	 * zeigt die BuchungsBar im LaufendeZulieferungs Modus
+	 * @param restMenge gibt an wie viele Einheiten noch verteilt werden müssen
+	 */
+	public void zeigeLaufendeZulieferung(int restMenge) {
 
 		this.removeAll();
 		this.add(undo);
 		this.addSeparator(new Dimension(10,0));
-		laufendeBuchung.setText("<html>Es gibt eine laufende Zulieferung <br>"+restMenge+" Einheiten müssen noch verteilt werden</html>");
-		this.add(laufendeBuchung);
+		laufendeZulieferung.setText("<html>Es gibt eine laufende Zulieferung <br>"+restMenge+" Einheiten müssen noch verteilt werden</html>");
+		this.add(laufendeZulieferung);
 		this.add(buchungVerwerfen);
-		if (vollständigVerteilt){
+		if (restMenge==0){
 			this.add(buchungAbschliessen);
 		}
 		this.add(redo);
@@ -166,14 +186,18 @@ public class BuchungBar extends JToolBar{
 		this.repaint();
 	}
 	
-	public void zeigeLaufendeAuslieferung(boolean istEinAnteilVerteilt){
+	/**
+	 * zeigt die BuchungsBar im LaufendeZAusieferungs Modus
+	 * @param restMenge gibt an wie viele Einheiten schon verteilt wurden
+	 */
+	public void zeigeLaufendeAuslieferung(int restMenge){
 		this.removeAll();
 		this.add(undo);
 		this.addSeparator(new Dimension(10,0));
-		laufendeBuchung.setText("<html>Es gibt eine laufende Auslieferung <br>"+restMenge+" Einheiten wurden schon verteilt</html>");
-		this.add(laufendeBuchung);
+		laufendeAuslieferung.setText("<html>Es gibt eine laufende Auslieferung <br>"+restMenge+" Einheiten wurden schon verteilt</html>");
+		this.add(laufendeAuslieferung);
 		this.add(buchungVerwerfen);
-		if (istEinAnteilVerteilt){
+		if (restMenge>0){
 			this.add(buchungAbschliessen);
 		}
 		this.add(redo);
@@ -181,6 +205,10 @@ public class BuchungBar extends JToolBar{
 		this.repaint();
 	}
 	
+	/**
+	 * zeigt die BuchungBar im neue Buchung Modus
+	 * @param zulieferung true wenn neue Zulieferung erstellt werden soll
+	 */
 	public void zeigeNeueBuchung(boolean zulieferung){
 		this.removeAll();
 		if (zulieferung) {
@@ -201,5 +229,13 @@ public class BuchungBar extends JToolBar{
 		}
 		this.revalidate();
 		this.repaint();
+	}
+	
+	public void aktualisiereRestMenge(int restMenge) {
+		laufendeAuslieferung.setText("<html>Es gibt eine laufende Auslieferung <br>"+restMenge+" Einheiten wurden schon verteilt</html>");
+		laufendeZulieferung.setText("<html>Es gibt eine laufende Zulieferung <br>"+restMenge+" Einheiten müssen noch verteilt werden</html>");
+		this.revalidate();
+		this.repaint();
+
 	}
 }
