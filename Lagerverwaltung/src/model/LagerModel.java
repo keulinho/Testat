@@ -29,6 +29,7 @@ public class LagerModel extends Observable {
 		this.maxKapazitaet=maxKapazitaet;
 		this.name=name;
 		this.unterLager = new Vector<LagerModel>();
+		this.buchungen = new Vector<BuchungsModel>();
 		if(oberLager != null){
 			this.bestand = oberLager.getBestand();
 		} else {
@@ -55,12 +56,14 @@ public class LagerModel extends Observable {
 	 * @throws LagerUeberfuelltException 
 	 */
 	public void veraendernBestand(int menge) throws LagerUeberfuelltException{
-		if(0 <= (this.bestand += menge) || (this.bestand += menge) > this.maxKapazitaet){
+		if( (this.bestand + menge) < 0 || this.maxKapazitaet < (this.bestand + menge)){
 			throw new LagerUeberfuelltException(this.name + " ist überfüllt.\n"
 					+ "Kapazität: \t" + this.bestand + "\nBestand: \t" + (this.bestand += menge));
 		}
 		this.bestand += menge;
-		this.anpassenOberlagerBestand(menge);
+		if(this.oberLager != null){
+			this.anpassenOberlagerBestand(menge);
+		}
 	}
 	
 	/**
@@ -69,26 +72,43 @@ public class LagerModel extends Observable {
 	 * @throws LagerUeberfuelltException 
 	 */
 	public void anpassenOberlagerBestand(int menge) throws LagerUeberfuelltException{
-		this.oberLager.veraendernBestand(menge);
 		if (this.oberLager != null) {
+			this.oberLager.veraendernBestand(menge);
 			this.oberLager.anpassenOberlagerBestand(menge);
 		}
 	}
 	
 	/**
-	 * fügt dem Lager ein Unterlager hinzu
-	 * @param lager LagerModel, das hinzugefügt werden soll
+	 * ändert die maxKapazität um den mitgegebenen Wert
+	 * @param aenderung
 	 */
-	public void addUnterlager(LagerModel lager){
-		unterLager.add(lager);
+	public void aendernKapazitaet(int aenderung){
+		this.maxKapazitaet += aenderung;
 	}
 	
 	/**
 	 * ändert die maxKapazität um den mitgegebenen Wert
-	 * @param steigerung
+	 * @param aenderung
 	 */
-	public void aendernkapazitaet(int steigerung){
-		this.maxKapazitaet += steigerung;
+	public void aendernOberlagerKapazitaet(int aenderung){
+		if (this.oberLager != null) {
+			this.oberLager.aendernOberlagerKapazitaet(aenderung);
+			this.oberLager.aendernKapazitaet(aenderung);
+		}
+	}
+	
+	/**
+	 * erzeugt ein neues Lager und fügt es dem Oberlafer hinzu
+	 * und gibt das erzeugte Lafer zurück
+	 * @param kapazitaet	des neuen Lagers
+	 * @param name			des neuen Lagers
+	 * @param oberLager		des neuen Lagers oder null
+	 * @return				LagerModel das erzeugt wurde
+	 */
+	public LagerModel addUnterlager(int kapazitaet, String name){
+		LagerModel lager = new LagerModel(kapazitaet, name, this);
+		unterLager.add(lager);
+		return lager;
 	}
 	
 	/**
@@ -96,6 +116,7 @@ public class LagerModel extends Observable {
 	 * @param buchung
 	 */
 	public void addBuchung(BuchungsModel buchung){
+		//TODO evtl. Logik hierhin verschieben wenn Buchung eingeht wird hier alles gebucht
 		buchungen.add(buchung);
 	}
 	

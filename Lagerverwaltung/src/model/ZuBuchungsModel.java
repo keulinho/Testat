@@ -22,14 +22,14 @@ public class ZuBuchungsModel extends BuchungsModel {
 	 * prüft vorher ob im Lager noch genug Platz vorhanden ist
 	 * @return true wenn Anteil erfolgreich erstellt wurde sonst false
 	 */
-	public boolean hinzufuegenAnteil(LagerModel lager, int anteil) {
+	public AnteilModel hinzufuegenAnteil(LagerModel lager, int anteil) {
 		if(anteil <= this.getFreienPlatz()){
 			AnteilModel anteilModel = new AnteilModel(lager, anteil);
 			anteile.add(anteilModel);
 			verteilteMenge += anteilModel.getAnteil();
-			return true;
+			return anteilModel;
 		}
-		return false;
+		return null;
 	}
 
 	//getter

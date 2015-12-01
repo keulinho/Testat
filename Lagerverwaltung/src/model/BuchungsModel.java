@@ -2,6 +2,7 @@ package model;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Vector;
 
 abstract public class BuchungsModel {
 	Date buchungsTag;
@@ -11,6 +12,7 @@ abstract public class BuchungsModel {
 	//Konstruktor
 	public BuchungsModel(Date buchungsTag) {
 		this.buchungsTag = buchungsTag;
+		this.anteile = new Vector<AnteilModel>();
 	}
 
 	//abstract Methoden
@@ -25,7 +27,7 @@ abstract public class BuchungsModel {
 	 * @param lager		Lager an das der Anteil geht
 	 * @param anteil	absoluter Anteil an der Buchung
 	 */
-	abstract public boolean hinzufuegenAnteil(LagerModel lager, int anteil);
+	abstract public AnteilModel hinzufuegenAnteil(LagerModel lager, int anteil);
 	
 	//Methoden
 	

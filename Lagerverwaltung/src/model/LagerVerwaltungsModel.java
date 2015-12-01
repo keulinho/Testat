@@ -2,11 +2,12 @@ package model;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Observable;
 import java.util.Vector;
 
 import core.exception.LagerUeberfuelltException;
 
-public class LagerVerwaltungsModel {
+public class LagerVerwaltungsModel extends Observable {
 	List<LagerModel> lager;
 	List<BuchungsModel> buchungen;
 	int maxFreieKapazitaet;
@@ -40,27 +41,31 @@ public class LagerVerwaltungsModel {
 	 * @param name
 	 * @return true wenn das Lager erfolgreich erstellt wurde sonst false
 	 */
-	public boolean hinzufuegenLAger(LagerModel oberLager, int kapazitaet, String name){
+	public LagerModel hinzufuegenLager(LagerModel oberLager, int kapazitaet, String name){
 		if(oberLager != null){
-			if(oberLager.getUnterLager().isEmpty() && oberLager.getBestand() < kapazitaet){
-				LagerModel lager = new LagerModel(kapazitaet, name, oberLager);
-				oberLager.addUnterlager(lager);
+			if(oberLager.getUnterLager().isEmpty() && oberLager.getBestand() <= kapazitaet){
+				LagerModel lager = oberLager.addUnterlager(kapazitaet, name);
 				try {
 					lager.veraendernBestand(oberLager.getBestand());
+					oberLager.aendernKapazitaet(kapazitaet);
+					maxFreieKapazitaet += kapazitaet;
 				} catch (LagerUeberfuelltException e) {
 					// TODO ErrorHandler und evtl. was rückhängig machen und evtl. false zurückgeben
 					e.printStackTrace();
 				}
-				return true;
+				return lager;
 			} else if(!oberLager.getUnterLager().isEmpty()) {
-				oberLager.addUnterlager(new LagerModel(kapazitaet, name, oberLager));
-				oberLager.aendernkapazitaet(kapazitaet);
-				return true;
+				LagerModel lager = oberLager.addUnterlager(kapazitaet, name);
+				oberLager.aendernKapazitaet(kapazitaet);
+				maxFreieKapazitaet += kapazitaet;
+				return lager;
 			}
-			return false;
+			return null;
 		} else {
-			new LagerModel(kapazitaet, name, oberLager);
-			return true;
+			LagerModel newLager = new LagerModel(kapazitaet, name, oberLager);
+			lager.add(newLager);
+			maxFreieKapazitaet += kapazitaet;
+			return newLager;
 		}
 	}
 	
@@ -135,6 +140,8 @@ public class LagerVerwaltungsModel {
 					break;
 				}
 			}
+			maxFreieKapazitaet -= laufendeBuchung.getVerteilteMenge();
+			buchungen.add(laufendeBuchung);
 			laufendeBuchung = null;
 			return true;
 		}
@@ -148,7 +155,8 @@ public class LagerVerwaltungsModel {
 	 * @return true wenn der Anteil erfolgreich hinzugefügt wurde sonst false
 	 */
 	public boolean hinzugegenAnteil(LagerModel lager, int anteil){
-		if(laufendeBuchung.hinzufuegenAnteil(lager, anteil)){
+		//TODO prüfen ob Lager unterster Eben
+		if(laufendeBuchung.hinzufuegenAnteil(lager, anteil) != null){
 			return true;
 		}
 		return false;
@@ -162,6 +170,7 @@ public class LagerVerwaltungsModel {
 	public void loeschenAnteil(LagerModel lager, int menge){
 		laufendeBuchung.loeschenAnteil(lager, menge);
 	}
+	//TODO andere Varianten des löschen implementieren
 	
 	public void loesschenLager(LagerModel lager){
 		// TODO
@@ -181,6 +190,22 @@ public class LagerVerwaltungsModel {
 	 */
 	public int getMaxFreieKapazitaet(){
 		return this.maxFreieKapazitaet;
+	}
+	
+	/**
+	 * gibt die laufenden Buchung zurück
+	 * @return BuchungsModel
+	 */
+	public BuchungsModel getLaufendeBuchung(){
+		return this.laufendeBuchung;
+	}
+	
+	/**
+	 * gibt alle abgeschlossenen Buchungen zurück
+	 * @return Liste von BuchungsModdeln
+	 */
+	public List<BuchungsModel> getBuchungen(){
+		return this.buchungen;
 	}
 	
 	/**
