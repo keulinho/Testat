@@ -62,7 +62,7 @@ public class VerwaltungsView extends JFrame implements Observer{
 		buchungBar = new BuchungBar(controller);
 		buchungBar.setVisible(false);
 		this.add(buchungBar, BorderLayout.PAGE_END);
-
+		
 		try {
 		    Image img = ImageIO.read(new File("src/icons/icon.png"));
 		    this.setIconImage(img);
@@ -158,6 +158,9 @@ public class VerwaltungsView extends JFrame implements Observer{
 	}
 
 **/
-		
+	public void zeigeNeuesLager() {
+		buchungBar.zeigeNeuesLager();
+		buchungBar.setVisible(true);
+	}
 	
 }

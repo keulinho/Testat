@@ -91,7 +91,8 @@ public class DetailView extends JPanel implements Observer{
 		this.add(buchungen,BorderLayout.CENTER);
 		
 		optionenPanel = new OptionenPanel(editName,controller);
-		optionenPanel.zeigeSlider(1327,1327);
+		//optionenPanel.zeigeSlider(1327,1327);
+		optionenPanel.zeigeButton();
 		this.add(optionenPanel,BorderLayout.PAGE_END);
 	}
 

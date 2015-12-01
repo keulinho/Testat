@@ -15,6 +15,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -74,7 +75,9 @@ public class OptionenPanel extends JPanel{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				controller.erstelleUnterLager();
+				//System.out.println(OptionenPanel.this.getRootPane().get);
+				VerwaltungsView vView = (VerwaltungsView) SwingUtilities.getWindowAncestor(OptionenPanel.this);
+				vView.zeigeNeuesLager();
 			}
 		});
 		umbenennen = new JButton("Lager umbennen");

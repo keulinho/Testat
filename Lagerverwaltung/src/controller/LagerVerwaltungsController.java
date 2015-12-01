@@ -44,7 +44,7 @@ public class LagerVerwaltungsController {
 		
 	}
 	
-	public void erstelleUnterLager() {
+	public void erstelleUnterLager(String lagerName, int lagerKapazitaet) {
 		
 	}
 	
