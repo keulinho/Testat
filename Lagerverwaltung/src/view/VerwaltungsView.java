@@ -63,6 +63,12 @@ public class VerwaltungsView extends JFrame implements Observer{
 		buchungBar.setVisible(false);
 		this.add(buchungBar, BorderLayout.PAGE_END);
 
+		try {
+		    Image img = ImageIO.read(new File("src/icons/icon.png"));
+		    this.setIconImage(img);
+		  } catch (IOException ex) {
+			  ex.printStackTrace();
+		  }
 		this.setLocation(150, 100);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setResizable(false);
