@@ -54,6 +54,14 @@ public class OptionenPanel extends JPanel{
 		  } catch (IOException ex) {
 			  ex.printStackTrace();
 		  }
+		loeschen.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				controller.loescheLager();
+			}
+		});
 		neuesLager = new JButton("Unterlager erstellen");
 		try {
 		    Image img = ImageIO.read(new File("src/icons/new.png"));
@@ -61,6 +69,14 @@ public class OptionenPanel extends JPanel{
 		  } catch (IOException ex) {
 			  ex.printStackTrace();
 		  }
+		neuesLager.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				controller.erstelleUnterLager();
+			}
+		});
 		umbenennen = new JButton("Lager umbennen");
 		try {
 		    Image img = ImageIO.read(new File("src/icons/edit2.png"));
@@ -73,7 +89,7 @@ public class OptionenPanel extends JPanel{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				OptionenPanel.this.editName.edit();
+				editName.edit();
 			}
 		});
 		
@@ -107,6 +123,14 @@ public class OptionenPanel extends JPanel{
 		  } catch (IOException ex) {
 			  ex.printStackTrace();
 		  }
+		anteilBuchen.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				controller.bucheAnteil();
+			}
+		});
 		
 	}
 	

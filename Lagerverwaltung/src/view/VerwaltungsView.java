@@ -22,7 +22,7 @@ import model.LagerVerwaltungsModel;
 public class VerwaltungsView extends JFrame implements Observer{
 
 	int restMenge;
-	JButton openButton, zulieferungButton, saveButton, auslieferungButton;
+	JButton laden, neueZulieferung, speichern, neueAuslieferung;
 	JToolBar toolbar;
 	BuchungBar buchungBar;
 	DetailView detailPane;
@@ -44,10 +44,10 @@ public class VerwaltungsView extends JFrame implements Observer{
 		
 		toolbar = new JToolBar();
 		
-		toolbar.add(saveButton);
-		toolbar.add(openButton);
-		toolbar.add(zulieferungButton);
-		toolbar.add(auslieferungButton);
+		toolbar.add(speichern);
+		toolbar.add(laden);
+		toolbar.add(neueZulieferung);
+		toolbar.add(neueAuslieferung);
 		toolbar.setFloatable(false);
 		
 		this.add(toolbar,BorderLayout.PAGE_START);
@@ -73,49 +73,68 @@ public class VerwaltungsView extends JFrame implements Observer{
 	 * erzeugt alle Button und Label dieses Panels
 	 */
 	public void guiElementeErstellen(){
-		saveButton= new JButton("Speichern");
+		speichern= new JButton("Speichern");
 		try {
 		    Image img = ImageIO.read(new File("src/icons/save.png"));
-		    saveButton.setIcon(new ImageIcon(img));
+		    speichern.setIcon(new ImageIcon(img));
 		  } catch (IOException ex) {
 			  ex.printStackTrace();
 		  }
-	
-		openButton= new JButton("Öffnen");
+		speichern.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				controller.speichern();
+			}
+		});
+		laden= new JButton("Öffnen");
 		try {
 		    Image img = ImageIO.read(new File("src/icons/open.png"));
-		    openButton.setIcon(new ImageIcon(img));
+		    laden.setIcon(new ImageIcon(img));
 		  } catch (IOException ex) {
 			  ex.printStackTrace();
 		  }
-		zulieferungButton= new JButton("Neue Zulieferung");
+		laden.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				controller.laden();
+			}
+		});
+		neueZulieferung= new JButton("Neue Zulieferung");
 		try {
 		    Image img = ImageIO.read(new File("src/icons/zulieferung.png"));
-		    zulieferungButton.setIcon(new ImageIcon(img));
+		    neueZulieferung.setIcon(new ImageIcon(img));
 		  } catch (IOException ex) {
 			  ex.printStackTrace();
 		  }
-		zulieferungButton.addActionListener(new ActionListener() {
+		neueZulieferung.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				buchungBar.zeigeNeueBuchung(true);
 				buchungBar.setVisible(true);
+				neueAuslieferung.setEnabled(false);
+				neueZulieferung.setEnabled(false);
 			}
 		});
-		auslieferungButton= new JButton("Neue Auslieferung");
+		neueAuslieferung= new JButton("Neue Auslieferung");
 		try {
 		    Image img = ImageIO.read(new File("src/icons/auslieferung.png"));
-		    auslieferungButton.setIcon(new ImageIcon(img));
+		    neueAuslieferung.setIcon(new ImageIcon(img));
 		  } catch (IOException ex) {
 			  ex.printStackTrace();
 		  }
-		auslieferungButton.addActionListener(new ActionListener() {
+		neueAuslieferung.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				buchungBar.zeigeNeueBuchung(false);
 				buchungBar.setVisible(true);
+				neueAuslieferung.setEnabled(false);
+				neueZulieferung.setEnabled(false);
 			}
 		});
 		

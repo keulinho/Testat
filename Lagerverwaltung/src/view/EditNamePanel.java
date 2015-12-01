@@ -128,6 +128,7 @@ public class EditNamePanel extends JPanel{
 			public void mousePressed(MouseEvent e) {
 				// TODO Auto-generated method stub
 				zeigeName(neuerName.getText());
+				controller.aendereName(neuerName.getText());
 			}
 			
 			@Override
@@ -171,9 +172,9 @@ public class EditNamePanel extends JPanel{
 			@Override
 			public void keyPressed(KeyEvent e) {
 				// TODO Auto-generated method stub
-				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+				if ((neuerName.getText()!=null)&&(e.getKeyCode() == KeyEvent.VK_ENTER)) {
 					zeigeName(neuerName.getText());
-		
+					controller.aendereName(neuerName.getText());
 				}
 			}
 		});

@@ -53,6 +53,13 @@ public class BuchungBar extends JToolBar{
 		  } catch (IOException ex) {
 			  ex.printStackTrace();
 		  }
+		undo.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				controller.undo();
+			}
+		});
 		
 		redo= new JButton("Redo");
 		try {
@@ -61,6 +68,13 @@ public class BuchungBar extends JToolBar{
 		  } catch (IOException ex) {
 			  ex.printStackTrace();
 		  }
+		redo.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				controller.redo();
+			}
+		});
 		laufendeZulieferung = new JLabel();
 		try {
 		    Image img = ImageIO.read(new File("src/icons/exclamation.png"));
@@ -82,6 +96,13 @@ public class BuchungBar extends JToolBar{
 		  } catch (IOException ex) {
 			  ex.printStackTrace();
 		  }
+		buchungVerwerfen.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				controller.buchungVerwerfen();
+			}
+		});
 		buchungAbschliessen= new JButton("Buchung abschlieﬂen");
 		try {
 		    Image img = ImageIO.read(new File("src/icons/check.png"));
@@ -89,6 +110,13 @@ public class BuchungBar extends JToolBar{
 		  } catch (IOException ex) {
 			  ex.printStackTrace();
 		  }
+		buchungAbschliessen.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				controller.buchungAbschliessen();
+			}
+		});
 		neueBuchung = new JLabel();
 		NumberFormat format = NumberFormat.getInstance();
 	    NumberFormatter formatter = new NumberFormatter(format);
@@ -104,13 +132,11 @@ public class BuchungBar extends JToolBar{
 			
 			@Override
 			public void keyTyped(KeyEvent e) {
-				// TODO Auto-generated method stub
 				
 			}
 			
 			@Override
 			public void keyReleased(KeyEvent e) {
-				// TODO Auto-generated method stub
 				if(menge.getValue()==null){
 					zulieferungErstellen.setEnabled(false);
 				} else {
@@ -125,7 +151,6 @@ public class BuchungBar extends JToolBar{
 			
 			@Override
 			public void keyPressed(KeyEvent e) {
-				// TODO Auto-generated method stub
 				if ((menge.getValue()!=null)&&(e.getKeyCode() == KeyEvent.VK_BACK_SPACE)&&((int)menge.getValue()<10)) {
 					menge.setValue(null);
 					zulieferungErstellen.setEnabled(false);
@@ -144,6 +169,7 @@ public class BuchungBar extends JToolBar{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				zeigeLaufendeAuslieferung(0);
+				controller.auslieferungErstellen();
 				
 			}
 		});
@@ -159,7 +185,7 @@ public class BuchungBar extends JToolBar{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				zeigeLaufendeZulieferung((int)menge.getValue());
-				
+				controller.zulieferungErstellen((int)menge.getValue());
 			}
 		});
 		
