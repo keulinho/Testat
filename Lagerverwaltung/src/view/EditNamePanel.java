@@ -18,16 +18,58 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-public class EditNameView extends JPanel{
+import controller.LagerVerwaltungsController;
+
+public class EditNamePanel extends JPanel{
 	
 	JLabel editieren, name, speichern;
 	JTextField neuerName;
+	LagerVerwaltungsController controller;
 	
-	public EditNameView(String lagerName){
+	public EditNamePanel(String lagerName, LagerVerwaltungsController controller){
 		
+		this.controller=controller;
 		this.setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
 		this.setPreferredSize(new Dimension(515,25));
-		name = new JLabel(lagerName);
+		
+		guiElementeErstellen();
+		
+		zeigeName(lagerName);
+	}
+	/**
+	 * löscht alle Elemente dieses Panels und fügt alle GUI-Elemente für den Edit-Modus neu hinzu
+	 * @param lagerName Name des Lagers der angezeigt wird
+	 */
+	public void zeigeName(String lagerName) {
+		this.removeAll();
+		name.setText(lagerName);
+		this.add(name);
+		this.add(Box.createRigidArea(new Dimension(10,0)));
+		this.add(editieren);
+		this.setAlignmentX(LEFT_ALIGNMENT);
+		this.revalidate();
+	}
+	
+	/**
+	 * löscht alle Elemente dieses Panels und fügt alle GUI-Elemente für den Edit-Modus neu hinzu
+	 */
+	public void edit() {
+		this.removeAll();
+		neuerName.setText(name.getText());
+		this.add(neuerName);
+		this.add(Box.createRigidArea(new Dimension(10,0)));
+		this.add(speichern);
+		neuerName.requestFocus();
+		neuerName.selectAll();
+		this.revalidate();
+	}
+	
+	/**
+	 * Erstellt alle GUI-Elemente die in diesem Panel angezeigt werden können
+	 */
+	public void guiElementeErstellen(){
+		//Anzeige-Modus
+		name = new JLabel("");
 		name.setFont(new Font(name.getFont().getName(),Font.BOLD,20));
 		editieren = new JLabel("");
 		try {
@@ -69,6 +111,7 @@ public class EditNameView extends JPanel{
 				
 			}
 		});
+		//Edit-Modus
 		neuerName = new JTextField();
 		neuerName.setPreferredSize(name.getSize());
 		speichern = new JLabel("");
@@ -85,6 +128,7 @@ public class EditNameView extends JPanel{
 			public void mousePressed(MouseEvent e) {
 				// TODO Auto-generated method stub
 				zeigeName(neuerName.getText());
+				controller.aendereName(neuerName.getText());
 			}
 			
 			@Override
@@ -128,33 +172,11 @@ public class EditNameView extends JPanel{
 			@Override
 			public void keyPressed(KeyEvent e) {
 				// TODO Auto-generated method stub
-				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+				if ((neuerName.getText()!=null)&&(e.getKeyCode() == KeyEvent.VK_ENTER)) {
 					zeigeName(neuerName.getText());
-		
+					controller.aendereName(neuerName.getText());
 				}
 			}
 		});
-		zeigeName(lagerName);
-	}
-
-	public void zeigeName(String lagerName) {
-		this.removeAll();
-		name.setText(lagerName);
-		this.add(name);
-		this.add(Box.createRigidArea(new Dimension(10,0)));
-		this.add(editieren);
-		this.setAlignmentX(LEFT_ALIGNMENT);
-		this.revalidate();
-	}
-	
-	public void edit() {
-		this.removeAll();
-		neuerName.setText(name.getText());
-		this.add(neuerName);
-		this.add(Box.createRigidArea(new Dimension(10,0)));
-		this.add(speichern);
-		neuerName.requestFocus();
-		neuerName.selectAll();
-		this.revalidate();
 	}
 }

@@ -1,69 +1,139 @@
 package view;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.Image;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.io.File;
-import java.io.IOException;
 import java.util.Date;
 import java.util.Observable;
 import java.util.Observer;
 
-import javax.imageio.ImageIO;
-import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextField;
+
+import controller.LagerVerwaltungsController;
+import model.LagerModel;
 
 public class DetailView extends JPanel implements Observer{
 	
-	String lagerName, mengeKapazitaet, mengeBestand;
+	String lagerName;
+	int mengeKapazitaet, mengeBestand;
+	EditNamePanel editName;
+	OptionenPanel optionenPanel;
+	JPanel lagerInfo;
+	JLabel bestand, kapazitaet;
+	JScrollPane buchungen;
+	JTable tabelle;
+	String[] columnNames;
+	Object[][] data;
+	boolean isUnterLager;
+	LagerVerwaltungsController controller;
 
-	public DetailView() {
+	/**
+	 * erzeugt eine DetailView
+	 * @param controller Controller an den alle Befehle runtergereicht werden
+	 */
+	public DetailView(LagerVerwaltungsController controller) {
 		
+		this.controller=controller;
 		lagerName="Beispiel";
-		mengeKapazitaet="1000";
-		mengeBestand="300";
+		mengeKapazitaet=1000;
+		mengeBestand=300;
 		
 		this.setPreferredSize(new Dimension(515,400));
-		this.setBackground(Color.CYAN);
 		this.setLayout(new BorderLayout());
 		
-		String[] columnNames = {"Buchungstag",
+		columnNames = new String []{"Buchungstag",
 				"Gesamte Menge",
                 "relativer Anteil",
                 "absoluter Anteil"};
 		
-		Object[][] data = {
-			    {new Date(2015,11,24), 1000,
+		data = new Object [][]{
+			    {new Date(115,10,24).toLocaleString(), 1000,
 			     ""+30+"%", 300},
-			    {new Date(2015,11,25), 200,
-			    	 ""+10+"%", 20}
+			    {new Date(115,11,25).toLocaleString(), 200,
+			    	 ""+10+"%", 20},
+			    {new Date(115,10,24).toLocaleString(), 1000,
+					 ""+30+"%", 300},
+			    {new Date(115,11,25).toLocaleString(), 200,
+					""+10+"%", 20},
+				{new Date(115,10,24).toLocaleString(), 1000,
+					""+30+"%", 300},
+				{new Date(115,11,25).toLocaleString(), 200,
+					""+10+"%", 20},
+				{new Date(115,10,24).toLocaleString(), 1000,
+					""+30+"%", 300},
+				{new Date(115,11,25).toLocaleString(), 200,
+					""+10+"%", 20},
+				{new Date(115,10,24).toLocaleString(), 1000,
+					""+30+"%", 300},
+				{new Date(115,11,25).toLocaleString(), 200,
+					""+10+"%", 20},
+				{new Date(115,10,24).toLocaleString(), 1000,
+					""+30+"%", 300},
+				{new Date(115,11,25).toLocaleString(), 200,
+					""+10+"%", 20},
+				{new Date(115,10,24).toLocaleString(), 1000,
+					""+30+"%", 300},
+				{new Date(115,11,25).toLocaleString(), 200,
+					""+10+"%", 20},
+				{new Date(115,10,24).toLocaleString(), 1000,
+					""+30+"%", 300},
+				{new Date(115,11,25).toLocaleString(), 200,
+					""+10+"%", 20}
 			};
+		lagerInfoErstellen();
+		this.add(lagerInfo,BorderLayout.NORTH);
 
-		JPanel lagerInfo = new JPanel();
+		buchungsTabelleErstellen();
+		this.add(buchungen,BorderLayout.CENTER);
+		
+		optionenPanel = new OptionenPanel(editName,controller);
+		optionenPanel.zeigeSlider(1327,1327);
+		this.add(optionenPanel,BorderLayout.PAGE_END);
+	}
+
+	/**
+	 * Die View überwacht ein Lagermodel
+	 * wird dieses verändert aktualisiert die View sich auch
+	 */
+	@Override
+	public void update(Observable o, Object arg1) {
+		// TODO Auto-generated method stub
+		LagerModel lModel = (LagerModel)o;
+		mengeBestand=lModel.getBestand();
+		mengeKapazitaet=lModel.getMaxKapazitaet();
+		lagerName=lModel.getName();
+		lagerInfoAktualisieren();
+		if (lModel.hatUnterlager()) {
+			isUnterLager=false;
+		} else {
+			isUnterLager=true;
+		}
+		
+	}
+	
+	
+	/**
+	 * erstellt ein JPanel, welches alle Infos über ein Lager enthält
+	 * es zeigt die in den Klassenvariablen gespeicherten Werte an
+	 */
+	public void lagerInfoErstellen(){
+		
+		lagerInfo = new JPanel();
 		lagerInfo.setLayout(new BoxLayout(lagerInfo, BoxLayout.PAGE_AXIS));
 		JLabel standard = new JLabel("Lagerinfo:");
 		lagerInfo.add(standard);
 		
 		// Namensfeld + edit-Button erstellen
-		final EditNameView editName = new EditNameView("Beispiel");
+		lagerInfoAktualisieren();
+		
 		lagerInfo.add(editName);
-		JLabel kapazitaet = new JLabel("Maximale Kapazität: "+mengeKapazitaet);
 		lagerInfo.add(kapazitaet);
-		JLabel bestand = new JLabel("Aktueller Bestand: "+mengeBestand);
 		lagerInfo.add(bestand);
+		
 		JLabel platzhalter = new JLabel("\t");
 		lagerInfo.add(platzhalter);
 		JLabel buchungInfo = new JLabel("Buchungen im Detail:");
@@ -71,78 +141,54 @@ public class DetailView extends JPanel implements Observer{
 		lagerInfo.add(buchungInfo);
 		JLabel platzhalter2 = new JLabel("\t");
 		lagerInfo.add(platzhalter2);
-		
-		
-		this.add(lagerInfo,BorderLayout.NORTH);
-		
-		JTable buchungen = new JTable(data, columnNames);
-		JPanel tabelle = new JPanel(new BorderLayout());
-		tabelle.add(buchungen.getTableHeader(),BorderLayout.PAGE_START);
-		tabelle.add(buchungen,BorderLayout.CENTER);
-		//tabelle.setPreferredSize(new Dimension(400,100));
-		
-		this.add(tabelle,BorderLayout.CENTER);
-		
-		JPanel buttonGroup = new JPanel();
-		buttonGroup.setLayout(new FlowLayout());
-		JButton loeschen = new JButton("Lager löschen");
-		try {
-		    Image img = ImageIO.read(new File("src/icons/delete.png"));
-		    loeschen.setIcon(new ImageIcon(img));
-		  } catch (IOException ex) {
-			  ex.printStackTrace();
-		  }
-		buttonGroup.add(loeschen);
-		buttonGroup.add(Box.createRigidArea(new Dimension(2,0)));
-		JButton neuesLager = new JButton("Unterlager erstellen");
-		try {
-		    Image img = ImageIO.read(new File("src/icons/new.png"));
-		    neuesLager.setIcon(new ImageIcon(img));
-		  } catch (IOException ex) {
-			  ex.printStackTrace();
-		  }
-		buttonGroup.add(neuesLager);
-		buttonGroup.add(Box.createRigidArea(new Dimension(2,0)));
-		JButton umbennen = new JButton("Lager umbennen");
-		try {
-		    Image img = ImageIO.read(new File("src/icons/edit2.png"));
-		    umbennen.setIcon(new ImageIcon(img));
-		  } catch (IOException ex) {
-			  ex.printStackTrace();
-		  }
-		umbennen.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				editName.edit();
-			}
-		});
-		buttonGroup.add(umbennen);
-		buttonGroup.setPreferredSize(new Dimension(515,50));
-		
-		this.add(buttonGroup,BorderLayout.PAGE_END);
 	}
-
-	@Override
-	public void update(Observable o, Object arg) {
-		// TODO Auto-generated method stub
-		
-	}
-
+	
 	/**
-	 * Die View überwacht ein Lagermodel
-	 * wird dieses verändert aktualisiert die View sich auch
+	 * Aktualisiert alle variablen Texte der View auf die in den Klassenvariablen gespeicherten Werte
 	 */
-/*	@Override
-	public void update(Observable o, Object arg1) {
-		// TODO Auto-generated method stub
-		LagerModel lModel = (LagerModel)o;
-		mengeBestand=""+lModel.getBestand();
-		mengeKapazitaet=""+lModel.getMaxKapazitaet();
-		lagerName=lModel.getName();
+	public void lagerInfoAktualisieren(){
+		editName = new EditNamePanel(lagerName,controller);
+		kapazitaet = new JLabel("Maximale Kapazität: "+mengeKapazitaet);
+		bestand = new JLabel("Aktueller Bestand: "+mengeBestand);
+		lagerInfo.revalidate();
+		lagerInfo.repaint();
 	}
-	*/
 	
+	/**
+	 * Erstellt ein JPanel mit einer Tabelle die die Buchungen anzeigt
+	 */
+	public void buchungsTabelleErstellen() {
+		tabelle = new JTable(data, columnNames);
+		tabelle.setEnabled(false);
+		tabelle.getTableHeader().setReorderingAllowed(false);
+		buchungen = new JScrollPane(tabelle);
+		buchungen.setPreferredSize(new Dimension(515,400));
+	}
 	
+	/**
+	 * setzt das Optionen-Panel in den zeige Button Modus
+	 */
+	public void zeigeButton(){
+		optionenPanel.zeigeButton();
+	}
+	
+	/**
+	 * setzt das Optionen-Panel in den zeige Slider Modus
+	 * @param gesamtMenge gesamt Menge der Buchung zu der der Prozentsatz errechnet wird
+	 * @param maximum Maximum des Sliders
+	 * @param zulieferung true wenn zulieferung, sonst false
+	 */
+	public void zeigeBuchungsOptionen(int gesamtMenge, int maximum, boolean zulieferung){
+		if (isUnterLager) {
+			if (zulieferung) {
+				optionenPanel.zeigeSlider(gesamtMenge,maximum);
+			} else {
+				optionenPanel.zeigeSlider(gesamtMenge,mengeKapazitaet);	
+			}
+				
+		} else {
+			optionenPanel.zeigeInfo();
+		}
+	}
 }
+
