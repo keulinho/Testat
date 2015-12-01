@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -17,7 +18,9 @@ import javax.swing.JFrame;
 import javax.swing.JToolBar;
 
 import controller.LagerVerwaltungsController;
+import model.AbBuchungsModel;
 import model.LagerVerwaltungsModel;
+import model.ZuBuchungsModel;
 
 public class VerwaltungsView extends JFrame implements Observer{
 
@@ -145,19 +148,31 @@ public class VerwaltungsView extends JFrame implements Observer{
 		});
 		
 	}
+
+	
 	@Override
 	public void update(Observable o, Object arg) {
-		// TODO Auto-generated method stub
-		
-	}
-	
-/**	@Override
-	public void update(Observable o, Object arg) {
 		lvModel  = (LagerVerwaltungsModel) o;
+		if (lvModel.getLaufendeBuchung()!=null) {
+			neueZulieferung.setEnabled(false);
+			neueAuslieferung.setEnabled(false);
+			if (lvModel.getLaufendeBuchung().getClass().equals(new AbBuchungsModel(new Date()))) {
+				buchungBar.zeigeLaufendeAuslieferung(lvModel.getLaufendeBuchung().getVerteilteMenge());
+				detailPane.zeigeBuchungsOptionen(lvModel.getLaufendeBuchung().getVerteilteMenge(), 0, false);
+			} else {
+				buchungBar.zeigeLaufendeZulieferung(((ZuBuchungsModel) (lvModel.getLaufendeBuchung())).getMenge()-lvModel.getLaufendeBuchung().getVerteilteMenge());
+				detailPane.zeigeBuchungsOptionen(((ZuBuchungsModel) (lvModel.getLaufendeBuchung())).getMenge(), ((ZuBuchungsModel) (lvModel.getLaufendeBuchung())).getMenge()-lvModel.getLaufendeBuchung().getVerteilteMenge(), true);
+			}
+			buchungBar.setVisible(true);
+		} else {
+			neueZulieferung.setEnabled(true);
+			neueAuslieferung.setEnabled(true);
+			detailPane.zeigeButton();
+			buchungBar.setVisible(false);
+		}
 		
 	}
 
-**/
 	public void zeigeNeuesLager() {
 		buchungBar.zeigeNeuesLager();
 		buchungBar.setVisible(true);
