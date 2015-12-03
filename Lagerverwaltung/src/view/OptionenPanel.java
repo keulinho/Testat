@@ -131,7 +131,7 @@ public class OptionenPanel extends JPanel{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				controller.bucheAnteil();
+				controller.bucheAnteil(slider.getValue());
 			}
 		});
 		

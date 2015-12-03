@@ -35,7 +35,7 @@ public class BuchungsView extends JPanel{
 		ueberschrift.setFont(new Font(this.getFont().getName(),Font.BOLD,20));
 		this.add(ueberschrift, BorderLayout.PAGE_START);
 		
-		if (listeBuchungen!= null) {
+		if ((listeBuchungen!= null) && (listeBuchungen.size()>0)) {
 			datenAufbereiten(listeBuchungen);
 			JTable tabelle = new JTable(data,columnNames);
 			tabelle.setEnabled(false);

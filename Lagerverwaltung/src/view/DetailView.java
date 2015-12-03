@@ -26,7 +26,7 @@ public class DetailView extends JPanel implements Observer{
 	EditNamePanel editName;
 	OptionenPanel optionenPanel;
 	JPanel lagerInfo;
-	JLabel bestand, kapazitaet;
+	JLabel bestand, kapazitaet, meldung;
 	JScrollPane buchungen;
 	JTable tabelle;
 	String[] columnNames;
@@ -117,7 +117,15 @@ public class DetailView extends JPanel implements Observer{
 		} else {
 			isUnterLager=true;
 		}
-		bereiteBuchungenAuf(lModel.getBuchungen(),(LagerModel)o);
+		if ((lModel.getBuchungen()!=null) && (lModel.getBuchungen().size()>0)) {
+			bereiteBuchungenAuf(lModel.getBuchungen(),(LagerModel)o);
+		} else {
+			if (buchungen.isVisible()) {
+				this.remove(buchungen);
+				this.add(meldung,BorderLayout.CENTER);
+			}
+		}
+		
 	}
 	
 	
@@ -168,6 +176,7 @@ public class DetailView extends JPanel implements Observer{
 		tabelle.getTableHeader().setReorderingAllowed(false);
 		buchungen = new JScrollPane(tabelle);
 		buchungen.setPreferredSize(new Dimension(515,400));
+		meldung= new JLabel("Es gibt noch keine Buchungen auf dieses Lager");
 	}
 	
 	/**
@@ -180,13 +189,17 @@ public class DetailView extends JPanel implements Observer{
 	/**
 	 * setzt das Optionen-Panel in den zeige Slider Modus
 	 * @param gesamtMenge gesamt Menge der Buchung zu der der Prozentsatz errechnet wird
-	 * @param maximum Maximum des Sliders
+	 * @param maximum maximal noch zu verteilende Menge
 	 * @param zulieferung true wenn zulieferung, sonst false
 	 */
 	public void zeigeBuchungsOptionen(int gesamtMenge, int maximum, boolean zulieferung){
 		if (isUnterLager) {
 			if (zulieferung) {
-				optionenPanel.zeigeSlider(gesamtMenge,maximum);
+				if (maximum>mengeKapazitaet) {
+					optionenPanel.zeigeSlider(gesamtMenge,mengeKapazitaet);
+				} else {
+					optionenPanel.zeigeSlider(gesamtMenge,maximum);
+				}	
 			} else {
 				optionenPanel.zeigeSlider(gesamtMenge,mengeKapazitaet);	
 			}
@@ -196,6 +209,11 @@ public class DetailView extends JPanel implements Observer{
 		}
 	}
 	
+	/**
+	 * bereitet die Liste mit den Buchungen für die Tabellenansicht des mitgegebenen Lagers vor
+	 * @param listeBuchungen Liste der Buchungen für das mitgegebene Lager
+	 * @param lModel Lager für das die Tabelle erzeugt wird
+	 */
 	public void bereiteBuchungenAuf(List<BuchungsModel> listeBuchungen, LagerModel lModel) {
 		int i=0;
 		data = new Object[listeBuchungen.size()][5];
@@ -223,6 +241,10 @@ public class DetailView extends JPanel implements Observer{
 		tabelle.getTableHeader().setReorderingAllowed(false);
 		buchungen.revalidate();
 		buchungen.repaint();
+		if (meldung.isVisible()) {
+			this.remove(meldung);
+			this.add(buchungen,BorderLayout.CENTER);
+		}
 		
 	}
 }
