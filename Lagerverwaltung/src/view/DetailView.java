@@ -56,37 +56,37 @@ public class DetailView extends JPanel implements Observer{
 		
 		data = new Object [][]{
 			    {new Date(115,10,24).toLocaleString(), 1000,
-			     ""+30+"%", 300},
+			     ""+30+"%", 300,"Auslieferung"},
 			    {new Date(115,11,25).toLocaleString(), 200,
-			    	 ""+10+"%", 20},
+			    	 ""+10+"%", 20,"Auslieferung"},
 			    {new Date(115,10,24).toLocaleString(), 1000,
-					 ""+30+"%", 300},
+					 ""+30+"%", 300,"Auslieferung"},
 			    {new Date(115,11,25).toLocaleString(), 200,
-					""+10+"%", 20},
+					""+10+"%", 20,"Auslieferung"},
 				{new Date(115,10,24).toLocaleString(), 1000,
-					""+30+"%", 300},
+					""+30+"%", 300,"Auslieferung"},
 				{new Date(115,11,25).toLocaleString(), 200,
-					""+10+"%", 20},
+					""+10+"%", 20,"Auslieferung"},
 				{new Date(115,10,24).toLocaleString(), 1000,
-					""+30+"%", 300},
+					""+30+"%", 300,"Auslieferung"},
 				{new Date(115,11,25).toLocaleString(), 200,
-					""+10+"%", 20},
+					""+10+"%", 20,"Auslieferung"},
 				{new Date(115,10,24).toLocaleString(), 1000,
-					""+30+"%", 300},
+					""+30+"%", 300,"Auslieferung"},
 				{new Date(115,11,25).toLocaleString(), 200,
-					""+10+"%", 20},
+					""+10+"%", 20,"Auslieferung"},
 				{new Date(115,10,24).toLocaleString(), 1000,
-					""+30+"%", 300},
+					""+30+"%", 300,"Auslieferung"},
 				{new Date(115,11,25).toLocaleString(), 200,
-					""+10+"%", 20},
+					""+10+"%", 20,"Auslieferung"},
 				{new Date(115,10,24).toLocaleString(), 1000,
-					""+30+"%", 300},
+					""+30+"%", 300,"Auslieferung"},
 				{new Date(115,11,25).toLocaleString(), 200,
-					""+10+"%", 20},
+					""+10+"%", 20,"Auslieferung"},
 				{new Date(115,10,24).toLocaleString(), 1000,
-					""+30+"%", 300},
+					""+30+"%", 300,"Auslieferung"},
 				{new Date(115,11,25).toLocaleString(), 200,
-					""+10+"%", 20}
+					""+10+"%", 20,"Auslieferung"}
 			};
 		lagerInfoErstellen();
 		this.add(lagerInfo,BorderLayout.NORTH);
@@ -218,6 +218,8 @@ public class DetailView extends JPanel implements Observer{
 			}
 		}
 		tabelle=new JTable(data, columnNames);
+		tabelle.setEnabled(false);
+		tabelle.getTableHeader().setReorderingAllowed(false);
 		buchungen.revalidate();
 		buchungen.repaint();
 		
