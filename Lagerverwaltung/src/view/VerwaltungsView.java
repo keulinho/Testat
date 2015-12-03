@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -19,19 +20,22 @@ import javax.swing.JToolBar;
 
 import controller.LagerVerwaltungsController;
 import model.AbBuchungsModel;
+import model.BuchungsModel;
 import model.LagerVerwaltungsModel;
 import model.ZuBuchungsModel;
 
 public class VerwaltungsView extends JFrame implements Observer{
 
 	int restMenge;
-	JButton laden, neueZulieferung, speichern, neueAuslieferung;
+	JButton laden, neueZulieferung, speichern, neueAuslieferung,alleBuchungen;
 	JToolBar toolbar;
 	BuchungBar buchungBar;
 	DetailView detailPane;
 	TreeView treePane;
 	LagerVerwaltungsModel lvModel;
 	LagerVerwaltungsController controller;
+	List<BuchungsModel> listeBuchungen;
+	BuchungsView buchungsView;
 	
 	/**
 	 * erzeugt eine VerwaltungsView
@@ -51,6 +55,7 @@ public class VerwaltungsView extends JFrame implements Observer{
 		toolbar.add(laden);
 		toolbar.add(neueZulieferung);
 		toolbar.add(neueAuslieferung);
+		toolbar.add(alleBuchungen);
 		toolbar.setFloatable(false);
 		
 		this.add(toolbar,BorderLayout.PAGE_START);
@@ -97,7 +102,7 @@ public class VerwaltungsView extends JFrame implements Observer{
 				controller.speichern();
 			}
 		});
-		laden= new JButton("Öffnen");
+		laden= new JButton("Laden");
 		try {
 		    Image img = ImageIO.read(new File("src/icons/open.png"));
 		    laden.setIcon(new ImageIcon(img));
@@ -146,6 +151,26 @@ public class VerwaltungsView extends JFrame implements Observer{
 				neueZulieferung.setEnabled(false);
 			}
 		});
+		alleBuchungen= new JButton("Alle Buchungen anzeigen");
+		try {
+		    Image img = ImageIO.read(new File("src/icons/alleBuchungen.png"));
+		    alleBuchungen.setIcon(new ImageIcon(img));
+		  } catch (IOException ex) {
+			  ex.printStackTrace();
+		  }
+		alleBuchungen.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				VerwaltungsView.this.remove(detailPane);
+				buchungsView=new BuchungsView(listeBuchungen);
+				VerwaltungsView.this.add(buchungsView,BorderLayout.EAST);
+				VerwaltungsView.this.revalidate();
+				VerwaltungsView.this.repaint();
+				
+			}
+		});
 		
 	}
 
@@ -172,6 +197,7 @@ public class VerwaltungsView extends JFrame implements Observer{
 			detailPane.zeigeButton();
 			buchungBar.setVisible(false);
 		}
+		listeBuchungen=lvModel.getBuchungen();
 		
 	}
 	
@@ -183,4 +209,13 @@ public class VerwaltungsView extends JFrame implements Observer{
 		buchungBar.setVisible(true);
 	}
 	
+	/**
+	 * löscht die Ansicht aller Buchungen und zeigt die Details zu einem Lager
+	 */
+	public void zeigeDetailPane() {
+		VerwaltungsView.this.remove(buchungsView);
+		VerwaltungsView.this.add(detailPane,BorderLayout.EAST);
+		VerwaltungsView.this.revalidate();
+		VerwaltungsView.this.repaint();
+	}
 }

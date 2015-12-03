@@ -198,6 +198,7 @@ public class DetailView extends JPanel implements Observer{
 	
 	public void bereiteBuchungenAuf(List<BuchungsModel> listeBuchungen, LagerModel lModel) {
 		int i=0;
+		data = new Object[listeBuchungen.size()][5];
 		for (BuchungsModel bModel : listeBuchungen) {
 			data[i][0]=bModel.getBuchungsTag().toLocaleString();
 			data[i][1]=bModel.getVerteilteMenge();
