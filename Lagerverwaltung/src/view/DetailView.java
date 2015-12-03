@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.util.Date;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -14,6 +15,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
 import controller.LagerVerwaltungsController;
+import model.AbBuchungsModel;
+import model.BuchungsModel;
 import model.LagerModel;
 
 public class DetailView extends JPanel implements Observer{
@@ -48,7 +51,8 @@ public class DetailView extends JPanel implements Observer{
 		columnNames = new String []{"Buchungstag",
 				"Gesamte Menge",
                 "relativer Anteil",
-                "absoluter Anteil"};
+                "absoluter Anteil",
+                "Art"};
 		
 		data = new Object [][]{
 			    {new Date(115,10,24).toLocaleString(), 1000,
@@ -113,7 +117,7 @@ public class DetailView extends JPanel implements Observer{
 		} else {
 			isUnterLager=true;
 		}
-		
+		bereiteBuchungenAuf(lModel.getBuchungen(),(LagerModel)o);
 	}
 	
 	
@@ -190,6 +194,33 @@ public class DetailView extends JPanel implements Observer{
 		} else {
 			optionenPanel.zeigeInfo();
 		}
+	}
+	
+	public void bereiteBuchungenAuf(List<BuchungsModel> listeBuchungen, LagerModel lModel) {
+		int i=0;
+		for (BuchungsModel bModel : listeBuchungen) {
+			data[i][0]=bModel.getBuchungsTag().toLocaleString();
+			data[i][1]=bModel.getVerteilteMenge();
+			int j;
+			for (j = 0; bModel.getAnteile().get(j).getLager().equals(lModel); j++) {
+				
+				}
+			data[i][3]=bModel.getAnteile().get(j).getAnteil();
+			double prozent = (((double)data[i][3]/(double)data[i][1])*100.00);
+			prozent = (prozent*1000)+5;
+			int temp = (int) (prozent/10);
+			prozent = (double)temp/100.00;
+			data[i][2]=""+prozent+"%";
+			if (bModel.getClass().equals(new AbBuchungsModel(null).getClass())) {
+				data[i][4]="Auslieferung";
+			} else {
+				data[i][4]="Zulieferung";
+			}
+		}
+		tabelle=new JTable(data, columnNames);
+		buchungen.revalidate();
+		buchungen.repaint();
+		
 	}
 }
 

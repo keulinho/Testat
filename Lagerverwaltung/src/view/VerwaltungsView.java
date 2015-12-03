@@ -149,14 +149,16 @@ public class VerwaltungsView extends JFrame implements Observer{
 		
 	}
 
-	
+	/**
+	 * aktualisiert die ganze View basierend auf den Veränderungen im Observer
+	 */
 	@Override
 	public void update(Observable o, Object arg) {
 		lvModel  = (LagerVerwaltungsModel) o;
 		if (lvModel.getLaufendeBuchung()!=null) {
 			neueZulieferung.setEnabled(false);
 			neueAuslieferung.setEnabled(false);
-			if (lvModel.getLaufendeBuchung().getClass().equals(new AbBuchungsModel(new Date()))) {
+			if (lvModel.getLaufendeBuchung().getClass().equals(new AbBuchungsModel(new Date()).getClass())) {
 				buchungBar.zeigeLaufendeAuslieferung(lvModel.getLaufendeBuchung().getVerteilteMenge());
 				detailPane.zeigeBuchungsOptionen(lvModel.getLaufendeBuchung().getVerteilteMenge(), 0, false);
 			} else {
@@ -172,7 +174,10 @@ public class VerwaltungsView extends JFrame implements Observer{
 		}
 		
 	}
-
+	
+	/**
+	 * zeigt die BuchungsBar im neues Lager Modus
+	 */
 	public void zeigeNeuesLager() {
 		buchungBar.zeigeNeuesLager();
 		buchungBar.setVisible(true);
