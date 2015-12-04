@@ -139,5 +139,10 @@ public class LagerVerwaltungsModelTest extends TestCase{
 		lagerVM.erstellenAbBuchung(new Date(1));
 		assertEquals(false, lagerVM.abschliessenBuchung());
 	}
+	
+	public void testInitialBefuellung(){
+		lagerVM.initialBefuellung();
+		lagerVM.hinzufuegenLager(null, 100, "hier debuggen!");
+	}
 
 }

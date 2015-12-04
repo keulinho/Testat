@@ -25,8 +25,67 @@ public class LagerVerwaltungsModel extends Observable {
 	}
 	
 	//Methoden
-	public void initialBefüllung(){
-		//TODO
+	public void initialBefuellung(){
+		//Lager
+		LagerModel lager1 = hinzufuegenLager(null, 0, "Deutschland");
+		LagerModel lager11 = hinzufuegenLager(lager1, 0, "Niedersachsen");
+		LagerModel lager111 = hinzufuegenLager(lager11, 15000, "Hannover-Misburg");
+		LagerModel lager112 = hinzufuegenLager(lager11, 15000, "Nienburg");
+		LagerModel lager12 = hinzufuegenLager(lager1, 15000, "NRW");
+		LagerModel lager13 = hinzufuegenLager(lager1, 15000, "Bremen");
+		LagerModel lager14 = hinzufuegenLager(lager1, 15000, "Hessen");
+		LagerModel lager15 = hinzufuegenLager(lager1, 15000, "Sachsen");
+		LagerModel lager16 = hinzufuegenLager(lager1, 15000, "Brandeburg");
+		LagerModel lager17 = hinzufuegenLager(lager1, 15000, "MV");
+		LagerModel lager2 = hinzufuegenLager(null, 0, "Deutschland");
+		LagerModel lager21 = hinzufuegenLager(null, 0, "Frankreich");
+		LagerModel lager211 = hinzufuegenLager(lager21, 15000, "Paris-Nord");
+		LagerModel lager212 = hinzufuegenLager(lager21, 15000, "Orléans");
+		LagerModel lager213 = hinzufuegenLager(lager21, 15000, "Marseille");
+		LagerModel lager214 = hinzufuegenLager(lager21, 15000, "Nîmes");
+		LagerModel lager22 = hinzufuegenLager(null, 0, "Italien");
+		LagerModel lager221 = hinzufuegenLager(lager22, 15000, "Mailand");
+		LagerModel lager222 = hinzufuegenLager(lager22, 15000, "L'Aquila");
+		LagerModel lager23 = hinzufuegenLager(lager2, 15000, "Spanien");
+		LagerModel lager3 = hinzufuegenLager(null, 15000, "Großbritannien");
+		
+		//Buchungen
+		erstellenZuBuchung(new Date(1), 1000);
+		hinzugegenAnteil(lager13, 500);
+		hinzugegenAnteil(lager17, 200);
+		hinzugegenAnteil(lager221, 100);
+		hinzugegenAnteil(lager23, 100);
+		hinzugegenAnteil(lager3, 100);
+		abschliessenBuchung();
+		
+		erstellenZuBuchung(new Date(1), 2000);
+		hinzugegenAnteil(lager112, 1000);
+		hinzugegenAnteil(lager12, 400);
+		hinzugegenAnteil(lager14, 400);
+		hinzugegenAnteil(lager15, 200);
+		abschliessenBuchung();
+		
+		erstellenZuBuchung(new Date(1), 10000);
+		hinzugegenAnteil(lager16, 2000);
+		hinzugegenAnteil(lager212, 1000);
+		hinzugegenAnteil(lager222, 2500);
+		hinzugegenAnteil(lager23, 2500);
+		hinzugegenAnteil(lager3, 2000);
+		abschliessenBuchung();
+		
+		erstellenZuBuchung(new Date(1), 5000);
+		hinzugegenAnteil(lager214, 2500);
+		hinzugegenAnteil(lager17, 2000);
+		hinzugegenAnteil(lager112, 500);
+		abschliessenBuchung();
+		
+		erstellenZuBuchung(new Date(1), 12500);
+		hinzugegenAnteil(lager211, 3750);
+		hinzugegenAnteil(lager16, 2500);
+		hinzugegenAnteil(lager111, 1875);
+		hinzugegenAnteil(lager13, 1875);
+		hinzugegenAnteil(lager221, 2500);
+		abschliessenBuchung();
 	}
 	
 	public void addObserverTo(){
@@ -46,6 +105,7 @@ public class LagerVerwaltungsModel extends Observable {
 			if(oberLager.getUnterLager().isEmpty() && oberLager.getBestand() <= kapazitaet){
 				LagerModel lager = oberLager.addUnterlager(kapazitaet, name);
 				try {
+					// TODO neues Unterlager hat weniger Kapazität als das alte -> Kapazität wird nicht blind nach oben gegeben
 					lager.veraendernBestand(oberLager.getBestand());
 					oberLager.aendernKapazitaet(kapazitaet);
 					maxFreieKapazitaet += kapazitaet;
@@ -102,6 +162,18 @@ public class LagerVerwaltungsModel extends Observable {
 			return true;
 		}
 		return false;
+	}
+	
+	/**
+	 * verwerfen aller Anteile und löschen der Buchung
+	 */
+	public void verwerfenBuchung(){
+		if(laufendeBuchung != null){
+			while(!laufendeBuchung.getAnteile().isEmpty()){
+				laufendeBuchung.getAnteile().remove(0);
+			}
+		}
+		laufendeBuchung = null;
 	}
 	
 	/**
