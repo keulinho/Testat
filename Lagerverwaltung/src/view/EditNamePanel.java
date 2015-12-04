@@ -26,6 +26,11 @@ public class EditNamePanel extends JPanel{
 	JTextField neuerName;
 	LagerVerwaltungsController controller;
 	
+	/**
+	 * Erstellt ein editierbares NamensPanel
+	 * @param lagerName Name des Lagers das angezeigt werden soll
+	 * @param controller Controller an den Befehle weitergereicht werden
+	 */
 	public EditNamePanel(String lagerName, LagerVerwaltungsController controller){
 		
 		this.controller=controller;
@@ -83,32 +88,23 @@ public class EditNamePanel extends JPanel{
 			
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
 			}
 			
 			@Override
 			public void mousePressed(MouseEvent e) {
-				// TODO Auto-generated method stub
 				edit();
 			}
 			
 			@Override
 			public void mouseExited(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
 			}
 			
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
 			}
 			
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
 			}
 		});
 		//Edit-Modus
@@ -126,52 +122,38 @@ public class EditNamePanel extends JPanel{
 		
 			@Override
 			public void mousePressed(MouseEvent e) {
-				// TODO Auto-generated method stub
 				zeigeName(neuerName.getText());
 				controller.aendereName(neuerName.getText());
 			}
 			
 			@Override
 			public void mouseExited(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
 			}
 			
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
 			}
 			
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
 			}
 
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
 			}
 		});
 		neuerName.addKeyListener(new KeyListener() {
 			
 			@Override
 			public void keyTyped(KeyEvent e) {
-				// TODO Auto-generated method stub
-				
 			}
 			
 			@Override
 			public void keyReleased(KeyEvent e) {
-				// TODO Auto-generated method stub
-				
 			}
 			
 			@Override
 			public void keyPressed(KeyEvent e) {
-				// TODO Auto-generated method stub
 				if ((neuerName.getText()!=null)&&(e.getKeyCode() == KeyEvent.VK_ENTER)) {
 					zeigeName(neuerName.getText());
 					controller.aendereName(neuerName.getText());

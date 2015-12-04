@@ -49,28 +49,31 @@ public class VerwaltungsView extends JFrame implements Observer{
 		restMenge=1000;
 		guiElementeErstellen();
 		
+		//Toolbar hinzufügen
 		toolbar = new JToolBar();
-		
 		toolbar.add(speichern);
 		toolbar.add(laden);
 		toolbar.add(neueZulieferung);
 		toolbar.add(neueAuslieferung);
 		toolbar.add(alleBuchungen);
 		toolbar.setFloatable(false);
-		
 		this.add(toolbar,BorderLayout.PAGE_START);
 
+		//DetailPane hinzufügen
 		detailPane = new DetailView(controller);
 		this.add(detailPane, BorderLayout.EAST);
-			
+		
+		//TreePane hinzufügen
 		treePane = new TreeView();
 		treePane.setBackground(Color.LIGHT_GRAY);
 		this.add(treePane, BorderLayout.WEST);
 		
+		//BuchungsBar hinzufügen
 		buchungBar = new BuchungBar(controller);
 		buchungBar.setVisible(false);
 		this.add(buchungBar, BorderLayout.PAGE_END);
 		
+		//Frame-Einstellungen
 		try {
 		    Image img = ImageIO.read(new File("src/icons/icon.png"));
 		    this.setIconImage(img);
@@ -83,10 +86,12 @@ public class VerwaltungsView extends JFrame implements Observer{
         this.pack();
 		this.setVisible(true);		
 	}
+	
 	/**
-	 * erzeugt alle Button und Label dieses Panels
+	 * erzeugt alle Button der Toolbar
 	 */
 	public void guiElementeErstellen(){
+		//Toolbar
 		speichern= new JButton("Speichern");
 		try {
 		    Image img = ImageIO.read(new File("src/icons/save.png"));
@@ -98,7 +103,6 @@ public class VerwaltungsView extends JFrame implements Observer{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
 				controller.speichern();
 			}
 		});
@@ -113,7 +117,6 @@ public class VerwaltungsView extends JFrame implements Observer{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
 				controller.laden();
 			}
 		});
@@ -162,13 +165,7 @@ public class VerwaltungsView extends JFrame implements Observer{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				VerwaltungsView.this.remove(detailPane);
-				buchungsView=new BuchungsView(listeBuchungen);
-				VerwaltungsView.this.add(buchungsView,BorderLayout.EAST);
-				VerwaltungsView.this.revalidate();
-				VerwaltungsView.this.repaint();
-				
+				zeigeAlleBuchungen();
 			}
 		});
 		
@@ -180,24 +177,24 @@ public class VerwaltungsView extends JFrame implements Observer{
 	@Override
 	public void update(Observable o, Object arg) {
 		lvModel  = (LagerVerwaltungsModel) o;
-		if (lvModel.getLaufendeBuchung()!=null) {
+		if (lvModel.getLaufendeBuchung()!=null) {  //Es gibt eine nicht abgeschlossene Buchung
 			neueZulieferung.setEnabled(false);
 			neueAuslieferung.setEnabled(false);
-			if (lvModel.getLaufendeBuchung().getClass().equals(new AbBuchungsModel(new Date()).getClass())) {
+			if (lvModel.getLaufendeBuchung().getClass().equals(new AbBuchungsModel(new Date()).getClass())) { //nicht abgeschlossene Buchung ist eine Abbuchung
 				buchungBar.zeigeLaufendeAuslieferung(lvModel.getLaufendeBuchung().getVerteilteMenge());
 				detailPane.zeigeBuchungsOptionen(lvModel.getLaufendeBuchung().getVerteilteMenge(), 0, false);
-			} else {
+			} else { //laufende Buchung ist eine Zubuchung
 				buchungBar.zeigeLaufendeZulieferung(((ZuBuchungsModel) (lvModel.getLaufendeBuchung())).getMenge()-lvModel.getLaufendeBuchung().getVerteilteMenge());
 				detailPane.zeigeBuchungsOptionen(((ZuBuchungsModel) (lvModel.getLaufendeBuchung())).getMenge(), ((ZuBuchungsModel) (lvModel.getLaufendeBuchung())).getMenge()-lvModel.getLaufendeBuchung().getVerteilteMenge(), true);
 			}
 			buchungBar.setVisible(true);
-		} else {
+		} else { //es gibt keine laufende Buchung
 			neueZulieferung.setEnabled(true);
 			neueAuslieferung.setEnabled(true);
 			detailPane.zeigeButton();
 			buchungBar.setVisible(false);
 		}
-		listeBuchungen=lvModel.getBuchungen();
+		listeBuchungen=lvModel.getBuchungen(); //Liste wird bei jedem Update aktualisiert
 		
 	}
 	
@@ -215,6 +212,16 @@ public class VerwaltungsView extends JFrame implements Observer{
 	public void zeigeDetailPane() {
 		VerwaltungsView.this.remove(buchungsView);
 		VerwaltungsView.this.add(detailPane,BorderLayout.EAST);
+		VerwaltungsView.this.revalidate();
+		VerwaltungsView.this.repaint();
+	}
+	/**
+	 * löscht die Ansicht der Details zu einem Lager und zeigt alle Buchungen
+	 */
+	public void zeigeAlleBuchungen() {
+		VerwaltungsView.this.remove(detailPane);
+		buchungsView=new BuchungsView(listeBuchungen);
+		VerwaltungsView.this.add(buchungsView,BorderLayout.EAST);
 		VerwaltungsView.this.revalidate();
 		VerwaltungsView.this.repaint();
 	}

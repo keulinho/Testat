@@ -39,6 +39,7 @@ public class BuchungBar extends JToolBar{
 		
 		this.controller=controller;
 		this.setFloatable(false);
+		
 		guiElementeErstellen();
 
 	}
@@ -47,6 +48,7 @@ public class BuchungBar extends JToolBar{
 	 * Erstellt alle GUI-Elemente die in diesem Panel angezeigt werden können
 	 */
 	public void guiElementeErstellen(){
+		//für laufende Buchungs-Modus
 		undo= new JButton("Undo");
 		try {
 		    Image img = ImageIO.read(new File("src/icons/undo.png"));
@@ -118,6 +120,7 @@ public class BuchungBar extends JToolBar{
 				controller.buchungAbschliessen();
 			}
 		});
+		//für neueBuchung Modus
 		neueBuchung = new JLabel();
 		NumberFormat format = NumberFormat.getInstance();
 	    NumberFormatter formatter = new NumberFormatter(format);
@@ -144,10 +147,8 @@ public class BuchungBar extends JToolBar{
 					zulieferungErstellen.setEnabled(true);
 					if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 						zeigeLaufendeZulieferung((int) menge.getValue());
-					}
-					
-				}
-				
+					}		
+				}	
 			}
 			
 			@Override
@@ -189,6 +190,7 @@ public class BuchungBar extends JToolBar{
 				controller.zulieferungErstellen((int)menge.getValue());
 			}
 		});
+		//für neues Lager Modus
 		neuesLager=new JLabel("<html>Neues Lager erstellen: <br>Bitte geben Sie Name und Kapazität des Lagers an</html>");
 		name=new JLabel("Name:");
 		lagerName=new JTextField();
@@ -198,13 +200,10 @@ public class BuchungBar extends JToolBar{
 			
 			@Override
 			public void keyTyped(KeyEvent arg0) {
-				// TODO Auto-generated method stub
-				
 			}
 			
 			@Override
 			public void keyReleased(KeyEvent arg0) {
-				// TODO Auto-generated method stub
 				if((lagerKapazitaet.getValue()!=null)&&(!lagerName.getText().isEmpty())){
 					
 					neuesLagerErstellen.setEnabled(true);
@@ -219,9 +218,7 @@ public class BuchungBar extends JToolBar{
 			}
 			
 			@Override
-			public void keyPressed(KeyEvent arg0) {
-				// TODO Auto-generated method stub
-				
+			public void keyPressed(KeyEvent arg0) {	
 			}
 		});
 		kapazitaet=new JLabel("Kapazität:");

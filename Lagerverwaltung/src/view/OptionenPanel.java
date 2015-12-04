@@ -33,7 +33,6 @@ public class OptionenPanel extends JPanel{
 		
 		this.controller=controller;
 		this.editName=editName;
-		
 		this.setPreferredSize(new Dimension(515,50));
 		
 		guiElementeErstellen();
@@ -59,7 +58,6 @@ public class OptionenPanel extends JPanel{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
 				controller.loescheLager();
 			}
 		});
@@ -74,8 +72,6 @@ public class OptionenPanel extends JPanel{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				//System.out.println(OptionenPanel.this.getRootPane().get);
 				VerwaltungsView vView = (VerwaltungsView) SwingUtilities.getWindowAncestor(OptionenPanel.this);
 				vView.zeigeNeuesLager();
 			}
@@ -91,11 +87,10 @@ public class OptionenPanel extends JPanel{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
 				editName.edit();
 			}
 		});
-		
+		//Info Modus bei offener Buchung und gewähltem Oberlager
 		infoText = new JLabel("<html>Um die Buchung zu verteilen gehen Sie zu einem Lager der untersten Ebene <br>Um die Optionen zu öffnen schließen Sie die Buchung ab</html>");
 		infoText.setPreferredSize(new Dimension(515,50));
 		try {
@@ -104,6 +99,7 @@ public class OptionenPanel extends JPanel{
 		  } catch (IOException ex) {
 			  ex.printStackTrace();
 		  }
+		//Slider Modus bei offener Buchung und gewähltem Unterlager
 		menge= new JLabel("<html>absolute Menge: <br>relative Menge:</html>");
 		anteil = new JLabel();
 		anteil.setMinimumSize(new Dimension(50, 30));
@@ -130,7 +126,6 @@ public class OptionenPanel extends JPanel{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
 				controller.bucheAnteil(slider.getValue());
 			}
 		});
@@ -179,8 +174,6 @@ public class OptionenPanel extends JPanel{
 		slider.setValue(slider.getMaximum()/2);
 		anteil.setText("<html>"+slider.getValue()+"<br>"+rechneProzent()+"%</html>");
 		this.add(anteil);
-		slider.setMaximum(maximum);
-		slider.setValue(maximum/2);
 		this.add(slider);
 		this.add(anteilBuchen);
 		this.revalidate();
