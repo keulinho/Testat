@@ -3,6 +3,7 @@ package model;
 import java.util.Date;
 import java.util.List;
 import java.util.Observable;
+import java.util.Observer;
 import java.util.Vector;
 
 import core.exception.LagerUeberfuelltException;
@@ -20,6 +21,7 @@ public class LagerVerwaltungsModel extends Observable {
 	public LagerVerwaltungsModel(){
 		lager = new Vector<LagerModel>();
 		buchungen = new Vector<BuchungsModel>();
+		initialBefuellung();
 		this.maxFreieKapazitaet = 0;
 		this.laufendeBuchung = null;
 	}
@@ -88,6 +90,11 @@ public class LagerVerwaltungsModel extends Observable {
 		abschliessenBuchung();
 	}
 	
+	public void addObserver(Observer o) {
+		super.addObserver(o);
+		setChanged();
+		notifyObservers();
+	}
 	public void addObserverTo(){
 		//TODO
 	}

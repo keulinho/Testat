@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.util.Date;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -14,6 +15,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
 import controller.LagerVerwaltungsController;
+import model.AbBuchungsModel;
+import model.BuchungsModel;
 import model.LagerModel;
 
 public class DetailView extends JPanel implements Observer{
@@ -23,7 +26,7 @@ public class DetailView extends JPanel implements Observer{
 	EditNamePanel editName;
 	OptionenPanel optionenPanel;
 	JPanel lagerInfo;
-	JLabel bestand, kapazitaet;
+	JLabel bestand, kapazitaet, meldung;
 	JScrollPane buchungen;
 	JTable tabelle;
 	String[] columnNames;
@@ -38,9 +41,7 @@ public class DetailView extends JPanel implements Observer{
 	public DetailView(LagerVerwaltungsController controller) {
 		
 		this.controller=controller;
-		lagerName="Beispiel";
-		mengeKapazitaet=1000;
-		mengeBestand=300;
+		lagerName="";
 		
 		this.setPreferredSize(new Dimension(515,400));
 		this.setLayout(new BorderLayout());
@@ -48,42 +49,10 @@ public class DetailView extends JPanel implements Observer{
 		columnNames = new String []{"Buchungstag",
 				"Gesamte Menge",
                 "relativer Anteil",
-                "absoluter Anteil"};
+                "absoluter Anteil",
+                "Art"};
 		
-		data = new Object [][]{
-			    {new Date(115,10,24).toLocaleString(), 1000,
-			     ""+30+"%", 300},
-			    {new Date(115,11,25).toLocaleString(), 200,
-			    	 ""+10+"%", 20},
-			    {new Date(115,10,24).toLocaleString(), 1000,
-					 ""+30+"%", 300},
-			    {new Date(115,11,25).toLocaleString(), 200,
-					""+10+"%", 20},
-				{new Date(115,10,24).toLocaleString(), 1000,
-					""+30+"%", 300},
-				{new Date(115,11,25).toLocaleString(), 200,
-					""+10+"%", 20},
-				{new Date(115,10,24).toLocaleString(), 1000,
-					""+30+"%", 300},
-				{new Date(115,11,25).toLocaleString(), 200,
-					""+10+"%", 20},
-				{new Date(115,10,24).toLocaleString(), 1000,
-					""+30+"%", 300},
-				{new Date(115,11,25).toLocaleString(), 200,
-					""+10+"%", 20},
-				{new Date(115,10,24).toLocaleString(), 1000,
-					""+30+"%", 300},
-				{new Date(115,11,25).toLocaleString(), 200,
-					""+10+"%", 20},
-				{new Date(115,10,24).toLocaleString(), 1000,
-					""+30+"%", 300},
-				{new Date(115,11,25).toLocaleString(), 200,
-					""+10+"%", 20},
-				{new Date(115,10,24).toLocaleString(), 1000,
-					""+30+"%", 300},
-				{new Date(115,11,25).toLocaleString(), 200,
-					""+10+"%", 20}
-			};
+			
 		lagerInfoErstellen();
 		this.add(lagerInfo,BorderLayout.NORTH);
 
@@ -91,7 +60,7 @@ public class DetailView extends JPanel implements Observer{
 		this.add(buchungen,BorderLayout.CENTER);
 		
 		optionenPanel = new OptionenPanel(editName,controller);
-		optionenPanel.zeigeSlider(1327,1327);
+		optionenPanel.zeigeButton();
 		this.add(optionenPanel,BorderLayout.PAGE_END);
 	}
 
@@ -101,17 +70,30 @@ public class DetailView extends JPanel implements Observer{
 	 */
 	@Override
 	public void update(Observable o, Object arg1) {
-		// TODO Auto-generated method stub
 		LagerModel lModel = (LagerModel)o;
 		mengeBestand=lModel.getBestand();
 		mengeKapazitaet=lModel.getMaxKapazitaet();
 		lagerName=lModel.getName();
-		lagerInfoAktualisieren();
+		this.remove(lagerInfo);
+		lagerInfoErstellen();
+		this.add(lagerInfo,BorderLayout.NORTH);
 		if (lModel.hatUnterlager()) {
 			isUnterLager=false;
 		} else {
 			isUnterLager=true;
 		}
+		if ((lModel.getBuchungen()!=null) && (lModel.getBuchungen().size()>0)) { //True wenn es Buchungen zu diesem Lager gibt
+			bereiteBuchungenAuf(lModel.getBuchungen(),(LagerModel)o);
+		} else {
+			if (buchungen.isVisible()) {  //Wenn Buchungen angezeigt werden es aber keine gibt werden diese aus der Ansicht gelöscht und stattdessen eine Meldung angezeigt
+				this.remove(buchungen);
+				this.add(meldung,BorderLayout.CENTER);
+			} else {
+				this.add(meldung,BorderLayout.CENTER);
+			}
+		}
+		this.revalidate();
+		this.repaint();
 		
 	}
 	
@@ -127,7 +109,7 @@ public class DetailView extends JPanel implements Observer{
 		JLabel standard = new JLabel("Lagerinfo:");
 		lagerInfo.add(standard);
 		
-		// Namensfeld + edit-Button erstellen
+		//erstellt alle Elemente der LagerInfo mit aktuellen werten neu
 		lagerInfoAktualisieren();
 		
 		lagerInfo.add(editName);
@@ -144,25 +126,27 @@ public class DetailView extends JPanel implements Observer{
 	}
 	
 	/**
-	 * Aktualisiert alle variablen Texte der View auf die in den Klassenvariablen gespeicherten Werte
+	 * erstellt alle variablen Texte der View mit den in den Klassenvariablen gespeicherten Werten neu
 	 */
 	public void lagerInfoAktualisieren(){
 		editName = new EditNamePanel(lagerName,controller);
 		kapazitaet = new JLabel("Maximale Kapazität: "+mengeKapazitaet);
+		kapazitaet.revalidate();
+		kapazitaet.repaint();
 		bestand = new JLabel("Aktueller Bestand: "+mengeBestand);
+		bestand.revalidate();
+		bestand.repaint();
 		lagerInfo.revalidate();
 		lagerInfo.repaint();
 	}
 	
 	/**
-	 * Erstellt ein JPanel mit einer Tabelle die die Buchungen anzeigt
+	 * Erstellt ein JScrollPane mit einer Tabelle die die Buchungen anzeigt
 	 */
 	public void buchungsTabelleErstellen() {
-		tabelle = new JTable(data, columnNames);
-		tabelle.setEnabled(false);
-		tabelle.getTableHeader().setReorderingAllowed(false);
-		buchungen = new JScrollPane(tabelle);
+		buchungen = new JScrollPane();
 		buchungen.setPreferredSize(new Dimension(515,400));
+		meldung= new JLabel("Es gibt noch keine Buchungen auf dieses Lager");
 	}
 	
 	/**
@@ -173,22 +157,71 @@ public class DetailView extends JPanel implements Observer{
 	}
 	
 	/**
-	 * setzt das Optionen-Panel in den zeige Slider Modus
+	 * setzt das Optionen-Panel in den Slider Modus oder den Info Modus
 	 * @param gesamtMenge gesamt Menge der Buchung zu der der Prozentsatz errechnet wird
-	 * @param maximum Maximum des Sliders
+	 * @param maximum maximal noch zu verteilende Menge
 	 * @param zulieferung true wenn zulieferung, sonst false
 	 */
 	public void zeigeBuchungsOptionen(int gesamtMenge, int maximum, boolean zulieferung){
 		if (isUnterLager) {
-			if (zulieferung) {
-				optionenPanel.zeigeSlider(gesamtMenge,maximum);
+			if (zulieferung) { //wenn Unterlager auf das Zugebucht werden soll
+				if (maximum>(mengeKapazitaet-mengeBestand)) { 
+					optionenPanel.zeigeSlider(gesamtMenge,mengeKapazitaet-mengeBestand); //wenn noch zu verteilende Menge größer als freie Kapazität des Lagers ist freie Kapazität Maximum des Sliders
+				} else {
+					optionenPanel.zeigeSlider(gesamtMenge,maximum); //wenn noch zu verteilende Menge kleiner als freie Kapazität ist zu verteilende Menge Maximum des Sliders
+				}	
 			} else {
-				optionenPanel.zeigeSlider(gesamtMenge,mengeKapazitaet);	
+				optionenPanel.zeigeSlider(gesamtMenge,mengeBestand); //bei Abbuchungen ist der BEstand des Lagers Maximum des Sliders	 
 			}
 				
 		} else {
-			optionenPanel.zeigeInfo();
+			optionenPanel.zeigeInfo(); //Bei Oberlagern wird der Infotext angezeigt
 		}
+	}
+	
+	/**
+	 * bereitet die Liste mit den Buchungen für die Tabellenansicht des mitgegebenen Lagers vor
+	 * @param listeBuchungen Liste der Buchungen für das mitgegebene Lager
+	 * @param lModel Lager für das die Tabelle erzeugt wird
+	 */
+	public void bereiteBuchungenAuf(List<BuchungsModel> listeBuchungen, LagerModel lModel) {
+		int i=0;
+		data = new Object[listeBuchungen.size()][5];
+		System.out.println(listeBuchungen.size());
+		
+		for (BuchungsModel bModel : listeBuchungen) { //für jede Buchung auf dieses Lager werden die Infos für die Tabelle als Array gespeichert
+			data[i][0]=bModel.getBuchungsTag().toLocaleString();
+			data[i][1]=bModel.getVerteilteMenge();
+			int j;
+			for (j = 0; bModel.getAnteile().get(j).getLager().equals(lModel); j++) { //Anteil der zum aktuellem Lager gehört wird gesucht
+				
+				}
+			data[i][3]=bModel.getAnteile().get(j).getAnteil();
+			double prozent = (((double)data[i][3]/(double)data[i][1])*100.00);
+			prozent = (prozent*1000)+5;
+			int temp = (int) (prozent/10);
+			prozent = (double)temp/100.00;
+			data[i][2]=""+prozent+"%";
+			if (bModel.getClass().equals(new AbBuchungsModel(null).getClass())) { //true bei Auslieferung
+				data[i][4]="Auslieferung";
+			} else {
+				data[i][4]="Zulieferung";
+			}
+		}
+		
+		tabelle=new JTable(data, columnNames);
+		tabelle.setEnabled(false);
+		tabelle.getTableHeader().setReorderingAllowed(false);
+		buchungen.removeAll();
+		buchungen.add(tabelle);
+		buchungen.revalidate();
+		buchungen.repaint();
+		//Wenn Meldung angezeigt wird das Keine Buchungen vorhanden sind, wird die Meldung entfernt und die Buchungen angezeigt
+		if (meldung.isVisible()) {
+			this.remove(meldung);
+			this.add(buchungen,BorderLayout.CENTER);
+		}
+		
 	}
 }
 

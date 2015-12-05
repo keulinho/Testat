@@ -15,6 +15,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -32,7 +33,6 @@ public class OptionenPanel extends JPanel{
 		
 		this.controller=controller;
 		this.editName=editName;
-		
 		this.setPreferredSize(new Dimension(515,50));
 		
 		guiElementeErstellen();
@@ -58,7 +58,6 @@ public class OptionenPanel extends JPanel{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
 				controller.loescheLager();
 			}
 		});
@@ -73,8 +72,8 @@ public class OptionenPanel extends JPanel{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				controller.erstelleUnterLager();
+				VerwaltungsView vView = (VerwaltungsView) SwingUtilities.getWindowAncestor(OptionenPanel.this);
+				vView.zeigeNeuesLager();
 			}
 		});
 		umbenennen = new JButton("Lager umbennen");
@@ -88,11 +87,10 @@ public class OptionenPanel extends JPanel{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
 				editName.edit();
 			}
 		});
-		
+		//Info Modus bei offener Buchung und gewähltem Oberlager
 		infoText = new JLabel("<html>Um die Buchung zu verteilen gehen Sie zu einem Lager der untersten Ebene <br>Um die Optionen zu öffnen schließen Sie die Buchung ab</html>");
 		infoText.setPreferredSize(new Dimension(515,50));
 		try {
@@ -101,6 +99,7 @@ public class OptionenPanel extends JPanel{
 		  } catch (IOException ex) {
 			  ex.printStackTrace();
 		  }
+		//Slider Modus bei offener Buchung und gewähltem Unterlager
 		menge= new JLabel("<html>absolute Menge: <br>relative Menge:</html>");
 		anteil = new JLabel();
 		anteil.setMinimumSize(new Dimension(50, 30));
@@ -127,8 +126,7 @@ public class OptionenPanel extends JPanel{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				controller.bucheAnteil();
+				controller.bucheAnteil(slider.getValue());
 			}
 		});
 		
@@ -176,8 +174,6 @@ public class OptionenPanel extends JPanel{
 		slider.setValue(slider.getMaximum()/2);
 		anteil.setText("<html>"+slider.getValue()+"<br>"+rechneProzent()+"%</html>");
 		this.add(anteil);
-		slider.setMaximum(maximum);
-		slider.setValue(maximum/2);
 		this.add(slider);
 		this.add(anteilBuchen);
 		this.revalidate();

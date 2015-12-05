@@ -24,9 +24,10 @@ import controller.LagerVerwaltungsController;
 
 public class BuchungBar extends JToolBar{
 	
-	JButton undo, redo, buchungVerwerfen,buchungAbschliessen,auslieferungErstellen,zulieferungErstellen;
-	JLabel laufendeZulieferung, neueBuchung,laufendeAuslieferung;
-	JFormattedTextField menge;
+	JButton undo, redo, buchungVerwerfen,buchungAbschliessen,auslieferungErstellen,zulieferungErstellen, neuesLagerErstellen;
+	JLabel laufendeZulieferung, neueBuchung,laufendeAuslieferung, neuesLager, name, kapazitaet;
+	JFormattedTextField menge,lagerKapazitaet;
+	JTextField lagerName;
 	LagerVerwaltungsController controller;
 
 	
@@ -38,6 +39,7 @@ public class BuchungBar extends JToolBar{
 		
 		this.controller=controller;
 		this.setFloatable(false);
+		
 		guiElementeErstellen();
 
 	}
@@ -46,6 +48,7 @@ public class BuchungBar extends JToolBar{
 	 * Erstellt alle GUI-Elemente die in diesem Panel angezeigt werden können
 	 */
 	public void guiElementeErstellen(){
+		//für laufende Buchungs-Modus
 		undo= new JButton("Undo");
 		try {
 		    Image img = ImageIO.read(new File("src/icons/undo.png"));
@@ -117,6 +120,7 @@ public class BuchungBar extends JToolBar{
 				controller.buchungAbschliessen();
 			}
 		});
+		//für neueBuchung Modus
 		neueBuchung = new JLabel();
 		NumberFormat format = NumberFormat.getInstance();
 	    NumberFormatter formatter = new NumberFormatter(format);
@@ -143,10 +147,8 @@ public class BuchungBar extends JToolBar{
 					zulieferungErstellen.setEnabled(true);
 					if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 						zeigeLaufendeZulieferung((int) menge.getValue());
-					}
-					
-				}
-				
+					}		
+				}	
 			}
 			
 			@Override
@@ -188,7 +190,79 @@ public class BuchungBar extends JToolBar{
 				controller.zulieferungErstellen((int)menge.getValue());
 			}
 		});
-		
+		//für neues Lager Modus
+		neuesLager=new JLabel("<html>Neues Lager erstellen: <br>Bitte geben Sie Name und Kapazität des Lagers an</html>");
+		name=new JLabel("Name:");
+		lagerName=new JTextField();
+		lagerName.setPreferredSize(new Dimension(150,30));
+		lagerName.setMaximumSize(new Dimension(150,30));
+		lagerName.addKeyListener(new KeyListener() {
+			
+			@Override
+			public void keyTyped(KeyEvent arg0) {
+			}
+			
+			@Override
+			public void keyReleased(KeyEvent arg0) {
+				if((lagerKapazitaet.getValue()!=null)&&(!lagerName.getText().isEmpty())){
+					
+					neuesLagerErstellen.setEnabled(true);
+					System.out.println(lagerName.getText());
+					if (arg0.getKeyCode() == KeyEvent.VK_ENTER) {
+						controller.erstelleUnterLager(lagerName.getText(),(int)lagerKapazitaet.getValue());
+					}
+				} else {
+					neuesLagerErstellen.setEnabled(false);
+					
+				}
+			}
+			
+			@Override
+			public void keyPressed(KeyEvent arg0) {	
+			}
+		});
+		kapazitaet=new JLabel("Kapazität:");
+		lagerKapazitaet = new JFormattedTextField(formatter);
+		lagerKapazitaet.setPreferredSize(new Dimension(100,30));
+		lagerKapazitaet.setMaximumSize(new Dimension(100,30));
+		lagerKapazitaet.addKeyListener(new KeyListener() {
+				
+				@Override
+				public void keyTyped(KeyEvent e) {
+					
+				}
+				
+				@Override
+				public void keyReleased(KeyEvent e) {
+					if((lagerKapazitaet.getValue()!=null)&&(!lagerName.getText().isEmpty())){
+						
+						neuesLagerErstellen.setEnabled(true);
+						System.out.println(lagerName.getText());
+						if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+							controller.erstelleUnterLager(lagerName.getText(),(int)lagerKapazitaet.getValue());
+						}
+					} else {
+						neuesLagerErstellen.setEnabled(false);
+						
+					}
+					
+				}
+				
+				@Override
+				public void keyPressed(KeyEvent e) {
+					if ((lagerKapazitaet.getValue()!=null)&&(e.getKeyCode() == KeyEvent.VK_BACK_SPACE)&&((int)lagerKapazitaet.getValue()<10)) {
+						lagerKapazitaet.setValue(null);
+						neuesLagerErstellen.setEnabled(false);
+					}
+				}
+			});
+		neuesLagerErstellen=new JButton("Lager erstellen");
+		try {
+		    Image img = ImageIO.read(new File("src/icons/check.png"));
+		    neuesLagerErstellen.setIcon(new ImageIcon(img));
+		  } catch (IOException ex) {
+			  ex.printStackTrace();
+		  }
 	}
 	
 	
@@ -257,6 +331,10 @@ public class BuchungBar extends JToolBar{
 		this.repaint();
 	}
 	
+	/**
+	 * aktualisiert die angezeigte Restmenge auf den übergebenen Wert
+	 * @param restMenge Wert der angezeigt werden soll
+	 */
 	public void aktualisiereRestMenge(int restMenge) {
 		laufendeAuslieferung.setText("<html>Es gibt eine laufende Auslieferung <br>"+restMenge+" Einheiten wurden schon verteilt</html>");
 		laufendeZulieferung.setText("<html>Es gibt eine laufende Zulieferung <br>"+restMenge+" Einheiten müssen noch verteilt werden</html>");
@@ -264,4 +342,25 @@ public class BuchungBar extends JToolBar{
 		this.repaint();
 
 	}
+	
+	/**
+	 * zeigt die BuchungBar im neues Lager anlegen Modus
+	 */
+	public void zeigeNeuesLager(){
+		this.removeAll();
+		this.add(neuesLager);
+		this.add(name);
+		this.addSeparator(new Dimension(10,0));
+		this.add(lagerName);
+		this.addSeparator(new Dimension(10,0));
+		this.add(kapazitaet);
+		this.addSeparator(new Dimension(10,0));
+		this.add(lagerKapazitaet);
+		this.addSeparator(new Dimension(10,0));
+		neuesLagerErstellen.setEnabled(false);
+		this.add(neuesLagerErstellen);
+		this.revalidate();
+		this.repaint();
+	}
+	
 }
