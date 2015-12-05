@@ -136,7 +136,6 @@ public class DetailView extends JPanel implements Observer{
 		bestand = new JLabel("Aktueller Bestand: "+mengeBestand);
 		bestand.revalidate();
 		bestand.repaint();
-		System.out.println(bestand.getText());
 		lagerInfo.revalidate();
 		lagerInfo.repaint();
 	}
