@@ -31,7 +31,7 @@ public class VerwaltungsView extends JFrame implements Observer{
 	JToolBar toolbar;
 	BuchungBar buchungBar;
 	DetailView detailPane;
-	TreeView treePane;
+	TreeView1 treePane;
 	LagerVerwaltungsModel lvModel;
 	LagerVerwaltungsController controller;
 	List<BuchungsModel> listeBuchungen;
@@ -64,8 +64,8 @@ public class VerwaltungsView extends JFrame implements Observer{
 		this.add(detailPane, BorderLayout.EAST);
 		
 		//TreePane hinzufügen
-		treePane = new TreeView();
-		treePane.setBackground(Color.LIGHT_GRAY);
+		treePane = new TreeView1(null,controller);
+		//treePane.setBackground(Color.LIGHT_GRAY);
 		this.add(treePane, BorderLayout.WEST);
 		
 		//BuchungsBar hinzufügen
@@ -195,7 +195,8 @@ public class VerwaltungsView extends JFrame implements Observer{
 			buchungBar.setVisible(false);
 		}
 		listeBuchungen=lvModel.getBuchungen(); //Liste wird bei jedem Update aktualisiert
-		
+		treePane.aktualisiereBaum(lvModel.getLager());
+	
 	}
 	
 	/**
@@ -224,5 +225,9 @@ public class VerwaltungsView extends JFrame implements Observer{
 		VerwaltungsView.this.add(buchungsView,BorderLayout.EAST);
 		VerwaltungsView.this.revalidate();
 		VerwaltungsView.this.repaint();
+	}
+	
+	public DetailView getDetailPane() {
+		return detailPane;
 	}
 }

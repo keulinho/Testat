@@ -41,9 +41,7 @@ public class DetailView extends JPanel implements Observer{
 	public DetailView(LagerVerwaltungsController controller) {
 		
 		this.controller=controller;
-		lagerName="Beispiel";
-		mengeKapazitaet=1000;
-		mengeBestand=300;
+		lagerName="";
 		
 		this.setPreferredSize(new Dimension(515,400));
 		this.setLayout(new BorderLayout());
@@ -53,42 +51,7 @@ public class DetailView extends JPanel implements Observer{
                 "relativer Anteil",
                 "absoluter Anteil",
                 "Art"};
-		//Beispiel
-		//TODO Beispiel löschen
-		data = new Object [][]{
-			    {new Date(115,10,24).toLocaleString(), 1000,
-			     ""+30+"%", 300,"Auslieferung"},
-			    {new Date(115,11,25).toLocaleString(), 200,
-			    	 ""+10+"%", 20,"Auslieferung"},
-			    {new Date(115,10,24).toLocaleString(), 1000,
-					 ""+30+"%", 300,"Auslieferung"},
-			    {new Date(115,11,25).toLocaleString(), 200,
-					""+10+"%", 20,"Auslieferung"},
-				{new Date(115,10,24).toLocaleString(), 1000,
-					""+30+"%", 300,"Auslieferung"},
-				{new Date(115,11,25).toLocaleString(), 200,
-					""+10+"%", 20,"Auslieferung"},
-				{new Date(115,10,24).toLocaleString(), 1000,
-					""+30+"%", 300,"Auslieferung"},
-				{new Date(115,11,25).toLocaleString(), 200,
-					""+10+"%", 20,"Auslieferung"},
-				{new Date(115,10,24).toLocaleString(), 1000,
-					""+30+"%", 300,"Auslieferung"},
-				{new Date(115,11,25).toLocaleString(), 200,
-					""+10+"%", 20,"Auslieferung"},
-				{new Date(115,10,24).toLocaleString(), 1000,
-					""+30+"%", 300,"Auslieferung"},
-				{new Date(115,11,25).toLocaleString(), 200,
-					""+10+"%", 20,"Auslieferung"},
-				{new Date(115,10,24).toLocaleString(), 1000,
-					""+30+"%", 300,"Auslieferung"},
-				{new Date(115,11,25).toLocaleString(), 200,
-					""+10+"%", 20,"Auslieferung"},
-				{new Date(115,10,24).toLocaleString(), 1000,
-					""+30+"%", 300,"Auslieferung"},
-				{new Date(115,11,25).toLocaleString(), 200,
-					""+10+"%", 20,"Auslieferung"}
-			};
+		
 			
 		lagerInfoErstellen();
 		this.add(lagerInfo,BorderLayout.NORTH);
@@ -111,7 +74,9 @@ public class DetailView extends JPanel implements Observer{
 		mengeBestand=lModel.getBestand();
 		mengeKapazitaet=lModel.getMaxKapazitaet();
 		lagerName=lModel.getName();
-		lagerInfoAktualisieren();
+		this.remove(lagerInfo);
+		lagerInfoErstellen();
+		this.add(lagerInfo,BorderLayout.NORTH);
 		if (lModel.hatUnterlager()) {
 			isUnterLager=false;
 		} else {
@@ -123,8 +88,12 @@ public class DetailView extends JPanel implements Observer{
 			if (buchungen.isVisible()) {  //Wenn Buchungen angezeigt werden es aber keine gibt werden diese aus der Ansicht gelöscht und stattdessen eine Meldung angezeigt
 				this.remove(buchungen);
 				this.add(meldung,BorderLayout.CENTER);
+			} else {
+				this.add(meldung,BorderLayout.CENTER);
 			}
 		}
+		this.revalidate();
+		this.repaint();
 		
 	}
 	
@@ -162,7 +131,12 @@ public class DetailView extends JPanel implements Observer{
 	public void lagerInfoAktualisieren(){
 		editName = new EditNamePanel(lagerName,controller);
 		kapazitaet = new JLabel("Maximale Kapazität: "+mengeKapazitaet);
+		kapazitaet.revalidate();
+		kapazitaet.repaint();
 		bestand = new JLabel("Aktueller Bestand: "+mengeBestand);
+		bestand.revalidate();
+		bestand.repaint();
+		System.out.println(bestand.getText());
 		lagerInfo.revalidate();
 		lagerInfo.repaint();
 	}
@@ -171,10 +145,7 @@ public class DetailView extends JPanel implements Observer{
 	 * Erstellt ein JScrollPane mit einer Tabelle die die Buchungen anzeigt
 	 */
 	public void buchungsTabelleErstellen() {
-		tabelle = new JTable(data, columnNames);
-		tabelle.setEnabled(false);
-		tabelle.getTableHeader().setReorderingAllowed(false);
-		buchungen = new JScrollPane(tabelle);
+		buchungen = new JScrollPane();
 		buchungen.setPreferredSize(new Dimension(515,400));
 		meldung= new JLabel("Es gibt noch keine Buchungen auf dieses Lager");
 	}
@@ -217,6 +188,8 @@ public class DetailView extends JPanel implements Observer{
 	public void bereiteBuchungenAuf(List<BuchungsModel> listeBuchungen, LagerModel lModel) {
 		int i=0;
 		data = new Object[listeBuchungen.size()][5];
+		System.out.println(listeBuchungen.size());
+		
 		for (BuchungsModel bModel : listeBuchungen) { //für jede Buchung auf dieses Lager werden die Infos für die Tabelle als Array gespeichert
 			data[i][0]=bModel.getBuchungsTag().toLocaleString();
 			data[i][1]=bModel.getVerteilteMenge();
@@ -240,6 +213,8 @@ public class DetailView extends JPanel implements Observer{
 		tabelle=new JTable(data, columnNames);
 		tabelle.setEnabled(false);
 		tabelle.getTableHeader().setReorderingAllowed(false);
+		buchungen.removeAll();
+		buchungen.add(tabelle);
 		buchungen.revalidate();
 		buchungen.repaint();
 		//Wenn Meldung angezeigt wird das Keine Buchungen vorhanden sind, wird die Meldung entfernt und die Buchungen angezeigt

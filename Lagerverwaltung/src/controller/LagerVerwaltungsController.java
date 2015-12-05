@@ -1,9 +1,12 @@
 package controller;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Observer;
 
 import model.LagerModel;
 import model.LagerVerwaltungsModel;
+import view.LagerBaumKnoten;
 import view.VerwaltungsView;
 
 public class LagerVerwaltungsController {
@@ -11,15 +14,20 @@ public class LagerVerwaltungsController {
 	VerwaltungsView view;
 	LagerVerwaltungsModel lVModel;
 	LagerModel aktuellesLager;
+	HashMap knotenZuLagerModel;
 	
 	public static void main(String... args){
 		LagerVerwaltungsController control = new LagerVerwaltungsController();
 	}
 	
 	public LagerVerwaltungsController() {
+		knotenZuLagerModel=new HashMap<LagerBaumKnoten,LagerModel>();
 		view=new VerwaltungsView(this);
 		lVModel=new LagerVerwaltungsModel();
 		lVModel.addObserver(view);
+		
+		aktuellesLager=lVModel.getLager().get(0);
+		aktuellesLager.addObserver(view.getDetailPane());
 	}
 	
 	public void undo() {
@@ -67,6 +75,17 @@ public class LagerVerwaltungsController {
 	}
 	
 	public void laden() {
+		
+	}
+	
+	public void aktuellesLagerAendern(LagerBaumKnoten lBKnoten) {
+		aktuellesLager.deleteObserver(view.getDetailPane());
+		aktuellesLager=(LagerModel) knotenZuLagerModel.get(lBKnoten);
+		aktuellesLager.addObserver(view.getDetailPane());
+	}
+	
+	public void knotenLagerZuordnungAktualiseren(LagerBaumKnoten lBKnoten,LagerModel lModel) {
+		knotenZuLagerModel.put(lBKnoten, lModel);
 		
 	}
 }
