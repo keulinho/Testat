@@ -7,6 +7,7 @@ import java.util.Observer;
 import java.util.Vector;
 
 import core.exception.LagerUeberfuelltException;
+import view.LagerBaumKnoten;
 
 public class LagerVerwaltungsModel extends Observable {
 	List<LagerModel> lager;
@@ -40,12 +41,12 @@ public class LagerVerwaltungsModel extends Observable {
 		LagerModel lager16 = hinzufuegenLager(lager1, 15000, "Brandeburg");
 		LagerModel lager17 = hinzufuegenLager(lager1, 15000, "MV");
 		LagerModel lager2 = hinzufuegenLager(null, 0, "Deutschland");
-		LagerModel lager21 = hinzufuegenLager(null, 0, "Frankreich");
+		LagerModel lager21 = hinzufuegenLager(lager2, 0, "Frankreich");
 		LagerModel lager211 = hinzufuegenLager(lager21, 15000, "Paris-Nord");
 		LagerModel lager212 = hinzufuegenLager(lager21, 15000, "Orléans");
 		LagerModel lager213 = hinzufuegenLager(lager21, 15000, "Marseille");
 		LagerModel lager214 = hinzufuegenLager(lager21, 15000, "Nîmes");
-		LagerModel lager22 = hinzufuegenLager(null, 0, "Italien");
+		LagerModel lager22 = hinzufuegenLager(lager2, 0, "Italien");
 		LagerModel lager221 = hinzufuegenLager(lager22, 15000, "Mailand");
 		LagerModel lager222 = hinzufuegenLager(lager22, 15000, "L'Aquila");
 		LagerModel lager23 = hinzufuegenLager(lager2, 15000, "Spanien");
@@ -60,14 +61,14 @@ public class LagerVerwaltungsModel extends Observable {
 		hinzugegenAnteil(lager3, 100);
 		abschliessenBuchung();
 		
-		erstellenZuBuchung(new Date(1), 2000);
+		erstellenZuBuchung(new Date(2), 2000);
 		hinzugegenAnteil(lager112, 1000);
 		hinzugegenAnteil(lager12, 400);
 		hinzugegenAnteil(lager14, 400);
 		hinzugegenAnteil(lager15, 200);
 		abschliessenBuchung();
 		
-		erstellenZuBuchung(new Date(1), 10000);
+		erstellenZuBuchung(new Date(3), 10000);
 		hinzugegenAnteil(lager16, 2000);
 		hinzugegenAnteil(lager212, 1000);
 		hinzugegenAnteil(lager222, 2500);
@@ -75,13 +76,13 @@ public class LagerVerwaltungsModel extends Observable {
 		hinzugegenAnteil(lager3, 2000);
 		abschliessenBuchung();
 		
-		erstellenZuBuchung(new Date(1), 5000);
+		erstellenZuBuchung(new Date(4), 5000);
 		hinzugegenAnteil(lager214, 2500);
 		hinzugegenAnteil(lager17, 2000);
 		hinzugegenAnteil(lager112, 500);
 		abschliessenBuchung();
 		
-		erstellenZuBuchung(new Date(1), 12500);
+		erstellenZuBuchung(new Date(5), 12500);
 		hinzugegenAnteil(lager211, 3750);
 		hinzugegenAnteil(lager16, 2500);
 		hinzugegenAnteil(lager111, 1875);
@@ -95,8 +96,8 @@ public class LagerVerwaltungsModel extends Observable {
 		setChanged();
 		notifyObservers();
 	}
-	public void addObserverTo(){
-		//TODO
+	public void addObserverTo(LagerModel lager, LagerBaumKnoten knoten){
+		lager.addObserver(knoten);
 	}
 
 	/**
@@ -112,18 +113,18 @@ public class LagerVerwaltungsModel extends Observable {
 			if(oberLager.getUnterLager().isEmpty() && oberLager.getBestand() <= kapazitaet){
 				LagerModel lager = oberLager.addUnterlager(kapazitaet, name);
 				try {
-					// TODO neues Unterlager hat weniger Kapazität als das alte -> Kapazität wird nicht blind nach oben gegeben
 					lager.veraendernBestand(oberLager.getBestand());
 					oberLager.aendernKapazitaet(kapazitaet-oberLager.getMaxKapazitaet());
+					oberLager.aendernOberlagerKapazitaet(kapazitaet);
 					maxFreieKapazitaet += kapazitaet;
 				} catch (LagerUeberfuelltException e) {
 					// TODO ErrorHandler und evtl. was rückhängig machen und evtl. false zurückgeben
-					e.printStackTrace();
 				}
 				return lager;
 			} else if(!oberLager.getUnterLager().isEmpty()) {
 				LagerModel lager = oberLager.addUnterlager(kapazitaet, name);
 				oberLager.aendernKapazitaet(kapazitaet);
+				oberLager.aendernOberlagerKapazitaet(kapazitaet);
 				maxFreieKapazitaet += kapazitaet;
 				return lager;
 			}
@@ -211,9 +212,11 @@ public class LagerVerwaltungsModel extends Observable {
 							anteile.get(i).getLager().entfernenBuchung(laufendeBuchung);
 							anteile.get(i).getLager().veraendernBestand(-anteile.get(i).getAnteil());
 						} catch (LagerUeberfuelltException e1) {
+							//TODO ErrorHandler
 							e1.printStackTrace();
 						}
 					}
+					//TODO ErrorHandler
 					System.out.println("Fehler beim befüllen von den Lagern!!!");
 					e.printStackTrace();
 					break;
@@ -234,8 +237,7 @@ public class LagerVerwaltungsModel extends Observable {
 	 * @return true wenn der Anteil erfolgreich hinzugefügt wurde sonst false
 	 */
 	public boolean hinzugegenAnteil(LagerModel lager, int anteil){
-		//TODO prüfen ob Lager unterster Eben
-		if(laufendeBuchung.hinzufuegenAnteil(lager, anteil) != null){
+		if(lager.isUntersteEbene() && laufendeBuchung.hinzufuegenAnteil(lager, anteil) != null){
 			return true;
 		}
 		return false;

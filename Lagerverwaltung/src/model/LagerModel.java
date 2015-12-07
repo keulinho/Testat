@@ -207,4 +207,8 @@ public class LagerModel extends Observable {
 		}
 		return true;
 	}
+	
+	public boolean isUntersteEbene(){
+		return this.unterLager.isEmpty();
+	}
 }
