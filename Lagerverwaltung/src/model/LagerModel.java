@@ -61,6 +61,8 @@ public class LagerModel extends Observable {
 					+ "Kapazität: \t" + this.bestand + "\nBestand: \t" + (this.bestand += menge));
 		}
 		this.bestand += menge;
+		this.setChanged();
+		this.notifyObservers();
 		if(this.oberLager != null){
 			this.anpassenOberlagerBestand(menge);
 		}
@@ -74,7 +76,6 @@ public class LagerModel extends Observable {
 	public void anpassenOberlagerBestand(int menge) throws LagerUeberfuelltException{
 		if (this.oberLager != null) {
 			this.oberLager.veraendernBestand(menge);
-			this.oberLager.anpassenOberlagerBestand(menge);
 		}
 	}
 	
@@ -84,6 +85,8 @@ public class LagerModel extends Observable {
 	 */
 	public void aendernKapazitaet(int aenderung){
 		this.maxKapazitaet += aenderung;
+		this.setChanged();
+		this.notifyObservers();
 	}
 	
 	/**
