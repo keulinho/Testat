@@ -34,24 +34,12 @@ public class TreeView1 extends JPanel{
 			
 			@Override
 			public void valueChanged(TreeSelectionEvent e) {
-				controller.aktuellesLagerAendern((LagerBaumKnoten) e.getPath().getLastPathComponent());
-				
+				if (!e.getPath().getLastPathComponent().equals(root)) {
+					controller.aktuellesLagerAendern((LagerBaumKnoten) e.getPath().getLastPathComponent());
+				}	
 			}
 		});
 	    baumEbeneErzeugen(lagerListe,root);
-	    tree = new JTree(root);
-	    tree.addTreeSelectionListener(new TreeSelectionListener() {
-			
-			@Override
-			public void valueChanged(TreeSelectionEvent e) {
-				if (!e.getPath().getLastPathComponent().equals(root)) {
-					controller.aktuellesLagerAendern((LagerBaumKnoten) e.getPath().getLastPathComponent());
-				}
-				
-				
-			}
-		});
-	    
 	    
 	    treeScrollPanel= new JScrollPane(tree);
 	        
