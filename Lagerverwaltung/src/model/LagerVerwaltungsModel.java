@@ -40,13 +40,13 @@ public class LagerVerwaltungsModel extends Observable {
 		LagerModel lager15 = hinzufuegenLager(lager1, 15000, "Sachsen");
 		LagerModel lager16 = hinzufuegenLager(lager1, 15000, "Brandeburg");
 		LagerModel lager17 = hinzufuegenLager(lager1, 15000, "MV");
-		LagerModel lager2 = hinzufuegenLager(null, 0, "Deutschland");
-		LagerModel lager21 = hinzufuegenLager(null, 0, "Frankreich");
+		LagerModel lager2 = hinzufuegenLager(null, 0, "Europa");
+		LagerModel lager21 = hinzufuegenLager(lager2, 0, "Frankreich");
 		LagerModel lager211 = hinzufuegenLager(lager21, 15000, "Paris-Nord");
 		LagerModel lager212 = hinzufuegenLager(lager21, 15000, "Orléans");
 		LagerModel lager213 = hinzufuegenLager(lager21, 15000, "Marseille");
 		LagerModel lager214 = hinzufuegenLager(lager21, 15000, "Nîmes");
-		LagerModel lager22 = hinzufuegenLager(null, 0, "Italien");
+		LagerModel lager22 = hinzufuegenLager(lager2, 0, "Italien");
 		LagerModel lager221 = hinzufuegenLager(lager22, 15000, "Mailand");
 		LagerModel lager222 = hinzufuegenLager(lager22, 15000, "L'Aquila");
 		LagerModel lager23 = hinzufuegenLager(lager2, 15000, "Spanien");

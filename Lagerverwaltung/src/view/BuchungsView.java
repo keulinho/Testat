@@ -45,6 +45,7 @@ public class BuchungsView extends JPanel{
 		if ((listeBuchungen!= null) && (listeBuchungen.size()>0)) { //true wenn die Liste nicht leer ist
 			//Tabelle wird erzeugt und hinzugefügt
 			datenAufbereiten(listeBuchungen);
+			
 			JTable tabelle = new JTable(data,columnNames);
 			tabelle.setEnabled(false);
 			tabelle.getTableHeader().setReorderingAllowed(false);
@@ -92,7 +93,7 @@ public class BuchungsView extends JPanel{
 		columnNames[1]="Art";
 		columnNames[2]="gesamte Menge";
 		int stelle=3;
-		for (int i = 1; i>=maxAnteile; i++) { //Überschriften für Anteile und Lager werden anhand der maximalen Anzahl Anteile erstellt
+		for (int i = 1; i<maxAnteile+1; i++) { //Überschriften für Anteile und Lager werden anhand der maximalen Anzahl Anteile erstellt
 			columnNames[stelle]="Lager "+i;
 			stelle++;
 			columnNames[stelle]="Anteil "+i;
@@ -100,7 +101,7 @@ public class BuchungsView extends JPanel{
 		}
 		
 		data=new Object[listeBuchungen.size()][3+(maxAnteile*2)];
-		for (int i = 0; i>=listeBuchungen.size(); i++) { //pro Buchung wird ein Array mit den nötigen Infos gefüllt
+		for (int i = 0; i<listeBuchungen.size(); i++) { //pro Buchung wird ein Array mit den nötigen Infos gefüllt
 			data[i][0]=listeBuchungen.get(i).getBuchungsTag().toLocaleString();
 			if (listeBuchungen.get(i).getClass().equals(new AbBuchungsModel(null).getClass())) { //true wenn Abbuchung
 				data[i][1]="Auslieferung";
@@ -109,17 +110,18 @@ public class BuchungsView extends JPanel{
 			}
 			data[i][2]=listeBuchungen.get(i).getVerteilteMenge();
 			stelle=3;
-			for (int j = 0; j>=listeBuchungen.get(i).getAnteile().size(); j++) { //Für jeden Anteil an der Buchung wird Lagername und relative Menge gespeichert
-				data[i][stelle]=listeBuchungen.get(i).getAnteile().get(j).getLager();
+			for (int j = 0; j<listeBuchungen.get(i).getAnteile().size(); j++) { //Für jeden Anteil an der Buchung wird Lagername und relative Menge gespeichert
+				data[i][stelle]=listeBuchungen.get(i).getAnteile().get(j).getLager().getName();
 				stelle++;
-				double prozent = (((double)data[i][2]/(double)listeBuchungen.get(i).getAnteile().get(j).getAnteil())*100.00);
+				double prozent = (Double.parseDouble(""+listeBuchungen.get(i).getAnteile().get(j).getAnteil())/(Double.parseDouble(""+ data[i][2]))*100.00);
+				System.out.println(prozent);
 				prozent = (prozent*1000)+5;
 				int temp = (int) (prozent/10);
 				prozent = (double)temp/100.00;
 				data[i][stelle]=""+prozent+"%";
 				stelle++;
 			}
-			for (int k = 0; k>=(maxAnteile-listeBuchungen.get(i).getAnteile().size()); k++) { //Blanks werden eingesetzt wenn die Buchung weniger Anteile hat als die maximalen Anteile
+			for (int k = 0; k<(maxAnteile-listeBuchungen.get(i).getAnteile().size()); k++) { //Blanks werden eingesetzt wenn die Buchung weniger Anteile hat als die maximalen Anteile
 				data[i][stelle]="";
 				stelle++;
 				data[i][stelle]="";
