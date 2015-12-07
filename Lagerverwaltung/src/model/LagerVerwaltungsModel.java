@@ -31,9 +31,9 @@ public class LagerVerwaltungsModel extends Observable {
 		//TODO
 		LagerModel de = new LagerModel(1000,"Deutschland",null);
 		lager.add(de);
-		LagerModel nl = new LagerModel(1000,"Niederlande",null);
+		LagerModel nl = new LagerModel(3000,"Niederlande",null);
 		lager.add(nl);
-		LagerModel it = new LagerModel(1000,"Italien",null);
+		LagerModel it = new LagerModel(100,"Italien",null);
 		lager.add(it);
 	}
 	
