@@ -51,14 +51,11 @@ public class DetailView extends JPanel implements Observer{
                 "relativer Anteil",
                 "absoluter Anteil",
                 "Art"};
-		
+		meldung= new JLabel("Es gibt noch keine Buchungen auf dieses Lager");
 			
 		lagerInfoErstellen();
 		this.add(lagerInfo,BorderLayout.NORTH);
 
-		buchungsTabelleErstellen();
-		this.add(buchungen,BorderLayout.CENTER);
-		
 		optionenPanel = new OptionenPanel(editName,controller);
 		optionenPanel.zeigeButton();
 		this.add(optionenPanel,BorderLayout.PAGE_END);
@@ -85,7 +82,7 @@ public class DetailView extends JPanel implements Observer{
 		if ((lModel.getBuchungen()!=null) && (lModel.getBuchungen().size()>0)) { //True wenn es Buchungen zu diesem Lager gibt
 			bereiteBuchungenAuf(lModel.getBuchungen(),(LagerModel)o);
 		} else {
-			if (buchungen.isVisible()) {  //Wenn Buchungen angezeigt werden es aber keine gibt werden diese aus der Ansicht gelöscht und stattdessen eine Meldung angezeigt
+			if ((buchungen!=null)&&(buchungen.isVisible())) {  //Wenn Buchungen angezeigt werden es aber keine gibt werden diese aus der Ansicht gelöscht und stattdessen eine Meldung angezeigt
 				this.remove(buchungen);
 				this.add(meldung,BorderLayout.CENTER);
 			} else {
@@ -141,15 +138,6 @@ public class DetailView extends JPanel implements Observer{
 	}
 	
 	/**
-	 * Erstellt ein JScrollPane mit einer Tabelle die die Buchungen anzeigt
-	 */
-	public void buchungsTabelleErstellen() {
-		buchungen = new JScrollPane();
-		buchungen.setPreferredSize(new Dimension(515,400));
-		meldung= new JLabel("Es gibt noch keine Buchungen auf dieses Lager");
-	}
-	
-	/**
 	 * setzt das Optionen-Panel in den zeige Button Modus
 	 */
 	public void zeigeButton(){
@@ -187,7 +175,6 @@ public class DetailView extends JPanel implements Observer{
 	public void bereiteBuchungenAuf(List<BuchungsModel> listeBuchungen, LagerModel lModel) {
 		int i=0;
 		data = new Object[listeBuchungen.size()][5];
-		System.out.println(listeBuchungen.size());
 		
 		for (BuchungsModel bModel : listeBuchungen) { //für jede Buchung auf dieses Lager werden die Infos für die Tabelle als Array gespeichert
 			data[i][0]=bModel.getBuchungsTag().toLocaleString();
@@ -197,7 +184,7 @@ public class DetailView extends JPanel implements Observer{
 				
 				}
 			data[i][3]=bModel.getAnteile().get(j).getAnteil();
-			double prozent = ((1.0*(int)data[i][3]/1.0*(int)data[i][1])*100.00);
+			double prozent = (Double.parseDouble("" + data[i][3])/(Double.parseDouble(""+ data[i][1]))*100.00);
 			prozent = (prozent*1000)+5;
 			int temp = (int) (prozent/10);
 			prozent = (double)temp/100.00;
@@ -207,15 +194,19 @@ public class DetailView extends JPanel implements Observer{
 			} else {
 				data[i][4]="Zulieferung";
 			}
+			i++;
 		}
 		
 		tabelle=new JTable(data, columnNames);
 		tabelle.setEnabled(false);
 		tabelle.getTableHeader().setReorderingAllowed(false);
-		buchungen.removeAll();
-		buchungen.add(tabelle);
-		buchungen.revalidate();
-		buchungen.repaint();
+		if ((buchungen!=null)&&(buchungen.isVisible())) {
+			this.remove(buchungen);
+		}
+		
+		buchungen = new JScrollPane(tabelle);
+		buchungen.setPreferredSize(new Dimension(515,400));
+		this.add(buchungen);
 		//Wenn Meldung angezeigt wird das Keine Buchungen vorhanden sind, wird die Meldung entfernt und die Buchungen angezeigt
 		if (meldung.isVisible()) {
 			this.remove(meldung);
