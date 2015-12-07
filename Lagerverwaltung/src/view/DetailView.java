@@ -197,7 +197,7 @@ public class DetailView extends JPanel implements Observer{
 				
 				}
 			data[i][3]=bModel.getAnteile().get(j).getAnteil();
-			double prozent = (((double)data[i][3]/(double)data[i][1])*100.00);
+			double prozent = ((1.0*(int)data[i][3]/1.0*(int)data[i][1])*100.00);
 			prozent = (prozent*1000)+5;
 			int temp = (int) (prozent/10);
 			prozent = (double)temp/100.00;
