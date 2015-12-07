@@ -114,7 +114,7 @@ public class LagerVerwaltungsModel extends Observable {
 				try {
 					// TODO neues Unterlager hat weniger Kapazität als das alte -> Kapazität wird nicht blind nach oben gegeben
 					lager.veraendernBestand(oberLager.getBestand());
-					oberLager.aendernKapazitaet(kapazitaet);
+					oberLager.aendernKapazitaet(kapazitaet-oberLager.getMaxKapazitaet());
 					maxFreieKapazitaet += kapazitaet;
 				} catch (LagerUeberfuelltException e) {
 					// TODO ErrorHandler und evtl. was rückhängig machen und evtl. false zurückgeben
