@@ -28,6 +28,8 @@ public class TreeView1 extends JPanel{
 		this.setLayout(new BorderLayout());
 		
 	    root = new LagerBaumKnoten("Root");
+	    
+	    baumEbeneErzeugen(lagerListe,root);
 	    tree = new JTree(root);
 	    //tree.setRootVisible(false);
 	    tree.addTreeSelectionListener(new TreeSelectionListener() {
@@ -39,8 +41,7 @@ public class TreeView1 extends JPanel{
 				}	
 			}
 		});
-	    baumEbeneErzeugen(lagerListe,root);
-	    
+	   
 	    treeScrollPanel= new JScrollPane(tree);
 	        
 	    this.add(treeScrollPanel);
@@ -65,9 +66,19 @@ public class TreeView1 extends JPanel{
 		root.removeAllChildren();
 		baumEbeneErzeugen(lagerListe,root);
 		tree=new JTree(root);
+		tree.addTreeSelectionListener(new TreeSelectionListener() {
+				
+				@Override
+				public void valueChanged(TreeSelectionEvent e) {
+					if (!e.getPath().getLastPathComponent().equals(root)) {
+						controller.aktuellesLagerAendern((LagerBaumKnoten) e.getPath().getLastPathComponent());
+					}	
+				}
+		});
 		treeScrollPanel.revalidate();
 		treeScrollPanel.repaint();
 		this.revalidate();
 		this.repaint();
 	}
+	
 }
