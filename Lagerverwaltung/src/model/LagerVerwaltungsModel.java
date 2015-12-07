@@ -28,6 +28,7 @@ public class LagerVerwaltungsModel extends Observable {
 	}
 	
 	//Methoden
+
 	public void initialBefuellung(){
 		//Lager
 		LagerModel lager1 = hinzufuegenLager(null, 0, "Deutschland");
@@ -40,7 +41,7 @@ public class LagerVerwaltungsModel extends Observable {
 		LagerModel lager15 = hinzufuegenLager(lager1, 15000, "Sachsen");
 		LagerModel lager16 = hinzufuegenLager(lager1, 15000, "Brandeburg");
 		LagerModel lager17 = hinzufuegenLager(lager1, 15000, "MV");
-		LagerModel lager2 = hinzufuegenLager(null, 0, "Deutschland");
+		LagerModel lager2 = hinzufuegenLager(null, 0, "Europa");
 		LagerModel lager21 = hinzufuegenLager(lager2, 0, "Frankreich");
 		LagerModel lager211 = hinzufuegenLager(lager21, 15000, "Paris-Nord");
 		LagerModel lager212 = hinzufuegenLager(lager21, 15000, "Orléans");
