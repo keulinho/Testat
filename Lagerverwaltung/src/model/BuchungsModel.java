@@ -34,7 +34,7 @@ abstract public class BuchungsModel {
 	/**
 	 * Löscht alle Anteile der Buchung
 	 */
-	public void loeschenAnteile() {
+	public void loeschenAlleAnteile() {
 		anteile.clear();
 		verteilteMenge = 0;
 	}
@@ -43,7 +43,7 @@ abstract public class BuchungsModel {
 	 * Löscht alle Anteile von einem Lager
 	 * @param lager dessen Anteil gelöscht werden soll
 	 */
-	public void loeschenAnteil(LagerModel lager) {
+	public void loeschenAnteile(LagerModel lager) {
 		for (AnteilModel anteil : anteile) {
 			if(lager == anteil.getLager()){
 				anteile.remove(anteile.indexOf(anteil));

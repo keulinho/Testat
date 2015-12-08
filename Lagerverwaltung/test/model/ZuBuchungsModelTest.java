@@ -42,14 +42,14 @@ public class ZuBuchungsModelTest extends TestCase{
 		zuBuchung.hinzufuegenAnteil(lager1, 50);
 		zuBuchung.hinzufuegenAnteil(lager1, 50);
 		zuBuchung.hinzufuegenAnteil(lager1, 50);
-		zuBuchung.loeschenAnteile();
+		zuBuchung.loeschenAlleAnteile();
 		assertEquals(true, zuBuchung.getAnteile().isEmpty());
 	}
 	
 	public void testloeschenAnteilLager(){
 		zuBuchung.hinzufuegenAnteil(lager1, 50);
 		zuBuchung.hinzufuegenAnteil(lager2, 50);
-		zuBuchung.loeschenAnteil(lager1);
+		zuBuchung.loeschenAnteile(lager1);
 		boolean result = (zuBuchung.getAnteile().size() == 1 && 
 				zuBuchung.getAnteile().get(0).getAnteil() == 50 && 
 				zuBuchung.getAnteile().get(0).getLager() == lager2);
@@ -58,7 +58,7 @@ public class ZuBuchungsModelTest extends TestCase{
 	}
 	
 	public void testloeschenAnteilSpezifisch(){
-		zuBuchung.loeschenAnteile();
+		zuBuchung.loeschenAlleAnteile();
 		zuBuchung.hinzufuegenAnteil(lager2, 50);
 		zuBuchung.hinzufuegenAnteil(lager2, 100);
 		zuBuchung.loeschenAnteil(lager2, 100);

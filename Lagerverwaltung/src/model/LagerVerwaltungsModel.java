@@ -206,10 +206,9 @@ public class LagerVerwaltungsModel extends Observable {
 					anteil.getLager().addBuchung(laufendeBuchung);
 				} catch (LagerUeberfuelltException e) {
 					//TODO ErrorHandler
-					//bisher ausgeführten Anteile und die Buchung werden zurück genommen
+					//bisher ausgeführten Anteile und die Buchung werden zurückgenommen
 					for(int i= anteile.indexOf(anteil)-1; i >= 0; i--){
 						try {
-							//TODO ErrorHandler
 							anteile.get(i).getLager().entfernenBuchung(laufendeBuchung);
 							anteile.get(i).getLager().veraendernBestand(-anteile.get(i).getAnteil());
 						} catch (LagerUeberfuelltException e1) {
@@ -252,7 +251,23 @@ public class LagerVerwaltungsModel extends Observable {
 	public void loeschenAnteil(LagerModel lager, int menge){
 		laufendeBuchung.loeschenAnteil(lager, menge);
 	}
-	//TODO andere Varianten des löschen implementieren
+	
+	//TODO Command für das löschen mehrer Anteile ??? um das redo für das löschen mehrer Anteile zu realisieren
+	/**
+	 * löscht alle Anteile, die zu einem Lager gehören, aus einer Buchung
+	 * @param lager
+	 */
+	public void loeschenAnteile(LagerModel lager){
+		laufendeBuchung.loeschenAnteile(lager);
+	}
+	
+	/**
+	 * löscht alle Anteile einer Buchung
+	 */
+	public void loeschenAlleAnteile() {
+		laufendeBuchung.loeschenAlleAnteile();
+	}
+	//TODO andere Varianten des löschen implementieren und Redostack löschen und so weiteres zeugs
 	
 	public void loesschenLager(LagerModel lager){
 		// TODO

@@ -44,17 +44,17 @@ public class AbBuchungsModelTest extends TestCase {
 		abBuchung.hinzufuegenAnteil(lager1, 50);
 		abBuchung.hinzufuegenAnteil(lager1, 50);
 		abBuchung.hinzufuegenAnteil(lager1, 50);
-		abBuchung.loeschenAnteile();
+		abBuchung.loeschenAlleAnteile();
 		assertEquals(true, abBuchung.getAnteile().isEmpty());
 	}
 
 	public void testloeschenAnteilLager(){
 		if(!abBuchung.getAnteile().isEmpty()){
-			abBuchung.loeschenAnteile();
+			abBuchung.loeschenAlleAnteile();
 		}
 		abBuchung.hinzufuegenAnteil(lager1, 50);
 		abBuchung.hinzufuegenAnteil(lager2, 50);
-		abBuchung.loeschenAnteil(lager1);
+		abBuchung.loeschenAnteile(lager1);
 		boolean result = (abBuchung.getAnteile().size() == 1 &&
 				abBuchung.getAnteile().get(0).getAnteil() == -50 &&
 				abBuchung.getAnteile().get(0).getLager() == lager2);
