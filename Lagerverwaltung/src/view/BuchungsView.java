@@ -17,7 +17,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.table.DefaultTableCellRenderer;
 
 import model.AbBuchungsModel;
 import model.BuchungsModel;
@@ -49,6 +51,12 @@ public class BuchungsView extends JPanel{
 			JTable tabelle = new JTable(data,columnNames);
 			tabelle.setEnabled(false);
 			tabelle.getTableHeader().setReorderingAllowed(false);
+			DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+			centerRenderer.setHorizontalAlignment( SwingUtilities.CENTER );
+			tabelle.getColumnModel().getColumn(0).setMinWidth(120);
+			tabelle.getColumnModel().getColumn(2).setMinWidth(100);
+			tabelle.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
+			tabelle.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 			JScrollPane alleBuchungen = new JScrollPane(tabelle);
 			this.add(alleBuchungen, BorderLayout.CENTER);
 		} else {
@@ -114,7 +122,6 @@ public class BuchungsView extends JPanel{
 				data[i][stelle]=listeBuchungen.get(i).getAnteile().get(j).getLager().getName();
 				stelle++;
 				double prozent = (Double.parseDouble(""+listeBuchungen.get(i).getAnteile().get(j).getAnteil())/(Double.parseDouble(""+ data[i][2]))*100.00);
-				System.out.println(prozent);
 				prozent = (prozent*1000)+5;
 				int temp = (int) (prozent/10);
 				prozent = (double)temp/100.00;
