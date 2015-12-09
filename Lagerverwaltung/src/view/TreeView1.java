@@ -2,7 +2,7 @@ package view;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JPanel;
@@ -10,6 +10,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.TreePath;
 
 import controller.LagerVerwaltungsController;
 import model.LagerModel;
@@ -27,10 +28,11 @@ public class TreeView1 extends JPanel{
 		this.setPreferredSize(new Dimension(300,400));
 		this.setLayout(new BorderLayout());
 		
-	    root = new LagerBaumKnoten("Root");
+	    root = new LagerBaumKnoten("Gesamtlager");
 	    
 	    baumEbeneErzeugen(lagerListe,root);
 	    tree = new JTree(root);
+	    tree.setExpandsSelectedPaths(true);
 	    //tree.setRootVisible(false);
 	    tree.addTreeSelectionListener(new TreeSelectionListener() {
 			
@@ -41,9 +43,8 @@ public class TreeView1 extends JPanel{
 				}	
 			}
 		});
-	   
-	    treeScrollPanel= new JScrollPane(tree);
-	        
+	    
+	    treeScrollPanel= new JScrollPane(tree);    
 	    this.add(treeScrollPanel);
 	    }
 	
@@ -66,6 +67,16 @@ public class TreeView1 extends JPanel{
 		root.removeAllChildren();
 		baumEbeneErzeugen(lagerListe,root);
 		tree=new JTree(root);
+		tree.setExpandsSelectedPaths(true);
+		
+		List<Object> knoten = new ArrayList<Object>();
+		for (int i = 0; i<tree.getModel().getChildCount(tree.getModel().getRoot()); i++) {
+		    knoten.add(tree.getModel().getChild(tree.getModel().getRoot(), i));
+		}
+		
+		tree.expandPath(new TreePath(knoten.toArray()));
+		System.out.println(tree.isExpanded(new TreePath(knoten.toArray())));
+		
 		tree.addTreeSelectionListener(new TreeSelectionListener() {
 				
 				@Override
@@ -75,8 +86,6 @@ public class TreeView1 extends JPanel{
 					}	
 				}
 		});
-		treeScrollPanel.revalidate();
-		treeScrollPanel.repaint();
 		this.revalidate();
 		this.repaint();
 	}
