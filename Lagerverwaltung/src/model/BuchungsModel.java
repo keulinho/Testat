@@ -1,10 +1,11 @@
 package model;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.Vector;
 
-abstract public class BuchungsModel {
+abstract public class BuchungsModel implements Serializable {
 	Date buchungsTag;
 	int verteilteMenge;
 	List<AnteilModel> anteile;

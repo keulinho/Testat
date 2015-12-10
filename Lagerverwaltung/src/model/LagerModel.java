@@ -1,5 +1,6 @@
 package model;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -10,7 +11,7 @@ import core.exception.LagerUeberfuelltException;
 /**
  * Diese Klasse stellt die Daten für ein Lager bereit und verarbeitet diese
  */
-public class LagerModel extends Observable {
+public class LagerModel extends Observable implements Serializable {
 	int maxKapazitaet, bestand;
 	String name;
 	List<LagerModel> unterLager;

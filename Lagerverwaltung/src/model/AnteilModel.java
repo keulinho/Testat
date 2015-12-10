@@ -1,6 +1,8 @@
 package model;
 
-public class AnteilModel {
+import java.io.Serializable;
+
+public class AnteilModel implements Serializable {
 	int anteil;
 	LagerModel lager;
 

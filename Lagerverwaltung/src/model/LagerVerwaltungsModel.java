@@ -1,5 +1,6 @@
 package model;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.Observable;
@@ -9,7 +10,7 @@ import java.util.Vector;
 import core.exception.LagerUeberfuelltException;
 import view.LagerBaumKnoten;
 
-public class LagerVerwaltungsModel extends Observable {
+public class LagerVerwaltungsModel extends Observable implements Serializable {
 	List<LagerModel> lager;
 	List<BuchungsModel> buchungen;
 	int maxFreieKapazitaet;
