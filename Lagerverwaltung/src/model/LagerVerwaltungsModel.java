@@ -157,6 +157,8 @@ public class LagerVerwaltungsModel extends Observable implements Serializable {
 	public boolean erstellenZuBuchung(Date buchungsTag, int menge){
 		if(laufendeBuchung == null) {
 			laufendeBuchung = new ZuBuchungsModel(buchungsTag, menge);
+			this.setChanged();
+			this.notifyObservers();
 			return true;
 		}
 		return false;
@@ -169,6 +171,8 @@ public class LagerVerwaltungsModel extends Observable implements Serializable {
 	public boolean erstellenAbBuchung(Date buchungsTag){
 		if(laufendeBuchung == null) {
 			laufendeBuchung = new AbBuchungsModel(buchungsTag);
+			this.setChanged();
+			this.notifyObservers();
 			return true;
 		}
 		return false;
@@ -184,6 +188,8 @@ public class LagerVerwaltungsModel extends Observable implements Serializable {
 			}
 		}
 		laufendeBuchung = null;
+		this.setChanged();
+		this.notifyObservers();
 	}
 	
 	/**
@@ -226,6 +232,8 @@ public class LagerVerwaltungsModel extends Observable implements Serializable {
 			maxFreieKapazitaet -= laufendeBuchung.getVerteilteMenge();
 			buchungen.add(laufendeBuchung);
 			laufendeBuchung = null;
+			this.setChanged();
+			this.notifyObservers();
 			return true;
 		}
 		return false;
@@ -253,7 +261,6 @@ public class LagerVerwaltungsModel extends Observable implements Serializable {
 		laufendeBuchung.loeschenAnteil(lager, menge);
 	}
 	
-	//TODO Command für das löschen mehrer Anteile ??? um das redo für das löschen mehrer Anteile zu realisieren
 	/**
 	 * löscht alle Anteile, die zu einem Lager gehören, aus einer Buchung
 	 * @param lager
