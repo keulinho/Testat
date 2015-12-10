@@ -268,7 +268,6 @@ public class LagerVerwaltungsModel extends Observable implements Serializable {
 	public void loeschenAlleAnteile() {
 		laufendeBuchung.loeschenAlleAnteile();
 	}
-	//TODO andere Varianten des löschen implementieren und Redostack löschen und so weiteres zeugs
 	
 	public void loesschenLager(LagerModel lager){
 		// TODO
