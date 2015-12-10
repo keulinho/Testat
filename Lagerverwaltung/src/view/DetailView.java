@@ -33,6 +33,7 @@ public class DetailView extends JPanel implements Observer{
 	Object[][] data;
 	boolean isUnterLager;
 	LagerVerwaltungsController controller;
+	
 
 	/**
 	 * erzeugt eine DetailView
@@ -51,7 +52,7 @@ public class DetailView extends JPanel implements Observer{
                 "relativer Anteil",
                 "absoluter Anteil",
                 "Art"};
-		meldung= new JLabel("Es gibt noch keine Buchungen auf dieses Lager");
+		meldung= new JLabel();
 			
 		lagerInfoErstellen();
 		this.add(lagerInfo,BorderLayout.NORTH);
@@ -76,8 +77,10 @@ public class DetailView extends JPanel implements Observer{
 		this.add(lagerInfo,BorderLayout.NORTH);
 		if (lModel.hatUnterlager()) {
 			isUnterLager=false;
+			meldung.setText("Bei einem Oberlager gibt es keine Buchungen");
 		} else {
 			isUnterLager=true;
+			meldung.setText("Es gibt noch keine Buchungen auf dieses Lager");
 		}
 		if ((lModel.getBuchungen()!=null) && (lModel.getBuchungen().size()>0)) { //True wenn es Buchungen zu diesem Lager gibt
 			bereiteBuchungenAuf(lModel.getBuchungen(),(LagerModel)o);
