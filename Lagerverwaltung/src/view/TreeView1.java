@@ -10,6 +10,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
 import controller.LagerVerwaltungsController;
@@ -21,6 +23,7 @@ public class TreeView1 extends JPanel{
 	LagerBaumKnoten root;
 	LagerVerwaltungsController controller;
 	JScrollPane treeScrollPanel;
+	DefaultTreeModel model;
 	
 	public TreeView1(List<LagerModel> lagerListe, final LagerVerwaltungsController controller){
 		
@@ -29,11 +32,11 @@ public class TreeView1 extends JPanel{
 		this.setLayout(new BorderLayout());
 		
 	    root = new LagerBaumKnoten("Gesamtlager");
-	    
+	    model = new DefaultTreeModel(root);
 	    baumEbeneErzeugen(lagerListe,root);
-	    tree = new JTree(root);
+	    tree = new JTree(model);
 	    tree.setExpandsSelectedPaths(true);
-	    //tree.setRootVisible(false);
+	    tree.setRootVisible(false);
 	    tree.addTreeSelectionListener(new TreeSelectionListener() {
 			
 			@Override
@@ -55,7 +58,13 @@ public class TreeView1 extends JPanel{
 				LagerBaumKnoten lBKnoten= new LagerBaumKnoten(lModel.getName());
 				lModel.addObserver(lBKnoten);
 				controller.knotenLagerZuordnungAktualiseren(lBKnoten, lModel);
-				elternKnoten.add(lBKnoten);
+				DefaultTreeModel model = (DefaultTreeModel)tree.getModel();
+				model.insertNodeInto(lBKnoten, elternKnoten, elternKnoten.getChildCount());
+				model.nodesWereInserted(elternKnoten, new int [elternKnoten.getChildCount()]);
+				model.reload(elternKnoten);
+				model.reload(lBKnoten);
+				model.nodeStructureChanged(elternKnoten);
+				System.out.println(lBKnoten.getUserObject());
 				baumEbeneErzeugen(lModel.getUnterLager(),lBKnoten);
 				
 			}
@@ -63,10 +72,12 @@ public class TreeView1 extends JPanel{
 	}
 	
 	public void aktualisiereBaum(List<LagerModel> lagerListe) {
-
+		
 		root.removeAllChildren();
+		//root = new LagerBaumKnoten("Gesamtlager");
+	    model = new DefaultTreeModel(root);
 		baumEbeneErzeugen(lagerListe,root);
-		tree=new JTree(root);
+		tree=new JTree(model);
 		tree.setExpandsSelectedPaths(true);
 		
 		List<Object> knoten = new ArrayList<Object>();
@@ -75,7 +86,6 @@ public class TreeView1 extends JPanel{
 		}
 		
 		tree.expandPath(new TreePath(knoten.toArray()));
-		//System.out.println(tree.isExpanded(new TreePath(knoten.toArray())));
 		
 		tree.addTreeSelectionListener(new TreeSelectionListener() {
 				
@@ -86,6 +96,12 @@ public class TreeView1 extends JPanel{
 					}	
 				}
 		});
+		
+		DefaultTreeModel model = (DefaultTreeModel)tree.getModel();
+		model.reload();
+		model.nodeStructureChanged(root);
+		
+		treeScrollPanel = new JScrollPane(tree);
 		this.revalidate();
 		this.repaint();
 	}
