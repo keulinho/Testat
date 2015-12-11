@@ -24,6 +24,7 @@ public class TreeView1 extends JPanel{
 	LagerVerwaltungsController controller;
 	JScrollPane treeScrollPanel;
 	DefaultTreeModel model;
+	List<LagerBaumKnoten> knoten;
 	
 	public TreeView1(List<LagerModel> lagerListe, final LagerVerwaltungsController controller){
 		
@@ -31,6 +32,7 @@ public class TreeView1 extends JPanel{
 		this.setPreferredSize(new Dimension(300,400));
 		this.setLayout(new BorderLayout());
 		
+		knoten = new ArrayList<LagerBaumKnoten>();
 	    root = new LagerBaumKnoten("Gesamtlager");
 	    model = new DefaultTreeModel(root);
 	    baumEbeneErzeugen(lagerListe,root);
@@ -64,6 +66,7 @@ public class TreeView1 extends JPanel{
 				model.reload(elternKnoten);
 				model.reload(lBKnoten);
 				model.nodeStructureChanged(elternKnoten);
+				knoten.add(lBKnoten);
 				System.out.println(lBKnoten.getUserObject());
 				baumEbeneErzeugen(lModel.getUnterLager(),lBKnoten);
 				
@@ -73,9 +76,13 @@ public class TreeView1 extends JPanel{
 	
 	public void aktualisiereBaum(List<LagerModel> lagerListe) {
 		
-		root.removeAllChildren();
-		//root = new LagerBaumKnoten("Gesamtlager");
-	    model = new DefaultTreeModel(root);
+
+		for (LagerBaumKnoten node : knoten) {
+			System.out.println(node.getUserObject());
+			model.removeNodeFromParent(node);
+			model.nodeStructureChanged(node.getParent());
+		}
+		knoten= new ArrayList<LagerBaumKnoten>();
 		baumEbeneErzeugen(lagerListe,root);
 		tree=new JTree(model);
 		tree.setExpandsSelectedPaths(true);
