@@ -21,6 +21,7 @@ import javax.swing.JToolBar;
 import controller.LagerVerwaltungsController;
 import model.AbBuchungsModel;
 import model.BuchungsModel;
+import model.LagerModel;
 import model.LagerVerwaltungsModel;
 import model.ZuBuchungsModel;
 
@@ -203,7 +204,6 @@ public class VerwaltungsView extends JFrame implements Observer{
 		}
 		listeBuchungen=lvModel.getBuchungen(); //Liste wird bei jedem Update aktualisiert
 		treePane.aktualisiereBaum(lvModel.getLager());
-	
 	}
 	
 	/**
