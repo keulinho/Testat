@@ -122,12 +122,16 @@ public class LagerVerwaltungsModel extends Observable implements Serializable {
 				} catch (LagerUeberfuelltException e) {
 					// TODO ErrorHandler und evtl. was rückhängig machen und evtl. false zurückgeben
 				}
+				setChanged();
+				notifyObservers();
 				return lager;
 			} else if(!oberLager.getUnterLager().isEmpty()) {
 				LagerModel lager = oberLager.addUnterlager(kapazitaet, name);
 				oberLager.aendernKapazitaet(kapazitaet);
 				oberLager.aendernOberlagerKapazitaet(kapazitaet);
 				maxFreieKapazitaet += kapazitaet;
+				setChanged();
+				notifyObservers();
 				return lager;
 			}
 			return null;
@@ -135,8 +139,11 @@ public class LagerVerwaltungsModel extends Observable implements Serializable {
 			LagerModel newLager = new LagerModel(kapazitaet, name, oberLager);
 			lager.add(newLager);
 			maxFreieKapazitaet += kapazitaet;
+			setChanged();
+			notifyObservers();
 			return newLager;
 		}
+		
 	}
 	
 	/**
@@ -146,6 +153,8 @@ public class LagerVerwaltungsModel extends Observable implements Serializable {
 	 */
 	public void umbenennenLager(LagerModel lager, String name){
 		lager.setName(name);
+		setChanged();
+		notifyObservers();
 	}
 	
 	/**

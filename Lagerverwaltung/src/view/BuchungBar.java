@@ -262,6 +262,15 @@ public class BuchungBar extends JToolBar{
 		  } catch (IOException ex) {
 			  ex.printStackTrace();
 		  }
+		neuesLagerErstellen.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				controller.erstelleUnterLager(lagerName.getText(), (int) lagerKapazitaet.getValue());
+				lagerName.setText("");
+				lagerKapazitaet.setValue(null);
+			}
+		});
 	}
 	
 	
