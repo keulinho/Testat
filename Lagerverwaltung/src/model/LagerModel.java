@@ -12,7 +12,7 @@ import core.exception.LagerUeberfuelltException;
  * Diese Klasse stellt die Daten für ein Lager bereit und verarbeitet diese
  */
 public class LagerModel extends Observable implements Serializable {
-	int maxKapazitaet, bestand;
+	int maxKapazitaet, bestand; //TODO verteilbare Menge implementieren
 	String name;
 	List<LagerModel> unterLager;
 	LagerModel oberLager;
