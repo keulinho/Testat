@@ -81,7 +81,6 @@ public class DetailView extends JPanel implements Observer{
 			isUnterLager=false;
 			meldung.setText("Bei einem Oberlager gibt es keine Buchungen");
 		} else {
-			System.out.println("unterlager");
 			isUnterLager=true;
 			meldung.setText("Es gibt noch keine Buchungen auf dieses Lager");
 		}

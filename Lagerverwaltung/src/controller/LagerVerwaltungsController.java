@@ -39,7 +39,7 @@ public class LagerVerwaltungsController {
 	}
 	
 	public void buchungVerwerfen() {
-
+		lVModel.verwerfenBuchung();
 	}
 	
 	public void buchungAbschliessen() {

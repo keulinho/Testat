@@ -247,6 +247,8 @@ public class LagerVerwaltungsModel extends Observable implements Serializable {
 	 */
 	public boolean hinzugegenAnteil(LagerModel lager, int anteil){
 		if(lager.isUntersteEbene() && laufendeBuchung.hinzufuegenAnteil(lager, anteil) != null){
+			this.setChanged();
+			this.notifyObservers();
 			return true;
 		}
 		return false;
