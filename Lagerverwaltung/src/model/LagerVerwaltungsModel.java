@@ -56,40 +56,40 @@ public class LagerVerwaltungsModel extends Observable implements Serializable {
 		
 		//Buchungen
 		erstellenZuBuchung(new Date(1), 1000);
-		hinzugegenAnteil(lager13, 500);
-		hinzugegenAnteil(lager17, 200);
-		hinzugegenAnteil(lager221, 100);
-		hinzugegenAnteil(lager23, 100);
-		hinzugegenAnteil(lager3, 100);
+		hinzufuegenAnteil(lager13, 500);
+		hinzufuegenAnteil(lager17, 200);
+		hinzufuegenAnteil(lager221, 100);
+		hinzufuegenAnteil(lager23, 100);
+		hinzufuegenAnteil(lager3, 100);
 		abschliessenBuchung();
 		
 		erstellenZuBuchung(new Date(2), 2000);
-		hinzugegenAnteil(lager112, 1000);
-		hinzugegenAnteil(lager12, 400);
-		hinzugegenAnteil(lager14, 400);
-		hinzugegenAnteil(lager15, 200);
+		hinzufuegenAnteil(lager112, 1000);
+		hinzufuegenAnteil(lager12, 400);
+		hinzufuegenAnteil(lager14, 400);
+		hinzufuegenAnteil(lager15, 200);
 		abschliessenBuchung();
 		
 		erstellenZuBuchung(new Date(3), 10000);
-		hinzugegenAnteil(lager16, 2000);
-		hinzugegenAnteil(lager212, 1000);
-		hinzugegenAnteil(lager222, 2500);
-		hinzugegenAnteil(lager23, 2500);
-		hinzugegenAnteil(lager3, 2000);
+		hinzufuegenAnteil(lager16, 2000);
+		hinzufuegenAnteil(lager212, 1000);
+		hinzufuegenAnteil(lager222, 2500);
+		hinzufuegenAnteil(lager23, 2500);
+		hinzufuegenAnteil(lager3, 2000);
 		abschliessenBuchung();
 		
 		erstellenZuBuchung(new Date(4), 5000);
-		hinzugegenAnteil(lager214, 2500);
-		hinzugegenAnteil(lager17, 2000);
-		hinzugegenAnteil(lager112, 500);
+		hinzufuegenAnteil(lager214, 2500);
+		hinzufuegenAnteil(lager17, 2000);
+		hinzufuegenAnteil(lager112, 500);
 		abschliessenBuchung();
 		
 		erstellenZuBuchung(new Date(5), 12500);
-		hinzugegenAnteil(lager211, 3750);
-		hinzugegenAnteil(lager16, 2500);
-		hinzugegenAnteil(lager111, 1875);
-		hinzugegenAnteil(lager13, 1875);
-		hinzugegenAnteil(lager221, 2500);
+		hinzufuegenAnteil(lager211, 3750);
+		hinzufuegenAnteil(lager16, 2500);
+		hinzufuegenAnteil(lager111, 1875);
+		hinzufuegenAnteil(lager13, 1875);
+		hinzufuegenAnteil(lager221, 2500);
 		abschliessenBuchung();
 	}
 	
@@ -193,6 +193,7 @@ public class LagerVerwaltungsModel extends Observable implements Serializable {
 	public void verwerfenBuchung(){
 		if(laufendeBuchung != null){
 			while(!laufendeBuchung.getAnteile().isEmpty()){
+				laufendeBuchung.getAnteile().get(0).getLager().resetVerteilteMenge();
 				laufendeBuchung.getAnteile().remove(0);
 			}
 		}
@@ -210,20 +211,20 @@ public class LagerVerwaltungsModel extends Observable implements Serializable {
 	public boolean abschliessenBuchung(){
 		if(laufendeBuchung.isFertig()){
 			List<AnteilModel> anteile = laufendeBuchung.getAnteile();
-			for(AnteilModel anteil: anteile){
-				for(int i = anteile.indexOf(anteil) + 1; i < anteile.size(); i++){
-					if(anteil.getLager() == anteile.get(i).getLager()){
-						anteil.erhoehenAnteil(anteile.get(i).getAnteil());
+			for(int a = 0; a < anteile.size(); a++){
+				for(int i = anteile.indexOf(anteile.get(a)) + 1; i < anteile.size(); i++){
+					if(anteile.get(a).getLager() == anteile.get(i).getLager()){
+						anteile.get(a).erhoehenAnteil(anteile.get(i).getAnteil());
 						anteile.remove(i);
 					}
 				}
 				try {
-					anteil.getLager().veraendernBestand(anteil.getAnteil());
-					anteil.getLager().addBuchung(laufendeBuchung);
+					anteile.get(a).getLager().veraendernBestand(anteile.get(a).getAnteil());
+					anteile.get(a).getLager().addBuchung(laufendeBuchung);
 				} catch (LagerUeberfuelltException e) {
 					//TODO ErrorHandler
 					//bisher ausgeführten Anteile und die Buchung werden zurückgenommen
-					for(int i= anteile.indexOf(anteil)-1; i >= 0; i--){
+					for(int i= anteile.indexOf(anteile.get(a))-1; i >= 0; i--){
 						try {
 							anteile.get(i).getLager().entfernenBuchung(laufendeBuchung);
 							anteile.get(i).getLager().veraendernBestand(-anteile.get(i).getAnteil());
@@ -243,6 +244,9 @@ public class LagerVerwaltungsModel extends Observable implements Serializable {
 			laufendeBuchung = null;
 			this.setChanged();
 			this.notifyObservers();
+			for(AnteilModel anteil: anteile){
+				anteil.getLager().resetVerteilteMenge();
+			}
 			return true;
 		}
 		return false;
@@ -254,7 +258,7 @@ public class LagerVerwaltungsModel extends Observable implements Serializable {
 	 * @param anteil	der Buchung
 	 * @return true wenn der Anteil erfolgreich hinzugefügt wurde sonst false
 	 */
-	public boolean hinzugegenAnteil(LagerModel lager, int anteil){
+	public boolean hinzufuegenAnteil(LagerModel lager, int anteil){
 		if(lager.isUntersteEbene() && laufendeBuchung.hinzufuegenAnteil(lager, anteil) != null){
 			this.setChanged();
 			this.notifyObservers();
