@@ -67,7 +67,7 @@ public class LagerVerwaltungsController {
 	}
 	
 	public void bucheAnteil(int menge) {
-		lVModel.hinzugegenAnteil(aktuellesLager, menge);
+		lVModel.hinzufuegenAnteil(aktuellesLager, menge);
 	}
 	
 	public void speichern() {

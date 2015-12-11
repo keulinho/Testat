@@ -31,12 +31,14 @@ abstract public class BuchungsModel implements Serializable {
 	abstract public AnteilModel hinzufuegenAnteil(LagerModel lager, int anteil);
 	
 	//Methoden
-	
 	/**
 	 * Löscht alle Anteile der Buchung
 	 */
 	public void loeschenAlleAnteile() {
-		anteile.clear();
+		for(int i = anteile.size() -1 ; i > 0;i--){
+			anteile.get(i).getLager().aendernVerteilteMenge(-anteile.get(i).getAnteil());
+			anteile.remove(i);
+		}
 		verteilteMenge = 0;
 	}
 	
@@ -49,6 +51,7 @@ abstract public class BuchungsModel implements Serializable {
 			if(lager == anteil.getLager()){
 				anteile.remove(anteile.indexOf(anteil));
 				verteilteMenge -= anteil.getAnteil();
+				lager.aendernVerteilteMenge(-anteil.getAnteil());
 			}
 		}
 	}
@@ -65,6 +68,7 @@ abstract public class BuchungsModel implements Serializable {
 			if(anteil.getLager() == lager && anteil.getAnteil() == menge){
 				anteile.remove(anteile.indexOf(anteil));
 				verteilteMenge -= anteil.getAnteil();
+				lager.aendernVerteilteMenge(-anteil.getAnteil());
 				break;
 			}
 		}

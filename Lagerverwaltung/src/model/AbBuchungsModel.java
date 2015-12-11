@@ -21,6 +21,7 @@ public class AbBuchungsModel extends BuchungsModel {
 			AnteilModel anteilModel = new AnteilModel(lager, -anteil);
 			anteile.add(anteilModel);
 			verteilteMenge += anteilModel.getAnteil();
+			lager.aendernVerteilteMenge(anteil);
 			return anteilModel;
 		}
 		return null;

@@ -60,8 +60,8 @@ public class LagerVerwaltungsModelTest extends TestCase{
 		LagerModel lager1 = lagerVerwaltungsModel.hinzufuegenLager(null, 100, "Oberlager1");
 		LagerModel lager2 = lagerVerwaltungsModel.hinzufuegenLager(null, 100, "Oberlager2");
 		assertEquals(true,
-				lagerVerwaltungsModel.hinzugegenAnteil(lager1, 50) &&
-				lagerVerwaltungsModel.hinzugegenAnteil(lager2, 50) &&
+				lagerVerwaltungsModel.hinzufuegenAnteil(lager1, 50) &&
+				lagerVerwaltungsModel.hinzufuegenAnteil(lager2, 50) &&
 				lagerVerwaltungsModel.getLaufendeBuchung().anteile.size() == 2 &&
 				lagerVerwaltungsModel.getLaufendeBuchung().getVerteilteMenge() == 100);
 	}
@@ -70,8 +70,8 @@ public class LagerVerwaltungsModelTest extends TestCase{
 		lagerVerwaltungsModel.erstellenZuBuchung(new Date(1), 100);
 		LagerModel lager1 = lagerVerwaltungsModel.hinzufuegenLager(null, 100, "Oberlager1");
 		LagerModel lager2 = lagerVerwaltungsModel.hinzufuegenLager(null, 100, "Oberlager2");
-		assertEquals(true, lagerVerwaltungsModel.hinzugegenAnteil(lager1, 50));
-		assertEquals(false, lagerVerwaltungsModel.hinzugegenAnteil(lager2, 60));
+		assertEquals(true, lagerVerwaltungsModel.hinzufuegenAnteil(lager1, 50));
+		assertEquals(false, lagerVerwaltungsModel.hinzufuegenAnteil(lager2, 60));
 		assertEquals(true,
 				lagerVerwaltungsModel.getLaufendeBuchung().anteile.size() == 1 &&
 				lagerVerwaltungsModel.getLaufendeBuchung().getVerteilteMenge() == 50);
@@ -81,8 +81,8 @@ public class LagerVerwaltungsModelTest extends TestCase{
 		lagerVerwaltungsModel.erstellenZuBuchung(new Date(1), 100);
 		LagerModel lager1 = lagerVerwaltungsModel.hinzufuegenLager(null, 100, "Oberlager1");
 		LagerModel lager2 = lagerVerwaltungsModel.hinzufuegenLager(null, 100, "Oberlager2");
-		lagerVerwaltungsModel.hinzugegenAnteil(lager1, 50);
-		lagerVerwaltungsModel.hinzugegenAnteil(lager2, 50);
+		lagerVerwaltungsModel.hinzufuegenAnteil(lager1, 50);
+		lagerVerwaltungsModel.hinzufuegenAnteil(lager2, 50);
 		lagerVerwaltungsModel.loeschenAnteil(lager1, 50);
 		assertEquals(true, lagerVerwaltungsModel.getLaufendeBuchung().getAnteile().size() == 1 &&
 				lagerVerwaltungsModel.getLaufendeBuchung().getAnteile().get(0).getLager() == lager2 &&
@@ -93,8 +93,8 @@ public class LagerVerwaltungsModelTest extends TestCase{
 		lagerVerwaltungsModel.erstellenZuBuchung(new Date(1), 100);
 		LagerModel lager1 = lagerVerwaltungsModel.hinzufuegenLager(null, 100, "Oberlager1");
 		LagerModel lager2 = lagerVerwaltungsModel.hinzufuegenLager(null, 100, "Oberlager2");
-		lagerVerwaltungsModel.hinzugegenAnteil(lager1, 50);
-		lagerVerwaltungsModel.hinzugegenAnteil(lager2, 50);
+		lagerVerwaltungsModel.hinzufuegenAnteil(lager1, 50);
+		lagerVerwaltungsModel.hinzufuegenAnteil(lager2, 50);
 		assertEquals(true, lagerVerwaltungsModel.abschliessenBuchung() &&
 				lagerVerwaltungsModel.getBuchungen().size() == 1 &&
 				lager1.getBestand() == 50 &&
@@ -108,7 +108,7 @@ public class LagerVerwaltungsModelTest extends TestCase{
 		lagerVerwaltungsModel.erstellenZuBuchung(new Date(1), 100);
 		LagerModel lager1 = lagerVerwaltungsModel.hinzufuegenLager(null, 100, "Oberlager1");
 		LagerModel lager2 = lagerVerwaltungsModel.hinzufuegenLager(null, 100, "Oberlager2");
-		lagerVerwaltungsModel.hinzugegenAnteil(lager1, 50);
+		lagerVerwaltungsModel.hinzufuegenAnteil(lager1, 50);
 		assertEquals(true, lagerVerwaltungsModel.abschliessenBuchung() == false &&
 				lagerVerwaltungsModel.getBuchungen().size() == 0 &&
 				lager1.getBestand() == 0 &&
@@ -120,12 +120,12 @@ public class LagerVerwaltungsModelTest extends TestCase{
 		lagerVerwaltungsModel.erstellenZuBuchung(new Date(1), 100);
 		LagerModel lager1 = lagerVerwaltungsModel.hinzufuegenLager(null, 100, "Oberlager1");
 		LagerModel lager2 = lagerVerwaltungsModel.hinzufuegenLager(null, 100, "Oberlager2");
-		lagerVerwaltungsModel.hinzugegenAnteil(lager1, 50);
-		lagerVerwaltungsModel.hinzugegenAnteil(lager2, 50);
+		lagerVerwaltungsModel.hinzufuegenAnteil(lager1, 50);
+		lagerVerwaltungsModel.hinzufuegenAnteil(lager2, 50);
 		lagerVerwaltungsModel.abschliessenBuchung();
 		lagerVerwaltungsModel.erstellenAbBuchung(new Date(1));
-		lagerVerwaltungsModel.hinzugegenAnteil(lager1, 50);
-		lagerVerwaltungsModel.hinzugegenAnteil(lager2, 50);
+		lagerVerwaltungsModel.hinzufuegenAnteil(lager1, 50);
+		lagerVerwaltungsModel.hinzufuegenAnteil(lager2, 50);
 		assertEquals(true, lagerVerwaltungsModel.abschliessenBuchung() &&
 				lager1.getBestand() == 0 &&
 				lager2.getBestand() == 0 &&
@@ -136,8 +136,8 @@ public class LagerVerwaltungsModelTest extends TestCase{
 		lagerVerwaltungsModel.erstellenZuBuchung(new Date(1), 100);
 		LagerModel lager1 = lagerVerwaltungsModel.hinzufuegenLager(null, 100, "Oberlager1");
 		LagerModel lager2 = lagerVerwaltungsModel.hinzufuegenLager(null, 100, "Oberlager2");
-		lagerVerwaltungsModel.hinzugegenAnteil(lager1, 50);
-		lagerVerwaltungsModel.hinzugegenAnteil(lager2, 50);
+		lagerVerwaltungsModel.hinzufuegenAnteil(lager1, 50);
+		lagerVerwaltungsModel.hinzufuegenAnteil(lager2, 50);
 		lagerVerwaltungsModel.abschliessenBuchung();
 		lagerVerwaltungsModel.erstellenAbBuchung(new Date(1));
 		assertEquals(false, lagerVerwaltungsModel.abschliessenBuchung());

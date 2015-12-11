@@ -26,7 +26,7 @@ public class AnteilCommand extends Command {
 
 	@Override
 	public void execute() {
-		lagerVM.hinzugegenAnteil(lager, anteil);
+		lagerVM.hinzufuegenAnteil(lager, anteil);
 	}
 
 	@Override

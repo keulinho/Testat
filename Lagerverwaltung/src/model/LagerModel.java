@@ -12,7 +12,7 @@ import core.exception.LagerUeberfuelltException;
  * Diese Klasse stellt die Daten für ein Lager bereit und verarbeitet diese
  */
 public class LagerModel extends Observable implements Serializable {
-	int maxKapazitaet, bestand; //TODO verteilbare Menge implementieren
+	int maxKapazitaet, bestand, verteilteMenge; //TODO verteilbare Menge implementieren
 	String name;
 	List<LagerModel> unterLager;
 	LagerModel oberLager;
@@ -36,6 +36,7 @@ public class LagerModel extends Observable implements Serializable {
 		} else {
 			this.bestand=0;
 		}
+		verteilteMenge = 0;
 	}
 	
 	//Methoden
@@ -120,7 +121,7 @@ public class LagerModel extends Observable implements Serializable {
 	 * @param buchung
 	 */
 	public void addBuchung(BuchungsModel buchung){
-		//TODO evtl. Logik hierhin verschieben wenn Buchung eingeht wird hier alles gebucht
+		//TODO evtl. Logik hierhin verschieben, wenn Buchung eingeht, wird hier alles gebucht
 		buchungen.add(buchung);
 	}
 	
@@ -130,6 +131,21 @@ public class LagerModel extends Observable implements Serializable {
 	 */
 	public void entfernenBuchung(BuchungsModel buchung){
 		buchungen.remove(buchung);
+	}
+	
+	/**
+	 * ändert die verteilte um den mitgegebenen Wert
+	 * @param menge int
+	 */
+	public void aendernVerteilteMenge(int menge){
+		verteilteMenge += menge;
+	}
+	
+	/**
+	 * setzt die verteilte Menge auf 0 zurück
+	 */
+	public void resetVerteilteMenge(){
+		verteilteMenge = 0;
 	}
 	
 	//setter

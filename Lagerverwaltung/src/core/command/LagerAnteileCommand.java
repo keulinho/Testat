@@ -33,7 +33,7 @@ public class LagerAnteileCommand extends Command {
 
 	public void undo() {
 		for (AnteilModel anteil : anteile) {
-			lagerVM.hinzugegenAnteil(anteil.getLager(), anteil.getAnteil());
+			lagerVM.hinzufuegenAnteil(anteil.getLager(), anteil.getAnteil());
 		}
 	}
 
