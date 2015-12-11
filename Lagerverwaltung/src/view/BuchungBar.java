@@ -147,6 +147,7 @@ public class BuchungBar extends JToolBar{
 					zulieferungErstellen.setEnabled(true);
 					if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 						zeigeLaufendeZulieferung((int) menge.getValue());
+						controller.zulieferungErstellen((int)menge.getValue());
 					}		
 				}	
 			}

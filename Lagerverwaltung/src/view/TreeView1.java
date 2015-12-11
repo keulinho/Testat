@@ -75,7 +75,7 @@ public class TreeView1 extends JPanel{
 		}
 		
 		tree.expandPath(new TreePath(knoten.toArray()));
-		System.out.println(tree.isExpanded(new TreePath(knoten.toArray())));
+		//System.out.println(tree.isExpanded(new TreePath(knoten.toArray())));
 		
 		tree.addTreeSelectionListener(new TreeSelectionListener() {
 				

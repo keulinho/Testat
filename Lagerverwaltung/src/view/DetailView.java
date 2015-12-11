@@ -22,7 +22,7 @@ import model.LagerModel;
 public class DetailView extends JPanel implements Observer{
 	
 	String lagerName;
-	int mengeKapazitaet, mengeBestand;
+	int mengeKapazitaet, mengeBestand, gesamtMenge, maximum;
 	EditNamePanel editName;
 	OptionenPanel optionenPanel;
 	JPanel lagerInfo;
@@ -31,7 +31,9 @@ public class DetailView extends JPanel implements Observer{
 	JTable tabelle;
 	String[] columnNames;
 	Object[][] data;
+	boolean zulieferung;
 	boolean isUnterLager;
+	boolean buchungsModus;
 	LagerVerwaltungsController controller;
 	
 
@@ -75,12 +77,16 @@ public class DetailView extends JPanel implements Observer{
 		this.remove(lagerInfo);
 		lagerInfoErstellen();
 		this.add(lagerInfo,BorderLayout.NORTH);
-		if (lModel.hatUnterlager()) {
+		if (!lModel.isUntersteEbene()) {
 			isUnterLager=false;
 			meldung.setText("Bei einem Oberlager gibt es keine Buchungen");
 		} else {
+			System.out.println("unterlager");
 			isUnterLager=true;
 			meldung.setText("Es gibt noch keine Buchungen auf dieses Lager");
+		}
+		if (buchungsModus) {
+			zeigeBuchungsOptionen(gesamtMenge, maximum, zulieferung);
 		}
 		if ((lModel.getBuchungen()!=null) && (lModel.getBuchungen().size()>0)) { //True wenn es Buchungen zu diesem Lager gibt
 			bereiteBuchungenAuf(lModel.getBuchungen(),(LagerModel)o);
@@ -145,6 +151,7 @@ public class DetailView extends JPanel implements Observer{
 	 */
 	public void zeigeButton(){
 		optionenPanel.zeigeButton();
+		buchungsModus=false;
 	}
 	
 	/**
@@ -154,6 +161,10 @@ public class DetailView extends JPanel implements Observer{
 	 * @param zulieferung true wenn zulieferung, sonst false
 	 */
 	public void zeigeBuchungsOptionen(int gesamtMenge, int maximum, boolean zulieferung){
+		buchungsModus=true;
+		this.gesamtMenge=gesamtMenge;
+		this.maximum=maximum;
+		this.zulieferung=zulieferung;
 		if (isUnterLager) {
 			if (zulieferung) { //wenn Unterlager auf das Zugebucht werden soll
 				if (maximum>(mengeKapazitaet-mengeBestand)) { 
