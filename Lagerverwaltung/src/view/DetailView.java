@@ -232,5 +232,9 @@ public class DetailView extends JPanel implements Observer{
 		}
 		
 	}
+	
+	public void editName() {
+		editName.edit();
+	}
 }
 

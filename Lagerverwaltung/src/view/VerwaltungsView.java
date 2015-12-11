@@ -27,7 +27,7 @@ import model.ZuBuchungsModel;
 public class VerwaltungsView extends JFrame implements Observer{
 
 	int restMenge;
-	JButton laden, neueZulieferung, speichern, neueAuslieferung,alleBuchungen;
+	JButton laden, neueZulieferung, speichern, neueAuslieferung,alleBuchungen, listeZeigen;
 	JToolBar toolbar;
 	BuchungBar buchungBar;
 	DetailView detailPane;
@@ -56,6 +56,7 @@ public class VerwaltungsView extends JFrame implements Observer{
 		toolbar.add(neueZulieferung);
 		toolbar.add(neueAuslieferung);
 		toolbar.add(alleBuchungen);
+		toolbar.add(listeZeigen);
 		toolbar.setFloatable(false);
 		this.add(toolbar,BorderLayout.PAGE_START);
 
@@ -154,7 +155,7 @@ public class VerwaltungsView extends JFrame implements Observer{
 				neueZulieferung.setEnabled(false);
 			}
 		});
-		alleBuchungen= new JButton("Alle Buchungen anzeigen");
+		alleBuchungen= new JButton("Alle Buchungen");
 		try {
 		    Image img = ImageIO.read(new File("src/icons/alleBuchungen.png"));
 		    alleBuchungen.setIcon(new ImageIcon(img));
@@ -168,7 +169,13 @@ public class VerwaltungsView extends JFrame implements Observer{
 				zeigeAlleBuchungen();
 			}
 		});
-		
+		listeZeigen= new JButton("Buchungsliste");
+		try {
+		    Image img = ImageIO.read(new File("src/icons/Liste.png"));
+		    listeZeigen.setIcon(new ImageIcon(img));
+		  } catch (IOException ex) {
+			  ex.printStackTrace();
+		  }
 	}
 
 	/**
@@ -229,5 +236,9 @@ public class VerwaltungsView extends JFrame implements Observer{
 	
 	public DetailView getDetailPane() {
 		return detailPane;
+	}
+	
+	public void editName() {
+		detailPane.editName();
 	}
 }

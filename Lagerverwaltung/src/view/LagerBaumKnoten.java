@@ -20,7 +20,7 @@ public class LagerBaumKnoten extends DefaultMutableTreeNode implements Observer{
 		if (lModel.hatUnterlager()) {
 			this.setUserObject(lModel.getName());
 		} else {
-			this.setUserObject("<html>"+lModel.getName()+"<br>aktueller Bestand: "+lModel.getBestand() + "<br>maximale Kapazitaet: "+ lModel.getMaxKapazitaet()+"</html>");
+			this.setUserObject("<html>"+lModel.getName()+"<br>aktueller Bestand: "+lModel.getBestand() + "<br>maximale Kapazität: "+ lModel.getMaxKapazitaet()+"</html>");
 		}
 		
 	}

@@ -208,7 +208,6 @@ public class BuchungBar extends JToolBar{
 				if((lagerKapazitaet.getValue()!=null)&&(!lagerName.getText().isEmpty())){
 					
 					neuesLagerErstellen.setEnabled(true);
-					System.out.println(lagerName.getText());
 					if (arg0.getKeyCode() == KeyEvent.VK_ENTER) {
 						controller.erstelleUnterLager(lagerName.getText(),(int)lagerKapazitaet.getValue());
 					}
@@ -238,7 +237,6 @@ public class BuchungBar extends JToolBar{
 					if((lagerKapazitaet.getValue()!=null)&&(!lagerName.getText().isEmpty())){
 						
 						neuesLagerErstellen.setEnabled(true);
-						System.out.println(lagerName.getText());
 						if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 							controller.erstelleUnterLager(lagerName.getText(),(int)lagerKapazitaet.getValue());
 						}

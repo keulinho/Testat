@@ -22,7 +22,6 @@ import javax.swing.event.ChangeListener;
 import controller.LagerVerwaltungsController;
 
 public class OptionenPanel extends JPanel{
-	EditNamePanel editName;
 	JButton loeschen, neuesLager, umbenennen, anteilBuchen;
 	JLabel infoText,menge, anteil;
 	JSlider slider;
@@ -32,7 +31,6 @@ public class OptionenPanel extends JPanel{
 	public OptionenPanel(EditNamePanel editName, LagerVerwaltungsController controller){
 		
 		this.controller=controller;
-		this.editName=editName;
 		this.setPreferredSize(new Dimension(515,50));
 		
 		guiElementeErstellen();
@@ -87,7 +85,8 @@ public class OptionenPanel extends JPanel{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				editName.edit();
+				VerwaltungsView vView = (VerwaltungsView) SwingUtilities.getWindowAncestor(OptionenPanel.this);
+				vView.editName();
 			}
 		});
 		//Info Modus bei offener Buchung und gewähltem Oberlager
