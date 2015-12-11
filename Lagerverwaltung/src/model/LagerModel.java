@@ -184,6 +184,10 @@ public class LagerModel extends Observable implements Serializable {
 		return this.bestand;
 	}
 	
+	public int getVerteilteMenge(){
+		return this.verteilteMenge;
+	}
+	
 	/**
 	 * gibt eine Liste aller Unterlager zurück
 	 * @return Liste der Unterlager oder null
@@ -232,5 +236,9 @@ public class LagerModel extends Observable implements Serializable {
 	
 	public boolean isUntersteEbene(){
 		return this.unterLager.isEmpty();
+	}
+	
+	public int getFreienPlatz(){
+		return maxKapazitaet-bestand;
 	}
 }

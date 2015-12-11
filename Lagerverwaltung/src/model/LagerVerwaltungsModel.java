@@ -335,4 +335,13 @@ public class LagerVerwaltungsModel extends Observable implements Serializable {
 		return this.lager;
 	}
 	
+	/**
+	 * gibt zu einem Lager die in der aktuellen Buchung verteilbare Menge zurück
+	 * @param lager
+	 * @return int
+	 */
+	public int getVerteilbareMenge(LagerModel lager) {
+		return laufendeBuchung.getVerteilbareMenge(lager);
+	}
+	
 }

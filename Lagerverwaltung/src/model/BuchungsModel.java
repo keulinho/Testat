@@ -30,6 +30,9 @@ abstract public class BuchungsModel implements Serializable {
 	 */
 	abstract public AnteilModel hinzufuegenAnteil(LagerModel lager, int anteil);
 	
+	//TODO JAVADOC
+	abstract public int getVerteilbareMenge(LagerModel lager);
+	
 	//Methoden
 	/**
 	 * Löscht alle Anteile der Buchung

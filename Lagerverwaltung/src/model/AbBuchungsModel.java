@@ -42,4 +42,8 @@ public class AbBuchungsModel extends BuchungsModel {
 		return !this.anteile.isEmpty();
 	}
 
+	public int getVerteilbareMenge(LagerModel lager) {
+		return lager.getBestand()-lager.getVerteilteMenge();
+	}
+
 }

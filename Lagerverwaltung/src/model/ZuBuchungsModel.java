@@ -61,6 +61,8 @@ public class ZuBuchungsModel extends BuchungsModel {
 		return false;
 	}
 	
-	
+	public int getVerteilbareMenge(LagerModel lager){
+		return lager.getFreienPlatz()-lager.getVerteilteMenge();
+	}
 
 }
