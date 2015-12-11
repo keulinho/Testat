@@ -298,7 +298,7 @@ public class BuchungBar extends JToolBar{
 		laufendeAuslieferung.setText("<html>Es gibt eine laufende Auslieferung <br>"+restMenge+" Einheiten wurden schon verteilt</html>");
 		this.add(laufendeAuslieferung);
 		this.add(buchungVerwerfen);
-		if (restMenge>0){
+		if (restMenge<0){
 			this.add(buchungAbschliessen);
 		}
 		this.add(redo);

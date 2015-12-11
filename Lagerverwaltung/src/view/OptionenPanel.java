@@ -184,11 +184,20 @@ public class OptionenPanel extends JPanel{
 	 * @return Prozentzahl auf zwei Stellen gerundet
 	 */
 	public double rechneProzent() {
-		
-		double prozent = (((double)slider.getValue()/gesamtMenge)*100.00);
-		prozent = (prozent*1000)+5;
-		int temp = (int) (prozent/10);
-		prozent = (double)temp/100.00;
-		return prozent;
+		if (this.gesamtMenge==0) {
+			return 100;
+		} else {
+			int gesamtMenge;
+			if (this.gesamtMenge<0) {
+				gesamtMenge = this.gesamtMenge * (-1);
+			} else {
+				gesamtMenge = this.gesamtMenge;
+			}
+			double prozent = (((double)slider.getValue()/gesamtMenge)*100.00);
+			prozent = (prozent*1000)+5;
+			int temp = (int) (prozent/10);
+			prozent = (double)temp/100.00;
+			return prozent;
+		}	
 	}
 }
