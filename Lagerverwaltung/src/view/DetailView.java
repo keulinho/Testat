@@ -193,9 +193,14 @@ public class DetailView extends JPanel implements Observer{
 			data[i][0]=bModel.getBuchungsTag().toLocaleString();
 			data[i][1]=bModel.getVerteilteMenge();
 			int j;
-			for (j = 0; bModel.getAnteile().get(j).getLager().equals(lModel); j++) { //Anteil der zum aktuellem Lager gehört wird gesucht
-				
+			if (bModel.getAnteile().size()==1) {
+				j=0;
+			} else {
+				for (j = 0; bModel.getAnteile().get(j).getLager().equals(lModel); j++) { //Anteil der zum aktuellem Lager gehört wird gesucht
+					
 				}
+			}
+			
 			data[i][3]=bModel.getAnteile().get(j).getAnteil();
 			double prozent = (Double.parseDouble("" + data[i][3])/(Double.parseDouble(""+ data[i][1]))*100.00);
 			prozent = (prozent*1000)+5;
