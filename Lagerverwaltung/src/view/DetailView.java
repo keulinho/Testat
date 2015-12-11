@@ -22,7 +22,7 @@ import model.LagerModel;
 public class DetailView extends JPanel implements Observer{
 	
 	String lagerName;
-	int mengeKapazitaet, mengeBestand, gesamtMenge, maximum;
+	int mengeKapazitaet, mengeBestand, gesamtMenge, maximum, verteilteMenge;
 	EditNamePanel editName;
 	OptionenPanel optionenPanel;
 	JPanel lagerInfo;
@@ -74,6 +74,12 @@ public class DetailView extends JPanel implements Observer{
 		mengeBestand=lModel.getBestand();
 		mengeKapazitaet=lModel.getMaxKapazitaet();
 		lagerName=lModel.getName();
+		if (zulieferung) {
+			verteilteMenge=lModel.getVerteilteMenge();
+		} else {
+			verteilteMenge=lModel.getVerteilteMenge()*-1;
+		}
+		
 		this.remove(lagerInfo);
 		lagerInfoErstellen();
 		this.add(lagerInfo,BorderLayout.NORTH);
@@ -138,7 +144,7 @@ public class DetailView extends JPanel implements Observer{
 		kapazitaet = new JLabel("Maximale Kapazität: "+mengeKapazitaet);
 		kapazitaet.revalidate();
 		kapazitaet.repaint();
-		bestand = new JLabel("Aktueller Bestand: "+mengeBestand);
+		bestand = new JLabel("Aktueller Bestand: "+(mengeBestand+verteilteMenge));
 		bestand.revalidate();
 		bestand.repaint();
 		lagerInfo.revalidate();
@@ -166,13 +172,13 @@ public class DetailView extends JPanel implements Observer{
 		this.zulieferung=zulieferung;
 		if (isUnterLager) {
 			if (zulieferung) { //wenn Unterlager auf das Zugebucht werden soll
-				if (maximum>(mengeKapazitaet-mengeBestand)) { 
-					optionenPanel.zeigeSlider(gesamtMenge,mengeKapazitaet-mengeBestand); //wenn noch zu verteilende Menge größer als freie Kapazität des Lagers ist freie Kapazität Maximum des Sliders
+				if (maximum>(mengeKapazitaet-(mengeBestand+verteilteMenge))) { 
+					optionenPanel.zeigeSlider(gesamtMenge,mengeKapazitaet-(mengeBestand+verteilteMenge)); //wenn noch zu verteilende Menge größer als freie Kapazität des Lagers ist freie Kapazität Maximum des Sliders
 				} else {
 					optionenPanel.zeigeSlider(gesamtMenge,maximum); //wenn noch zu verteilende Menge kleiner als freie Kapazität ist zu verteilende Menge Maximum des Sliders
 				}	
 			} else {
-				optionenPanel.zeigeSlider(gesamtMenge,mengeBestand); //bei Abbuchungen ist der BEstand des Lagers Maximum des Sliders	 
+				optionenPanel.zeigeSlider(gesamtMenge,(mengeBestand+verteilteMenge)); //bei Abbuchungen ist der BEstand des Lagers Maximum des Sliders	 
 			}
 				
 		} else {
@@ -193,13 +199,10 @@ public class DetailView extends JPanel implements Observer{
 			data[i][0]=bModel.getBuchungsTag().toLocaleString();
 			data[i][1]=bModel.getVerteilteMenge();
 			int j;
-			if (bModel.getAnteile().size()==1) {
-				j=0;
-			} else {
-				for (j = 0; bModel.getAnteile().get(j).getLager().equals(lModel); j++) { //Anteil der zum aktuellem Lager gehört wird gesucht
+			
+			for (j = 0; !bModel.getAnteile().get(j).getLager().equals(lModel); j++) { //Anteil der zum aktuellem Lager gehört wird gesucht
 					
 				}
-			}
 			
 			data[i][3]=bModel.getAnteile().get(j).getAnteil();
 			double prozent = (Double.parseDouble("" + data[i][3])/(Double.parseDouble(""+ data[i][1]))*100.00);

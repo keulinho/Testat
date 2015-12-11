@@ -67,7 +67,6 @@ public class TreeView1 extends JPanel{
 				model.reload(lBKnoten);
 				model.nodeStructureChanged(elternKnoten);
 				knoten.add(lBKnoten);
-				System.out.println(lBKnoten.getUserObject());
 				baumEbeneErzeugen(lModel.getUnterLager(),lBKnoten);
 				
 			}
@@ -78,7 +77,6 @@ public class TreeView1 extends JPanel{
 		
 
 		for (LagerBaumKnoten node : knoten) {
-			System.out.println(node.getUserObject());
 			model.removeNodeFromParent(node);
 			model.nodeStructureChanged(node.getParent());
 		}
