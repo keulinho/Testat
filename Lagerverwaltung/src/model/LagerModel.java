@@ -31,7 +31,7 @@ public class LagerModel extends Observable implements Serializable {
 		this.name=name;
 		this.unterLager = new Vector<LagerModel>();
 		this.buchungen = new Vector<BuchungsModel>();
-		if(oberLager != null){
+		if(oberLager != null && oberLager.getUnterLager().isEmpty()){
 			this.bestand = oberLager.getBestand();
 		} else {
 			this.bestand=0;
