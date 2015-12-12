@@ -114,14 +114,9 @@ public class LagerVerwaltungsModel extends Observable implements Serializable {
 		if(oberLager != null){
 			if(oberLager.getUnterLager().isEmpty() && oberLager.getBestand() <= kapazitaet){
 				LagerModel lager = oberLager.addUnterlager(kapazitaet, name);
-				try {
-					lager.veraendernBestand(oberLager.getBestand());
-					oberLager.aendernKapazitaet(kapazitaet-oberLager.getMaxKapazitaet());
-					oberLager.aendernOberlagerKapazitaet(kapazitaet);
-					maxFreieKapazitaet += kapazitaet;
-				} catch (LagerUeberfuelltException e) {
-					// TODO ErrorHandler und evtl. was rückhängig machen und evtl. false zurückgeben
-				}
+				oberLager.aendernKapazitaet(kapazitaet-oberLager.getMaxKapazitaet());
+				oberLager.aendernOberlagerKapazitaet(kapazitaet);
+				maxFreieKapazitaet += kapazitaet;
 				setChanged();
 				notifyObservers();
 				return lager;
