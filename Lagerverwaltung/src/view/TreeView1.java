@@ -24,6 +24,7 @@ public class TreeView1 extends JPanel{
 	LagerVerwaltungsController controller;
 	JScrollPane treeScrollPanel;
 	DefaultTreeModel model;
+	List<LagerBaumKnoten> knoten;
 	
 	public TreeView1(List<LagerModel> lagerListe, final LagerVerwaltungsController controller){
 		
@@ -31,6 +32,7 @@ public class TreeView1 extends JPanel{
 		this.setPreferredSize(new Dimension(300,400));
 		this.setLayout(new BorderLayout());
 		
+		knoten = new ArrayList<LagerBaumKnoten>();
 	    root = new LagerBaumKnoten("Gesamtlager");
 	    model = new DefaultTreeModel(root);
 	    baumEbeneErzeugen(lagerListe,root);
@@ -64,7 +66,7 @@ public class TreeView1 extends JPanel{
 				model.reload(elternKnoten);
 				model.reload(lBKnoten);
 				model.nodeStructureChanged(elternKnoten);
-				System.out.println(lBKnoten.getUserObject());
+				knoten.add(lBKnoten);
 				baumEbeneErzeugen(lModel.getUnterLager(),lBKnoten);
 				
 			}
@@ -73,37 +75,33 @@ public class TreeView1 extends JPanel{
 	
 	public void aktualisiereBaum(List<LagerModel> lagerListe) {
 		
-		root.removeAllChildren();
-		//root = new LagerBaumKnoten("Gesamtlager");
-	    model = new DefaultTreeModel(root);
-		baumEbeneErzeugen(lagerListe,root);
-		tree=new JTree(model);
-		tree.setExpandsSelectedPaths(true);
-		
-		List<Object> knoten = new ArrayList<Object>();
-		for (int i = 0; i<tree.getModel().getChildCount(tree.getModel().getRoot()); i++) {
-		    knoten.add(tree.getModel().getChild(tree.getModel().getRoot(), i));
+		if (getGroesseLagerList(lagerListe)-1!=knoten.size()) {
+			for (LagerBaumKnoten node : knoten) {
+				model.removeNodeFromParent(node);
+				model.nodeStructureChanged(node.getParent());
+			}
+			knoten= new ArrayList<LagerBaumKnoten>();
+			baumEbeneErzeugen(lagerListe,root);
+			tree=new JTree(model);
+			tree.setExpandsSelectedPaths(true);
+			
+			tree.addTreeSelectionListener(new TreeSelectionListener() {
+					
+					@Override
+					public void valueChanged(TreeSelectionEvent e) {
+						if (!e.getPath().getLastPathComponent().equals(root)) {
+							controller.aktuellesLagerAendern((LagerBaumKnoten) e.getPath().getLastPathComponent());
+						}	
+					}
+			});	
 		}
-		
-		tree.expandPath(new TreePath(knoten.toArray()));
-		
-		tree.addTreeSelectionListener(new TreeSelectionListener() {
-				
-				@Override
-				public void valueChanged(TreeSelectionEvent e) {
-					if (!e.getPath().getLastPathComponent().equals(root)) {
-						controller.aktuellesLagerAendern((LagerBaumKnoten) e.getPath().getLastPathComponent());
-					}	
-				}
-		});
-		
-		DefaultTreeModel model = (DefaultTreeModel)tree.getModel();
-		model.reload();
-		model.nodeStructureChanged(root);
-		
-		treeScrollPanel = new JScrollPane(tree);
-		this.revalidate();
-		this.repaint();
 	}
-	
+	public int getGroesseLagerList(List<LagerModel> lagerListe){
+		int start=0;
+		for (LagerModel lModel : lagerListe) {
+			start+=getGroesseLagerList(lModel.getUnterLager());
+		}
+		start++;
+		return start;
+	}
 }
