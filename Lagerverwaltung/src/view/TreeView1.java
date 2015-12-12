@@ -75,40 +75,33 @@ public class TreeView1 extends JPanel{
 	
 	public void aktualisiereBaum(List<LagerModel> lagerListe) {
 		
-
-		for (LagerBaumKnoten node : knoten) {
-			model.removeNodeFromParent(node);
-			model.nodeStructureChanged(node.getParent());
+		if (getGroesseLagerList(lagerListe)-1!=knoten.size()) {
+			for (LagerBaumKnoten node : knoten) {
+				model.removeNodeFromParent(node);
+				model.nodeStructureChanged(node.getParent());
+			}
+			knoten= new ArrayList<LagerBaumKnoten>();
+			baumEbeneErzeugen(lagerListe,root);
+			tree=new JTree(model);
+			tree.setExpandsSelectedPaths(true);
+			
+			tree.addTreeSelectionListener(new TreeSelectionListener() {
+					
+					@Override
+					public void valueChanged(TreeSelectionEvent e) {
+						if (!e.getPath().getLastPathComponent().equals(root)) {
+							controller.aktuellesLagerAendern((LagerBaumKnoten) e.getPath().getLastPathComponent());
+						}	
+					}
+			});	
 		}
-		knoten= new ArrayList<LagerBaumKnoten>();
-		baumEbeneErzeugen(lagerListe,root);
-		tree=new JTree(model);
-		tree.setExpandsSelectedPaths(true);
-		
-		List<Object> knoten = new ArrayList<Object>();
-		for (int i = 0; i<tree.getModel().getChildCount(tree.getModel().getRoot()); i++) {
-		    knoten.add(tree.getModel().getChild(tree.getModel().getRoot(), i));
-		}
-		
-		tree.expandPath(new TreePath(knoten.toArray()));
-		
-		tree.addTreeSelectionListener(new TreeSelectionListener() {
-				
-				@Override
-				public void valueChanged(TreeSelectionEvent e) {
-					if (!e.getPath().getLastPathComponent().equals(root)) {
-						controller.aktuellesLagerAendern((LagerBaumKnoten) e.getPath().getLastPathComponent());
-					}	
-				}
-		});
-		
-		DefaultTreeModel model = (DefaultTreeModel)tree.getModel();
-		model.reload();
-		model.nodeStructureChanged(root);
-		
-		treeScrollPanel = new JScrollPane(tree);
-		this.revalidate();
-		this.repaint();
 	}
-	
+	public int getGroesseLagerList(List<LagerModel> lagerListe){
+		int start=0;
+		for (LagerModel lModel : lagerListe) {
+			start+=getGroesseLagerList(lModel.getUnterLager());
+		}
+		start++;
+		return start;
+	}
 }
