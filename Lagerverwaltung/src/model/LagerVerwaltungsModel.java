@@ -207,10 +207,12 @@ public class LagerVerwaltungsModel extends Observable implements Serializable {
 		if(laufendeBuchung.isFertig()){
 			List<AnteilModel> anteile = laufendeBuchung.getAnteile();
 			for(int a = 0; a < anteile.size(); a++){
-				for(int i = anteile.indexOf(anteile.get(a)) + 1; i < anteile.size(); i++){
+				for(int i = anteile.indexOf(anteile.get(a)) + 1; i < anteile.size(); i=i){
 					if(anteile.get(a).getLager() == anteile.get(i).getLager()){
 						anteile.get(a).erhoehenAnteil(anteile.get(i).getAnteil());
 						anteile.remove(i);
+					} else {
+						i++;
 					}
 				}
 				try {
