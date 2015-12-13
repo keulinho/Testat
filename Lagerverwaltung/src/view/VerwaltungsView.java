@@ -38,6 +38,7 @@ public class VerwaltungsView extends JFrame implements Observer{
 	LagerVerwaltungsController controller;
 	List<BuchungsModel> listeBuchungen;
 	BuchungsView buchungsView;
+	ListenView liste;
 	
 	/**
 	 * erzeugt eine VerwaltungsView
@@ -182,12 +183,16 @@ public class VerwaltungsView extends JFrame implements Observer{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ListenView liste = new ListenView(listeBuchungen);
+				liste = new ListenView(listeBuchungen,VerwaltungsView.this);
 				VerwaltungsView.this.remove(treePane);
 				VerwaltungsView.this.remove(detailPane);
 				VerwaltungsView.this.add(liste,BorderLayout.WEST);
 				VerwaltungsView.this.revalidate();
 				VerwaltungsView.this.repaint();
+				neueZulieferung.setEnabled(false);
+				neueAuslieferung.setEnabled(false);
+				alleBuchungen.setEnabled(false);
+				listeZeigen.setEnabled(false);
 			}
 		});
 	}
@@ -253,5 +258,17 @@ public class VerwaltungsView extends JFrame implements Observer{
 	
 	public void editName() {
 		detailPane.editName();
+	}
+	
+	public void standardAnsicht() {
+		this.remove(liste);
+		this.add(treePane, BorderLayout.WEST);
+		this.add(detailPane, BorderLayout.EAST);
+		neueZulieferung.setEnabled(true);
+		neueAuslieferung.setEnabled(true);
+		alleBuchungen.setEnabled(true);
+		listeZeigen.setEnabled(true);
+		this.revalidate();
+		this.repaint();
 	}
 }
