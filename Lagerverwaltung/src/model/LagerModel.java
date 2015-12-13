@@ -123,6 +123,8 @@ public class LagerModel extends Observable implements Serializable {
 	public void addBuchung(BuchungsModel buchung){
 		//TODO evtl. Logik hierhin verschieben, wenn Buchung eingeht, wird hier alles gebucht
 		buchungen.add(buchung);
+		setChanged();
+		notifyObservers();
 	}
 	
 	/**
@@ -139,6 +141,8 @@ public class LagerModel extends Observable implements Serializable {
 	 */
 	public void aendernVerteilteMenge(int menge){
 		verteilteMenge += menge;
+		setChanged();
+		notifyObservers();
 	}
 	
 	/**
@@ -146,6 +150,8 @@ public class LagerModel extends Observable implements Serializable {
 	 */
 	public void resetVerteilteMenge(){
 		verteilteMenge = 0;
+		setChanged();
+		notifyObservers();
 	}
 	
 	//setter
