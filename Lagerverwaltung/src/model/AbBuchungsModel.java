@@ -21,7 +21,7 @@ public class AbBuchungsModel extends BuchungsModel {
 			AnteilModel anteilModel = new AnteilModel(lager, -anteil);
 			anteile.add(anteilModel);
 			verteilteMenge += anteilModel.getAnteil();
-			lager.aendernVerteilteMenge(anteil);
+			lager.aendernVerteilteMenge(-anteil);
 			return anteilModel;
 		}
 		return null;
@@ -43,7 +43,7 @@ public class AbBuchungsModel extends BuchungsModel {
 	}
 
 	public int getVerteilbareMenge(LagerModel lager) {
-		return lager.getBestand()-lager.getVerteilteMenge();
+		return lager.getBestand()+lager.getVerteilteMenge();
 	}
 
 }
