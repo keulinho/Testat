@@ -16,6 +16,7 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.JToolBar;
 
 import controller.LagerVerwaltungsController;
@@ -177,6 +178,18 @@ public class VerwaltungsView extends JFrame implements Observer{
 		  } catch (IOException ex) {
 			  ex.printStackTrace();
 		  }
+		listeZeigen.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				ListenView liste = new ListenView(listeBuchungen);
+				VerwaltungsView.this.remove(treePane);
+				VerwaltungsView.this.remove(detailPane);
+				VerwaltungsView.this.add(liste,BorderLayout.WEST);
+				VerwaltungsView.this.revalidate();
+				VerwaltungsView.this.repaint();
+			}
+		});
 	}
 
 	/**
