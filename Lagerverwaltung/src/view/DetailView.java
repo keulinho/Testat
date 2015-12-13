@@ -74,12 +74,7 @@ public class DetailView extends JPanel implements Observer{
 		mengeBestand=lModel.getBestand();
 		mengeKapazitaet=lModel.getMaxKapazitaet();
 		lagerName=lModel.getName();
-		if (zulieferung) {
-			verteilteMenge=lModel.getVerteilteMenge();
-		} else {
-			verteilteMenge=lModel.getVerteilteMenge()*-1;
-		}
-		
+		verteilteMenge=lModel.getVerteilteMenge();
 		this.remove(lagerInfo);
 		lagerInfoErstellen();
 		this.add(lagerInfo,BorderLayout.NORTH);

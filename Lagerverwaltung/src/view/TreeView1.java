@@ -33,7 +33,7 @@ public class TreeView1 extends JPanel{
 		this.setLayout(new BorderLayout());
 		
 		knoten = new ArrayList<LagerBaumKnoten>();
-	    root = new LagerBaumKnoten("Gesamtlager");
+	    root = new LagerBaumKnoten("Gesamtlager",this);
 	    model = new DefaultTreeModel(root);
 	    baumEbeneErzeugen(lagerListe,root);
 	    tree = new JTree(model);
@@ -57,7 +57,7 @@ public class TreeView1 extends JPanel{
 	public void baumEbeneErzeugen(List<LagerModel> lagerListe, LagerBaumKnoten elternKnoten) {
 		if ((lagerListe!=null)&&(lagerListe.size()>0)) {
 			for (LagerModel lModel : lagerListe) {
-				LagerBaumKnoten lBKnoten= new LagerBaumKnoten(lModel.getName());
+				LagerBaumKnoten lBKnoten= new LagerBaumKnoten(lModel.getName(),this);
 				lModel.addObserver(lBKnoten);
 				controller.knotenLagerZuordnungAktualiseren(lBKnoten, lModel);
 				DefaultTreeModel model = (DefaultTreeModel)tree.getModel();
@@ -104,4 +104,6 @@ public class TreeView1 extends JPanel{
 		start++;
 		return start;
 	}
+	
+	
 }
