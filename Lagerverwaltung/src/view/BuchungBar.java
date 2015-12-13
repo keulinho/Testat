@@ -189,6 +189,7 @@ public class BuchungBar extends JToolBar{
 			public void actionPerformed(ActionEvent e) {
 				zeigeLaufendeZulieferung((int)menge.getValue());
 				controller.zulieferungErstellen((int)menge.getValue());
+				menge.setValue(null);
 			}
 		});
 		//für neues Lager Modus

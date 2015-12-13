@@ -10,8 +10,11 @@ import model.LagerModel;
 
 public class LagerBaumKnoten extends DefaultMutableTreeNode implements Observer{
 
-	public LagerBaumKnoten(String lagerName) {
+	TreeView1 tree;
+	
+	public LagerBaumKnoten(String lagerName, TreeView1 tree) {
 		super(lagerName);
+		this.tree = tree;
 	}
 	
 	@Override
@@ -20,9 +23,10 @@ public class LagerBaumKnoten extends DefaultMutableTreeNode implements Observer{
 		if (lModel.hatUnterlager()) {
 			this.setUserObject(lModel.getName());
 		} else {
-			this.setUserObject("<html>"+lModel.getName()+"<br>aktueller Bestand: "+lModel.getBestand() + "<br>maximale Kapazität: "+ lModel.getMaxKapazitaet()+"</html>");
+			this.setUserObject("<html>"+lModel.getName()+"<br>aktueller Bestand: "+(lModel.getBestand()+lModel.getVerteilteMenge()) + "<br>maximale Kapazität: "+ lModel.getMaxKapazitaet()+"</html>");
 		}
-		
+		tree.revalidate();
+		tree.repaint();
 	}
 
 }
