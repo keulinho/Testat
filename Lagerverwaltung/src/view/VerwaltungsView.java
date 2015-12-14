@@ -76,6 +76,7 @@ public class VerwaltungsView extends JFrame implements Observer{
 		buchungBar = new BuchungBar(controller);
 		buchungBar.setVisible(false);
 		this.add(buchungBar, BorderLayout.PAGE_END);
+		controller.addObserver(buchungBar);
 		
 		//Frame-Einstellungen
 		try {

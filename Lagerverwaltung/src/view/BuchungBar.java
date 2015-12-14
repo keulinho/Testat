@@ -9,6 +9,8 @@ import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.IOException;
 import java.text.NumberFormat;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.imageio.ImageIO;
 import javax.swing.Box;
@@ -22,7 +24,7 @@ import javax.swing.text.NumberFormatter;
 
 import controller.LagerVerwaltungsController;
 
-public class BuchungBar extends JToolBar{
+public class BuchungBar extends JToolBar implements Observer{
 	
 	JButton undo, redo, buchungVerwerfen,buchungAbschliessen,auslieferungErstellen,zulieferungErstellen, neuesLagerErstellen;
 	JLabel laufendeZulieferung, neueBuchung,laufendeAuslieferung, neuesLager, name, kapazitaet;
@@ -63,7 +65,7 @@ public class BuchungBar extends JToolBar{
 				controller.undo();
 			}
 		});
-		
+		undo.setEnabled(false);
 		redo= new JButton("Redo");
 		try {
 		    Image img = ImageIO.read(new File("src/icons/redo.png"));
@@ -78,6 +80,7 @@ public class BuchungBar extends JToolBar{
 				controller.redo();
 			}
 		});
+		redo.setEnabled(false);
 		laufendeZulieferung = new JLabel();
 		try {
 		    Image img = ImageIO.read(new File("src/icons/exclamation.png"));
@@ -371,5 +374,15 @@ public class BuchungBar extends JToolBar{
 		this.revalidate();
 		this.repaint();
 	}
-	
+
+	@Override
+	public void update(Observable arg0, Object arg1) {
+		LagerVerwaltungsController lVController = (LagerVerwaltungsController) arg0;
+		if (lVController.getRedoStack().isEmpty()) {
+			redo.setEnabled(false);
+		} else redo.setEnabled(true);
+		if (lVController.getUndoStack().isEmpty()) {
+			undo.setEnabled(false);
+		} else undo.setEnabled(true);
+	}
 }

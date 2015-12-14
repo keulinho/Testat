@@ -2,19 +2,24 @@ package controller;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Observable;
 import java.util.Observer;
+import java.util.Stack;
 
+import core.command.AnteilCommand;
+import core.command.Command;
 import model.LagerModel;
 import model.LagerVerwaltungsModel;
 import view.LagerBaumKnoten;
 import view.VerwaltungsView;
 
-public class LagerVerwaltungsController {
+public class LagerVerwaltungsController extends Observable{
 	
 	VerwaltungsView view;
 	LagerVerwaltungsModel lVModel;
 	LagerModel aktuellesLager;
 	HashMap knotenZuLagerModel;
+	Stack<Command> redoStack, undoStack;
 	
 	public static void main(String... args){
 		LagerVerwaltungsController control = new LagerVerwaltungsController();
@@ -22,7 +27,10 @@ public class LagerVerwaltungsController {
 	
 	public LagerVerwaltungsController() {
 		knotenZuLagerModel=new HashMap<LagerBaumKnoten,LagerModel>();
+		redoStack=new Stack<Command>();
+		undoStack=new Stack<Command>();
 		view=new VerwaltungsView(this);
+		
 		lVModel=new LagerVerwaltungsModel();
 		lVModel.addObserver(view);
 		
@@ -31,11 +39,27 @@ public class LagerVerwaltungsController {
 	}
 	
 	public void undo() {
-		
+		Command command = undoStack.pop();
+		command.undo();
+		redoStack.push(command);
+		setChanged();
+		notifyObservers();
 	}
 	
+	public Stack<Command> getRedoStack() {
+		return redoStack;
+	}
+
+	public Stack<Command> getUndoStack() {
+		return undoStack;
+	}
+
 	public void redo() {
-		
+		Command command = redoStack.pop();
+		command.execute();
+		undoStack.push(command);
+		setChanged();
+		notifyObservers();
 	}
 	
 	public void buchungVerwerfen() {
@@ -67,7 +91,12 @@ public class LagerVerwaltungsController {
 	}
 	
 	public void bucheAnteil(int menge) {
-		lVModel.hinzufuegenAnteil(aktuellesLager, menge);
+		//lVModel.hinzufuegenAnteil(aktuellesLager, menge);
+		Command command = new AnteilCommand(redoStack,lVModel,aktuellesLager,menge);
+		command.execute();
+		undoStack.push(command);
+		setChanged();
+		notifyObservers();
 	}
 	
 	public void speichern() {
@@ -87,5 +116,11 @@ public class LagerVerwaltungsController {
 	public void knotenLagerZuordnungAktualiseren(LagerBaumKnoten lBKnoten,LagerModel lModel) {
 		knotenZuLagerModel.put(lBKnoten, lModel);
 		
+	}
+	
+	public void addObserver(Observer o) {
+		super.addObserver(o);
+		setChanged();
+		notifyObservers();
 	}
 }

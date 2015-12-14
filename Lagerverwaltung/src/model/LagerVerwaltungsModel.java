@@ -271,6 +271,8 @@ public class LagerVerwaltungsModel extends Observable implements Serializable {
 	 */
 	public void loeschenAnteil(LagerModel lager, int menge){
 		laufendeBuchung.loeschenAnteil(lager, menge);
+		this.setChanged();
+		this.notifyObservers();
 	}
 	
 	/**
@@ -279,6 +281,8 @@ public class LagerVerwaltungsModel extends Observable implements Serializable {
 	 */
 	public void loeschenAnteile(LagerModel lager){
 		laufendeBuchung.loeschenAnteile(lager);
+		this.setChanged();
+		this.notifyObservers();
 	}
 	
 	/**
@@ -286,6 +290,8 @@ public class LagerVerwaltungsModel extends Observable implements Serializable {
 	 */
 	public void loeschenAlleAnteile() {
 		laufendeBuchung.loeschenAlleAnteile();
+		this.setChanged();
+		this.notifyObservers();
 	}
 	
 	public void loesschenLager(LagerModel lager){
