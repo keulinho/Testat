@@ -35,7 +35,7 @@ public class BuchungsView extends JPanel{
 	 */
 	public BuchungsView(List<BuchungsModel> listeBuchungen) {
 		
-		this.setPreferredSize(new Dimension(515,400));
+		this.setPreferredSize(new Dimension(815,400));
 		this.setLayout(new BorderLayout());
 		
 		//Überschrift erstellen und hinzufügen
@@ -79,7 +79,7 @@ public class BuchungsView extends JPanel{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				VerwaltungsView vView = (VerwaltungsView) SwingUtilities.getWindowAncestor(BuchungsView.this);
-				vView.zeigeDetailPane();
+				vView.standardAnsicht();
 			}
 		});
 		this.add(schliessen, BorderLayout.PAGE_END);

@@ -20,6 +20,7 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -30,11 +31,9 @@ public class ListenView extends JPanel{
 
 	JList liste;
 	DefaultListModel model;
-	VerwaltungsView vView;
 	JPanel detailPanel;
 	
-	public ListenView(final List<BuchungsModel> buchungsListe, final VerwaltungsView vView) {
-		this.vView=vView;
+	public ListenView(final List<BuchungsModel> buchungsListe) {
 		this.setLayout(new BorderLayout());
 		this.setPreferredSize(new Dimension(815,300));
 		model=new DefaultListModel<String>();
@@ -69,6 +68,7 @@ public class ListenView extends JPanel{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				VerwaltungsView vView = (VerwaltungsView) SwingUtilities.getWindowAncestor(ListenView.this);
 				vView.standardAnsicht();
 				
 			}

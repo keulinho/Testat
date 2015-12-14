@@ -139,6 +139,8 @@ public class VerwaltungsView extends JFrame implements Observer{
 				buchungBar.setVisible(true);
 				neueAuslieferung.setEnabled(false);
 				neueZulieferung.setEnabled(false);
+				alleBuchungen.setEnabled(false);
+				listeZeigen.setEnabled(false);
 			}
 		});
 		neueAuslieferung= new JButton("Neue Auslieferung");
@@ -156,6 +158,8 @@ public class VerwaltungsView extends JFrame implements Observer{
 				buchungBar.setVisible(true);
 				neueAuslieferung.setEnabled(false);
 				neueZulieferung.setEnabled(false);
+				alleBuchungen.setEnabled(false);
+				listeZeigen.setEnabled(false);
 			}
 		});
 		alleBuchungen= new JButton("Alle Buchungen");
@@ -169,7 +173,16 @@ public class VerwaltungsView extends JFrame implements Observer{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				zeigeAlleBuchungen();
+				buchungsView=new BuchungsView(listeBuchungen);
+				VerwaltungsView.this.remove(treePane);
+				VerwaltungsView.this.remove(detailPane);
+				VerwaltungsView.this.add(buchungsView,BorderLayout.WEST);
+				VerwaltungsView.this.revalidate();
+				VerwaltungsView.this.repaint();
+				neueZulieferung.setEnabled(false);
+				neueAuslieferung.setEnabled(false);
+				alleBuchungen.setEnabled(false);
+				listeZeigen.setEnabled(false);
 			}
 		});
 		listeZeigen= new JButton("Buchungsliste");
@@ -183,7 +196,7 @@ public class VerwaltungsView extends JFrame implements Observer{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				liste = new ListenView(listeBuchungen,VerwaltungsView.this);
+				liste = new ListenView(listeBuchungen);
 				VerwaltungsView.this.remove(treePane);
 				VerwaltungsView.this.remove(detailPane);
 				VerwaltungsView.this.add(liste,BorderLayout.WEST);
@@ -206,6 +219,8 @@ public class VerwaltungsView extends JFrame implements Observer{
 		if (lvModel.getLaufendeBuchung()!=null) {  //Es gibt eine nicht abgeschlossene Buchung
 			neueZulieferung.setEnabled(false);
 			neueAuslieferung.setEnabled(false);
+			alleBuchungen.setEnabled(false);
+			listeZeigen.setEnabled(false);
 			if (lvModel.getLaufendeBuchung().getClass().equals(new AbBuchungsModel(new Date()).getClass())) { //nicht abgeschlossene Buchung ist eine Abbuchung
 				buchungBar.zeigeLaufendeAuslieferung(lvModel.getLaufendeBuchung().getVerteilteMenge());
 				detailPane.zeigeBuchungsOptionen(lvModel.getLaufendeBuchung().getVerteilteMenge(), 0, false);
@@ -217,6 +232,8 @@ public class VerwaltungsView extends JFrame implements Observer{
 		} else { //es gibt keine laufende Buchung
 			neueZulieferung.setEnabled(true);
 			neueAuslieferung.setEnabled(true);
+			alleBuchungen.setEnabled(true);
+			listeZeigen.setEnabled(true);
 			detailPane.zeigeButton();
 			buchungBar.setVisible(false);
 		}
@@ -232,6 +249,7 @@ public class VerwaltungsView extends JFrame implements Observer{
 		buchungBar.setVisible(true);
 	}
 	
+	
 	/**
 	 * löscht die Ansicht aller Buchungen und zeigt die Details zu einem Lager
 	 */
@@ -241,17 +259,18 @@ public class VerwaltungsView extends JFrame implements Observer{
 		VerwaltungsView.this.revalidate();
 		VerwaltungsView.this.repaint();
 	}
+	
 	/**
 	 * löscht die Ansicht der Details zu einem Lager und zeigt alle Buchungen
 	 */
-	public void zeigeAlleBuchungen() {
+	/**public void zeigeAlleBuchungen() {
 		VerwaltungsView.this.remove(detailPane);
 		buchungsView=new BuchungsView(listeBuchungen);
 		VerwaltungsView.this.add(buchungsView,BorderLayout.EAST);
 		VerwaltungsView.this.revalidate();
 		VerwaltungsView.this.repaint();
 	}
-	
+	*/
 	public DetailView getDetailPane() {
 		return detailPane;
 	}
@@ -261,7 +280,12 @@ public class VerwaltungsView extends JFrame implements Observer{
 	}
 	
 	public void standardAnsicht() {
-		this.remove(liste);
+		if (liste!=null&&liste.isVisible()) {
+			this.remove(liste);
+		} else {
+			this.remove(buchungsView);
+		}
+		
 		this.add(treePane, BorderLayout.WEST);
 		this.add(detailPane, BorderLayout.EAST);
 		neueZulieferung.setEnabled(true);
