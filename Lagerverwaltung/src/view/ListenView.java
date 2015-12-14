@@ -1,6 +1,7 @@
 package view;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
@@ -12,6 +13,7 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -19,8 +21,11 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.ListCellRenderer;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -43,6 +48,8 @@ public class ListenView extends JPanel{
 		liste = new JList<String>(model);
 		liste.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 		liste.setLayoutOrientation(JList.VERTICAL);
+
+		liste.setFixedCellHeight(40);
 		liste.addListSelectionListener(new ListSelectionListener() {
 			
 			@Override
@@ -97,8 +104,12 @@ public class ListenView extends JPanel{
 		anteilPanel.setLayout(new BoxLayout(anteilPanel,BoxLayout.Y_AXIS));
 		int i = 1;
 		for (AnteilModel aModel : buchung.getAnteile()) {
+			
 			JLabel lager = new JLabel("Lager " + i+": "+aModel.getLager().getName());
 			lager.setFont(new Font(bDetails.getFont().getName(),Font.BOLD,20));
+			if (i>1) {
+				lager.setBorder(new EmptyBorder(10, 0, 0, 0));
+			}
 			anteilPanel.add(lager);
 			JLabel absoluteMenge = new JLabel("absolute Menge: "+aModel.getAnteil());
 			anteilPanel.add(absoluteMenge);

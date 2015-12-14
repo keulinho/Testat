@@ -11,6 +11,12 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.Stack;
 
+import javax.swing.UIManager;
+import javax.swing.UIManager.LookAndFeelInfo;
+import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.plaf.metal.MetalLookAndFeel;
+import javax.swing.plaf.metal.OceanTheme;
+
 import core.command.AnteilCommand;
 import core.command.Command;
 import model.LagerModel;
@@ -27,7 +33,12 @@ public class LagerVerwaltungsController extends Observable{
 	Stack<Command> redoStack, undoStack;
 	
 	public static void main(String... args){
+		
+		
 		LagerVerwaltungsController control = new LagerVerwaltungsController();
+
+		
+		
 	}
 	
 	public LagerVerwaltungsController() {
@@ -144,12 +155,9 @@ public class LagerVerwaltungsController extends Observable{
 			try {
 				FileInputStream fins = new FileInputStream(filename);
 				ObjectInputStream ois = new ObjectInputStream(fins);
-				LagerVerwaltungsModel temp=(LagerVerwaltungsModel)ois.readObject();
-				lVModel=temp;
+				LagerVerwaltungsModel lVModel=(LagerVerwaltungsModel)ois.readObject();
 				lVModel.addObserver(view);
-				aktuellesLager=lVModel.getLager().get(0);
-				aktuellesLager.addObserver(view.getDetailPane());
-				view.aktualisiereBaum();
+				view.neuesModel();
 			} catch (Exception e) {
 				//err.handleExcepion(2, e);
 				e.printStackTrace();

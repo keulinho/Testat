@@ -69,7 +69,6 @@ public class VerwaltungsView extends JFrame implements Observer{
 		
 		//TreePane hinzufügen
 		treePane = new TreeView1(null,controller);
-		//treePane.setBackground(Color.LIGHT_GRAY);
 		this.add(treePane, BorderLayout.WEST);
 		
 		//BuchungsBar hinzufügen
@@ -250,28 +249,6 @@ public class VerwaltungsView extends JFrame implements Observer{
 		buchungBar.setVisible(true);
 	}
 	
-	
-	/**
-	 * löscht die Ansicht aller Buchungen und zeigt die Details zu einem Lager
-	 */
-	public void zeigeDetailPane() {
-		VerwaltungsView.this.remove(buchungsView);
-		VerwaltungsView.this.add(detailPane,BorderLayout.EAST);
-		VerwaltungsView.this.revalidate();
-		VerwaltungsView.this.repaint();
-	}
-	
-	/**
-	 * löscht die Ansicht der Details zu einem Lager und zeigt alle Buchungen
-	 */
-	/**public void zeigeAlleBuchungen() {
-		VerwaltungsView.this.remove(detailPane);
-		buchungsView=new BuchungsView(listeBuchungen);
-		VerwaltungsView.this.add(buchungsView,BorderLayout.EAST);
-		VerwaltungsView.this.revalidate();
-		VerwaltungsView.this.repaint();
-	}
-	*/
 	public DetailView getDetailPane() {
 		return detailPane;
 	}
@@ -297,7 +274,21 @@ public class VerwaltungsView extends JFrame implements Observer{
 		this.repaint();
 	}
 	
-	public void aktualisiereBaum() {
+	public void neuesModel() {
 		treePane.aktualisiereBaum(lvModel.getLager(),true);
+		if ((buchungsView!=null)&&(buchungsView.isVisible())) {
+			this.remove(buchungsView);
+			this.add(treePane, BorderLayout.WEST);
+			this.add(detailPane, BorderLayout.EAST);
+		} 
+		if ((liste!=null)&&(liste.isVisible())) {
+			this.remove(liste);
+			this.add(treePane, BorderLayout.WEST);
+			this.add(detailPane, BorderLayout.EAST);
+		}
+		
+		this.revalidate();
+		this.repaint();
+		
 	}
 }

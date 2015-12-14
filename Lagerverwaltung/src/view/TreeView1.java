@@ -126,6 +126,9 @@ public class TreeView1 extends JPanel{
 						}	
 					}
 			});	
+			if (mussAktualisieren){
+				controller.aktuellesLagerAendern((LagerBaumKnoten) tree.getModel().getChild(tree.getModel().getRoot(), 0));
+			}
 		}
 	}
 	public int getGroesseLagerList(List<LagerModel> lagerListe){
