@@ -31,7 +31,7 @@ public class BuchungBar extends JToolBar implements Observer{
 	JFormattedTextField menge,lagerKapazitaet;
 	JTextField lagerName;
 	LagerVerwaltungsController controller;
-
+	boolean oberLager;
 	
 	/**
 	 * erzeugt eine BuchungsBar
@@ -213,7 +213,7 @@ public class BuchungBar extends JToolBar implements Observer{
 					
 					neuesLagerErstellen.setEnabled(true);
 					if (arg0.getKeyCode() == KeyEvent.VK_ENTER) {
-						controller.erstelleUnterLager(lagerName.getText(),(int)lagerKapazitaet.getValue());
+						controller.erstelleUnterLager(lagerName.getText(),(int)lagerKapazitaet.getValue(),oberLager);
 					}
 				} else {
 					neuesLagerErstellen.setEnabled(false);
@@ -242,7 +242,7 @@ public class BuchungBar extends JToolBar implements Observer{
 						
 						neuesLagerErstellen.setEnabled(true);
 						if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-							controller.erstelleUnterLager(lagerName.getText(),(int)lagerKapazitaet.getValue());
+							controller.erstelleUnterLager(lagerName.getText(),(int)lagerKapazitaet.getValue(),oberLager);
 						}
 					} else {
 						neuesLagerErstellen.setEnabled(false);
@@ -270,7 +270,7 @@ public class BuchungBar extends JToolBar implements Observer{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				controller.erstelleUnterLager(lagerName.getText(), (int) lagerKapazitaet.getValue());
+				controller.erstelleUnterLager(lagerName.getText(), (int) lagerKapazitaet.getValue(),oberLager);
 				lagerName.setText("");
 				lagerKapazitaet.setValue(null);
 			}
@@ -358,7 +358,8 @@ public class BuchungBar extends JToolBar implements Observer{
 	/**
 	 * zeigt die BuchungBar im neues Lager anlegen Modus
 	 */
-	public void zeigeNeuesLager(){
+	public void zeigeNeuesLager(boolean oberLager){
+		this.oberLager=oberLager;
 		this.removeAll();
 		this.add(neuesLager);
 		this.add(name);

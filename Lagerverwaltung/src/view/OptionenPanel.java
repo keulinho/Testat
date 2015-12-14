@@ -71,7 +71,7 @@ public class OptionenPanel extends JPanel{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				VerwaltungsView vView = (VerwaltungsView) SwingUtilities.getWindowAncestor(OptionenPanel.this);
-				vView.zeigeNeuesLager();
+				vView.zeigeNeuesLager(false);
 			}
 		});
 		umbenennen = new JButton("Lager umbennen");

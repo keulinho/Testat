@@ -245,8 +245,8 @@ public class VerwaltungsView extends JFrame implements Observer{
 	/**
 	 * zeigt die BuchungsBar im neues Lager Modus
 	 */
-	public void zeigeNeuesLager() {
-		buchungBar.zeigeNeuesLager();
+	public void zeigeNeuesLager(boolean oberLager) {
+		buchungBar.zeigeNeuesLager(oberLager);
 		buchungBar.setVisible(true);
 	}
 	

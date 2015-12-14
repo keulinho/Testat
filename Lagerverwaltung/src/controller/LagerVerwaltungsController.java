@@ -86,8 +86,13 @@ public class LagerVerwaltungsController extends Observable{
 		lVModel.loesschenLager(aktuellesLager);
 	}
 	
-	public void erstelleUnterLager(String lagerName, int lagerKapazitaet) {
-		lVModel.hinzufuegenLager(aktuellesLager, lagerKapazitaet, lagerName);
+	public void erstelleUnterLager(String lagerName, int lagerKapazitaet, boolean oberLager) {
+		if (!oberLager) {
+			lVModel.hinzufuegenLager(aktuellesLager, lagerKapazitaet, lagerName);
+		} else {
+			lVModel.hinzufuegenLager(null, lagerKapazitaet, lagerName);
+		}
+		
 	}
 	
 	public void bucheAnteil(int menge) {
