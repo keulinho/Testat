@@ -239,7 +239,7 @@ public class VerwaltungsView extends JFrame implements Observer{
 			buchungBar.setVisible(false);
 		}
 		listeBuchungen=lvModel.getBuchungen(); //Liste wird bei jedem Update aktualisiert
-		treePane.aktualisiereBaum(lvModel.getLager());
+		treePane.aktualisiereBaum(lvModel.getLager(),false);
 	}
 	
 	/**
@@ -295,5 +295,9 @@ public class VerwaltungsView extends JFrame implements Observer{
 		listeZeigen.setEnabled(true);
 		this.revalidate();
 		this.repaint();
+	}
+	
+	public void aktualisiereBaum() {
+		treePane.aktualisiereBaum(lvModel.getLager(),true);
 	}
 }

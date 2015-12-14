@@ -88,6 +88,7 @@ public class TreeView1 extends JPanel{
 	public void baumEbeneErzeugen(List<LagerModel> lagerListe, LagerBaumKnoten elternKnoten) {
 		if ((lagerListe!=null)&&(lagerListe.size()>0)) {
 			for (LagerModel lModel : lagerListe) {
+				lModel.deleteObservers();
 				LagerBaumKnoten lBKnoten= new LagerBaumKnoten(lModel.getName(),this);
 				lModel.addObserver(lBKnoten);
 				controller.knotenLagerZuordnungAktualiseren(lBKnoten, lModel);
@@ -104,9 +105,9 @@ public class TreeView1 extends JPanel{
 		}
 	}
 	
-	public void aktualisiereBaum(List<LagerModel> lagerListe) {
+	public void aktualisiereBaum(List<LagerModel> lagerListe, boolean mussAktualisieren) {
 		
-		if (getGroesseLagerList(lagerListe)-1!=knoten.size()) {
+		if ((getGroesseLagerList(lagerListe)-1!=knoten.size())||(mussAktualisieren)) {
 			for (LagerBaumKnoten node : knoten) {
 				model.removeNodeFromParent(node);
 				model.nodeStructureChanged(node.getParent());

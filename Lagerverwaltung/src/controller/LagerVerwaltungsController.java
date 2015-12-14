@@ -1,5 +1,10 @@
 package controller;
 
+import java.awt.FileDialog;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Observable;
@@ -96,7 +101,6 @@ public class LagerVerwaltungsController extends Observable{
 	}
 	
 	public void bucheAnteil(int menge) {
-		//lVModel.hinzufuegenAnteil(aktuellesLager, menge);
 		Command command = new AnteilCommand(redoStack,lVModel,aktuellesLager,menge);
 		command.execute();
 		undoStack.push(command);
@@ -105,11 +109,53 @@ public class LagerVerwaltungsController extends Observable{
 	}
 	
 	public void speichern() {
+		FileDialog fd = new FileDialog(view, "Choose a file", FileDialog.SAVE);
+		fd.setDirectory("C:\\Users\\"+System.getProperty("user.name").toUpperCase());
+		fd.setFile("LagerVerwaltung");
+		fd.setVisible(true);
+		String filename = fd.getDirectory()+"\\"+fd.getFile();
+		if (filename.contains(".")) {
+			filename=filename.split("\\.")[0];
+		}
 		
+		if ((fd.getDirectory()!=null)&&(fd.getFile()!=null)) {
+			
+			FileOutputStream fout;
+			try {
+				fout = new FileOutputStream(filename+".lvm");
+				ObjectOutputStream oos = new ObjectOutputStream(fout);
+				oos.writeObject(lVModel);
+				oos.close();
+			} catch (Exception e) {
+				//err.handleExcepion(1, e);
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	public void laden() {
-		
+		FileDialog fd = new FileDialog(view, "Choose a file", FileDialog.LOAD);
+		fd.setDirectory("C:\\Users\\"+System.getProperty("user.name").toUpperCase());
+		fd.setFile(".lvm");
+		fd.setVisible(true);
+		String filename = fd.getDirectory()+"\\"+fd.getFile();
+		if ((fd.getDirectory()!=null)&&(fd.getFile()!=null)) {
+			
+			try {
+				FileInputStream fins = new FileInputStream(filename);
+				ObjectInputStream ois = new ObjectInputStream(fins);
+				LagerVerwaltungsModel temp=(LagerVerwaltungsModel)ois.readObject();
+				lVModel=temp;
+				lVModel.addObserver(view);
+				aktuellesLager=lVModel.getLager().get(0);
+				aktuellesLager.addObserver(view.getDetailPane());
+				view.aktualisiereBaum();
+			} catch (Exception e) {
+				//err.handleExcepion(2, e);
+				e.printStackTrace();
+			}
+			
+		}
 	}
 	
 	public void aktuellesLagerAendern(LagerBaumKnoten lBKnoten) {
@@ -119,10 +165,8 @@ public class LagerVerwaltungsController extends Observable{
 	}
 	
 	public void knotenLagerZuordnungAktualiseren(LagerBaumKnoten lBKnoten,LagerModel lModel) {
-		knotenZuLagerModel.put(lBKnoten, lModel);
-		
+		knotenZuLagerModel.put(lBKnoten, lModel);	
 	}
-	
 	public void addObserver(Observer o) {
 		super.addObserver(o);
 		setChanged();
