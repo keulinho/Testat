@@ -37,6 +37,7 @@ public class ListenView extends JPanel{
 	JList liste;
 	DefaultListModel model;
 	JPanel detailPanel;
+	int index;
 	
 	public ListenView(final List<BuchungsModel> buchungsListe) {
 		this.setLayout(new BorderLayout());
@@ -54,11 +55,14 @@ public class ListenView extends JPanel{
 			
 			@Override
 			public void valueChanged(ListSelectionEvent arg0) {
-				ListenView.this.remove(detailPanel);
-				detailPanel=anteilDetailsErstellen(buchungsListe.get(arg0.getFirstIndex()));
-				ListenView.this.add(detailPanel);
-				ListenView.this.revalidate();
-				ListenView.this.repaint();
+				 if (!arg0.getValueIsAdjusting()) {
+						ListenView.this.remove(detailPanel);
+						detailPanel=anteilDetailsErstellen(buchungsListe.get(liste.getSelectedIndex()));
+						ListenView.this.add(detailPanel);
+						ListenView.this.revalidate();
+						ListenView.this.repaint();
+	                }
+	
 			}
 		});
 		JScrollPane scrollListe = new JScrollPane(liste);
@@ -81,6 +85,7 @@ public class ListenView extends JPanel{
 			}
 		});
 		detailPanel=anteilDetailsErstellen(buchungsListe.get(0));
+		index=0;
 		this.add(detailPanel,BorderLayout.EAST);
 		
 		this.add(scrollListe, BorderLayout.WEST);

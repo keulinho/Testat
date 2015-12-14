@@ -169,6 +169,7 @@ public class OptionenPanel extends JPanel{
 		this.restMenge=maximum;
 		this.removeAll();
 		this.add(menge);
+		slider.setMinimum(0);
 		slider.setMaximum(maximum);
 		slider.setValue(slider.getMaximum()/2);
 		anteil.setText("<html>"+slider.getValue()+"<br>"+rechneProzent()+"%</html>");

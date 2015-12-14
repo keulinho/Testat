@@ -173,7 +173,7 @@ public class DetailView extends JPanel implements Observer{
 					optionenPanel.zeigeSlider(gesamtMenge,maximum); //wenn noch zu verteilende Menge kleiner als freie Kapazität ist zu verteilende Menge Maximum des Sliders
 				}	
 			} else {
-				optionenPanel.zeigeSlider(gesamtMenge,(mengeBestand+verteilteMenge)); //bei Abbuchungen ist der BEstand des Lagers Maximum des Sliders	 
+				optionenPanel.zeigeSlider(mengeBestand+verteilteMenge,(mengeBestand+verteilteMenge)); //bei Abbuchungen ist der BEstand des Lagers Maximum des Sliders	 
 			}
 				
 		} else {
