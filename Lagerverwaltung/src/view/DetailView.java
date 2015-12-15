@@ -3,7 +3,8 @@ package view;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.util.Date;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -15,6 +16,15 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
 import controller.LagerVerwaltungsController;
+import core.sortierer.AbsoluterAnteilAbsteigend;
+import core.sortierer.AbsoluterAnteilAufsteigend;
+import core.sortierer.GesamtMengeAbsteigend;
+import core.sortierer.GesamtMengeAufsteigend;
+import core.sortierer.RelativerAnteilAbsteigend;
+import core.sortierer.RelativerAnteilAufsteigend;
+import core.sortierer.Sortierer;
+import core.sortierer.TagAbsteigend;
+import core.sortierer.TagAufsteigend;
 import model.AbBuchungsModel;
 import model.BuchungsModel;
 import model.LagerModel;
@@ -35,6 +45,9 @@ public class DetailView extends JPanel implements Observer{
 	boolean isUnterLager;
 	boolean buchungsModus;
 	LagerVerwaltungsController controller;
+	Sortierer sortierer;
+	LagerModel lModel;
+	List<BuchungsModel> listeBuchungen;
 	
 
 	/**
@@ -89,7 +102,9 @@ public class DetailView extends JPanel implements Observer{
 			zeigeBuchungsOptionen(gesamtMenge, maximum, zulieferung);
 		}
 		if ((lModel.getBuchungen()!=null) && (lModel.getBuchungen().size()>0)) { //True wenn es Buchungen zu diesem Lager gibt
-			bereiteBuchungenAuf(lModel.getBuchungen(),(LagerModel)o);
+			listeBuchungen=lModel.getBuchungen();
+			this.lModel = (LagerModel) o;
+			bereiteBuchungenAuf();
 		} else {
 			if ((buchungen!=null)&&(buchungen.isVisible())) {  //Wenn Buchungen angezeigt werden es aber keine gibt werden diese aus der Ansicht gelöscht und stattdessen eine Meldung angezeigt
 				this.remove(buchungen);
@@ -186,7 +201,11 @@ public class DetailView extends JPanel implements Observer{
 	 * @param listeBuchungen Liste der Buchungen für das mitgegebene Lager
 	 * @param lModel Lager für das die Tabelle erzeugt wird
 	 */
-	public void bereiteBuchungenAuf(List<BuchungsModel> listeBuchungen, LagerModel lModel) {
+	public void bereiteBuchungenAuf() {
+		
+		if (sortierer!=null) {
+			listeBuchungen=sortierer.sortiere(listeBuchungen, lModel);
+		}
 		int i=0;
 		data = new Object[listeBuchungen.size()][5];
 		
@@ -216,6 +235,64 @@ public class DetailView extends JPanel implements Observer{
 		tabelle=new JTable(data, columnNames);
 		tabelle.setEnabled(false);
 		tabelle.getTableHeader().setReorderingAllowed(false);
+		tabelle.getTableHeader().addMouseListener(new MouseListener() {
+			
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mousePressed(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseExited(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				 int spalte = tabelle.columnAtPoint(arg0.getPoint());
+			     switch (spalte) {
+			     	case 0: if (sortierer!=null&&sortierer.getSort().getClass().equals(new TagAbsteigend().getClass())) {
+			     		sortierer=new Sortierer(new TagAufsteigend());
+			     	} else {
+			     		sortierer=new Sortierer(new TagAbsteigend());
+			     	}
+			     	break;
+			     	case 1: if (sortierer!=null&&sortierer.getSort().getClass().equals(new GesamtMengeAbsteigend().getClass())) {
+			     		sortierer=new Sortierer(new GesamtMengeAufsteigend());
+			     	} else {
+			     		sortierer=new Sortierer(new GesamtMengeAbsteigend());
+			     	}
+			     	break;
+			     	case 2: if (sortierer!=null&&sortierer.getSort().getClass().equals(new RelativerAnteilAbsteigend().getClass())) {
+			     		sortierer=new Sortierer(new RelativerAnteilAufsteigend());
+			     	} else {
+			     		sortierer=new Sortierer(new RelativerAnteilAbsteigend());
+			     	}
+			     	break;
+			     	case 3: if (sortierer!=null&&sortierer.getSort().getClass().equals(new AbsoluterAnteilAbsteigend().getClass())) {
+			     		sortierer=new Sortierer(new AbsoluterAnteilAufsteigend());
+			     	} else {
+			     		sortierer=new Sortierer(new AbsoluterAnteilAbsteigend());
+			     	}
+			     	break;
+			     }
+			     bereiteBuchungenAuf();	
+			}
+		});
 		if ((buchungen!=null)&&(buchungen.isVisible())) {
 			this.remove(buchungen);
 		}
@@ -228,7 +305,8 @@ public class DetailView extends JPanel implements Observer{
 			this.remove(meldung);
 			this.add(buchungen,BorderLayout.CENTER);
 		}
-		
+		this.revalidate();
+		this.repaint();
 	}
 	
 	public void editName() {
