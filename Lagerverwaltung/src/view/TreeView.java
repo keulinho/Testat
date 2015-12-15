@@ -70,7 +70,7 @@ public class TreeView extends JPanel{
     		renderer.setOpenIcon(branchIcon);
     		tree.setCellRenderer(renderer);
     	} catch(IOException ex){
-    		ex.printStackTrace();
+    		ErrorHandler.HandleException(ErrorHandler.BILD_NICHT_GEFUNDEN, new ImageNotFoundException("Bilddatei mit dem Pfad \"src/icons/home.png\" nicht gefunden",(Throwable) ex));
     	}
     
 	    //Leaf-Icon setzen
@@ -81,7 +81,7 @@ public class TreeView extends JPanel{
     		renderer.setOpenIcon(leafIcon);
     		tree.setCellRenderer(renderer);
     	} catch(IOException ex){
-    		ex.printStackTrace();
+    		ErrorHandler.HandleException(ErrorHandler.BILD_NICHT_GEFUNDEN, new ImageNotFoundException("Bilddatei mit dem Pfad \"src/icons/truck.png\" nicht gefunden",(Throwable) ex));
     	}
 
 	    treeScrollPanel= new JScrollPane(tree);    
