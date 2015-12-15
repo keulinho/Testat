@@ -68,7 +68,7 @@ public class VerwaltungsView extends JFrame implements Observer{
 		this.add(detailPane, BorderLayout.EAST);
 		
 		//TreePane hinzufügen
-		treePane = new TreeView(null,controller);
+		treePane = new TreeView(controller);
 		this.add(treePane, BorderLayout.WEST);
 		
 		//BuchungsBar hinzufügen
@@ -79,7 +79,7 @@ public class VerwaltungsView extends JFrame implements Observer{
 		
 		//Frame-Einstellungen
 		try {
-		    Image img = ImageIO.read(new File("src/icons/icon.png"));
+		    Image img = ImageIO.read(new File("src/icons/marke.png"));
 		    this.setIconImage(img);
 		  } catch (IOException ex) {
 			  ex.printStackTrace();
@@ -248,22 +248,21 @@ public class VerwaltungsView extends JFrame implements Observer{
 		buchungBar.zeigeNeuesLager(oberLager);
 		buchungBar.setVisible(true);
 	}
-	
-	public DetailView getDetailPane() {
-		return detailPane;
-	}
-	
+	/**
+	 * setzt die DetailPane in den EditName Modus
+	 */
 	public void editName() {
 		detailPane.editName();
 	}
-	
+	/**
+	 * löscht Listenansichten und wechselt zur Standardansicht mit buchungsdetails und Baum
+	 */
 	public void standardAnsicht() {
 		if (liste!=null&&liste.isVisible()) {
 			this.remove(liste);
 		} else {
 			this.remove(buchungsView);
 		}
-		
 		this.add(treePane, BorderLayout.WEST);
 		this.add(detailPane, BorderLayout.EAST);
 		neueZulieferung.setEnabled(true);
@@ -273,7 +272,9 @@ public class VerwaltungsView extends JFrame implements Observer{
 		this.revalidate();
 		this.repaint();
 	}
-	
+	/**
+	 * verdrahtet ein neues Model mit der alten View
+	 */
 	public void neuesModel() {
 		treePane.aktualisiereBaum(lvModel.getLager(),true);
 		if ((buchungsView!=null)&&(buchungsView.isVisible())) {
@@ -289,6 +290,12 @@ public class VerwaltungsView extends JFrame implements Observer{
 		
 		this.revalidate();
 		this.repaint();
-		
+	}
+	/**
+	 * getter DetailPane
+	 * @return detailPane
+	 */
+	public DetailView getDetailPane() {
+		return detailPane;
 	}
 }

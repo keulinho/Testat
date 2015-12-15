@@ -375,8 +375,11 @@ public class BuchungBar extends JToolBar implements Observer{
 		this.revalidate();
 		this.repaint();
 	}
-
+	
 	@Override
+	/**
+	 * aktualisiert die BuchungsBar, enabled/disabled die Redo/Undo-Button
+	 */
 	public void update(Observable arg0, Object arg1) {
 		LagerVerwaltungsController lVController = (LagerVerwaltungsController) arg0;
 		if (lVController.getRedoStack().isEmpty()) {

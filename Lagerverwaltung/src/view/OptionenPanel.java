@@ -29,8 +29,12 @@ public class OptionenPanel extends JPanel{
 	LagerVerwaltungsController controller;
 	int gesamtMenge, restMenge;
 	Rechner rechner;
-
-	public OptionenPanel(EditNamePanel editName, LagerVerwaltungsController controller){
+	
+	/**
+	 * erzeugt ein OptionenPanel im zeige Button Modus
+	 * @param controller controller an den Befehle weitergeleitet werden
+	 */
+	public OptionenPanel(LagerVerwaltungsController controller){
 		rechner=new Rechner();
 		this.controller=controller;
 		this.setPreferredSize(new Dimension(515,50));
