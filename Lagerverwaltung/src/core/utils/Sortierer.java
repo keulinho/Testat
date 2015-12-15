@@ -9,10 +9,19 @@ public class Sortierer {
 
 	SortierStrategie sort;
 	
+	/**
+	 * erzeugt einen neuen Sortierer
+	 * @param sort Sortierstrategie die angewendet werden soll
+	 */
 	public Sortierer(SortierStrategie sort){
 		this.sort = sort;
 	}
-
+	/**
+	 * sortiert die gegebene Liste anhand der aktuell gesetzten Sortiersatrategie
+	 * @param buchungsListe Liste die sortiert werden soll
+	 * @param lager Lager dessen Buchungen sortiert werden sollen
+	 * @return sortierte Buchungsliste
+	 */
 	public List<BuchungsModel> sortiere(List<BuchungsModel> buchungsListe, LagerModel lager) {
 		for (BuchungsModel buchung : buchungsListe) {
 			for (int i = 0; i < buchung.getAnteile().size();i++) {
@@ -38,11 +47,17 @@ public class Sortierer {
 		return buchungsListe;
 	}
 	
-	
+	/**
+	 * gibt Sortierstrategie zurück
+	 * @return momentane Sortierstrategie
+	 */
 	public SortierStrategie getSort() {
 		return sort;
 	}
-
+	/**
+	 * ändert die Sortierstrategie in die angegebene
+	 * @param sort neue Sortierstrategie
+	 */
 	public void setSort(SortierStrategie sort) {
 		this.sort = sort;
 	}

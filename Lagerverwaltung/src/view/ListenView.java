@@ -39,6 +39,10 @@ public class ListenView extends JPanel{
 	JPanel detailPanel;
 	int index;
 	
+	/**
+	 * erstellt eine ListenView mit den mitgegebenen Einträgen
+	 * @param buchungsListe Liste die angezeigt werden soll
+	 */
 	public ListenView(final List<BuchungsModel> buchungsListe) {
 		this.setLayout(new BorderLayout());
 		this.setPreferredSize(new Dimension(815,300));
@@ -94,6 +98,11 @@ public class ListenView extends JPanel{
 		this.repaint();
 	}
 	
+	/**
+	 * erstellt Details zu der mitgegebenen Buchung und gibt das Panel zurück
+	 * @param buchung Buchung deren Details angezeigt werden sollen
+	 * @return JPanel auf das dem Details angezeigt werden
+	 */
 	public JPanel anteilDetailsErstellen(BuchungsModel buchung) {
 		JPanel detailPanel = new JPanel();
 		detailPanel.setPreferredSize(new Dimension(515,350));

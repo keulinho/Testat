@@ -35,16 +35,17 @@ public class TreeView extends JPanel{
 	DefaultTreeModel model;
 	List<LagerBaumKnoten> knoten;
 	
-	public TreeView(List<LagerModel> lagerListe, final LagerVerwaltungsController controller){
-		
+	/**
+	 * erzeugt eine neue TreeView
+	 * @param controller controller, an den Befehle runtergereicht werden
+	 */ 
+	public TreeView(final LagerVerwaltungsController controller){
 		this.controller=controller;
 		this.setPreferredSize(new Dimension(300,400));
 		this.setLayout(new BorderLayout());
-		
 		knoten = new ArrayList<LagerBaumKnoten>();
 	    root = new LagerBaumKnoten("Gesamtlager",this);
 	    model = new DefaultTreeModel(root);
-	    baumEbeneErzeugen(lagerListe,root);
 	    tree = new JTree(model);
 	    tree.setExpandsSelectedPaths(true);
 	    tree.setRootVisible(false);
@@ -100,10 +101,11 @@ public class TreeView extends JPanel{
 		this.add(neuesOberLager,BorderLayout.CENTER);
 		this.setBorder(new EmptyBorder(5,5,5,5));
 	    }
-		
-	
-
-	
+	/**
+	 * rekursive Methode um BaumKnoten zu erzeugen zu verknoten und die Zuordnung zu Models speichert
+	 * @param lagerListe Liste in der die Lager einer Ebene sind
+	 * @param elternKnoten Knoten an den an die die Lager der LagerListe angehängt werden
+	 */
 	public void baumEbeneErzeugen(List<LagerModel> lagerListe, LagerBaumKnoten elternKnoten) {
 		if ((lagerListe!=null)&&(lagerListe.size()>0)) {
 			for (LagerModel lModel : lagerListe) {
@@ -113,19 +115,18 @@ public class TreeView extends JPanel{
 				controller.knotenLagerZuordnungAktualiseren(lBKnoten, lModel);
 				DefaultTreeModel model = (DefaultTreeModel)tree.getModel();
 				model.insertNodeInto(lBKnoten, elternKnoten, elternKnoten.getChildCount());
-				model.nodesWereInserted(elternKnoten, new int [elternKnoten.getChildCount()]);
-				model.reload(elternKnoten);
-				model.reload(lBKnoten);
 				model.nodeStructureChanged(elternKnoten);
 				knoten.add(lBKnoten);
-				baumEbeneErzeugen(lModel.getUnterLager(),lBKnoten);
-				
+				baumEbeneErzeugen(lModel.getUnterLager(),lBKnoten);	
 			}
 		}
 	}
-	
+	/**
+	 * aktualisiert den Baum
+	 * @param lagerListe neue Liste aller Lager die als Baum dargestellt werden sollen
+	 * @param mussAktualisieren gibt an ob der Baum zwangsweise aktualisiert werden muss
+	 */
 	public void aktualisiereBaum(List<LagerModel> lagerListe, boolean mussAktualisieren) {
-		
 		if ((getGroesseLagerList(lagerListe)-1!=knoten.size())||(mussAktualisieren)) {
 			for (LagerBaumKnoten node : knoten) {
 				model.removeNodeFromParent(node);
@@ -133,23 +134,16 @@ public class TreeView extends JPanel{
 			}
 			knoten= new ArrayList<LagerBaumKnoten>();
 			baumEbeneErzeugen(lagerListe,root);
-			tree=new JTree(model);
-			tree.setExpandsSelectedPaths(true);
-			
-			tree.addTreeSelectionListener(new TreeSelectionListener() {
-					
-					@Override
-					public void valueChanged(TreeSelectionEvent e) {
-						if (!e.getPath().getLastPathComponent().equals(root)) {
-							controller.aktuellesLagerAendern((LagerBaumKnoten) e.getPath().getLastPathComponent());
-						}	
-					}
-			});	
 			if (mussAktualisieren){
 				controller.aktuellesLagerAendern((LagerBaumKnoten) tree.getModel().getChild(tree.getModel().getRoot(), 0));
 			}
 		}
 	}
+	/**
+	 * ermittelt die Anzahl an Lagern in einer Lagerliste +1 
+	 * @param lagerListe Liste mit den Lagern dessen Anzahl ermittelt werden soll
+	 * @return Anzahl der Lager in der Liste +1
+	 */
 	public int getGroesseLagerList(List<LagerModel> lagerListe){
 		int start=0;
 		for (LagerModel lModel : lagerListe) {

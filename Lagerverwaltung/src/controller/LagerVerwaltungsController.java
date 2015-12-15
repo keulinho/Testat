@@ -31,16 +31,9 @@ public class LagerVerwaltungsController extends Observable{
 	LagerModel aktuellesLager;
 	HashMap knotenZuLagerModel;
 	Stack<Command> redoStack, undoStack;
-	
-	public static void main(String... args){
-		
-		
-		LagerVerwaltungsController control = new LagerVerwaltungsController();
-
-		
-		
-	}
-	
+	/**
+	 * erzeugt einen neuen Controller
+	 */
 	public LagerVerwaltungsController() {
 		knotenZuLagerModel=new HashMap<LagerBaumKnoten,LagerModel>();
 		redoStack=new Stack<Command>();
@@ -53,7 +46,9 @@ public class LagerVerwaltungsController extends Observable{
 		aktuellesLager=lVModel.getLager().get(0);
 		aktuellesLager.addObserver(view.getDetailPane());
 	}
-	
+	/**
+	 * macht letzte Buchung auf ein Lager rückgänig
+	 */
 	public void undo() {
 		Command command = undoStack.pop();
 		command.undo();
@@ -61,15 +56,23 @@ public class LagerVerwaltungsController extends Observable{
 		setChanged();
 		notifyObservers();
 	}
-	
+	/**
+	 * gibt den RedoStack zurück
+	 * @return RedoStack
+	 */
 	public Stack<Command> getRedoStack() {
 		return redoStack;
 	}
-
+	/**
+	 * gibt den UndoStack zurück
+	 * @return UndoStack
+	 */
 	public Stack<Command> getUndoStack() {
 		return undoStack;
 	}
-
+	/**
+	 * wiederholt die zuletzt rückgängig gemachte Buchung
+	 */
 	public void redo() {
 		Command command = redoStack.pop();
 		command.execute();
@@ -77,31 +80,50 @@ public class LagerVerwaltungsController extends Observable{
 		setChanged();
 		notifyObservers();
 	}
-	
+	/**
+	 * verwirft die laufende Buchung
+	 */
 	public void buchungVerwerfen() {
 		lVModel.verwerfenBuchung();
 	}
-	
+	/**
+	 * schließt die aktuelle Buchung ab
+	 */
 	public void buchungAbschliessen() {
 		lVModel.abschliessenBuchung();
 	}
-	
+	/**
+	 * erstellt eine neue Auslieferung
+	 */
 	public void auslieferungErstellen() {
 		lVModel.erstellenAbBuchung(new Date());
 	}
-	
+	/**
+	 * erstellt eine neue Zulieferung
+	 * @param gesamtMenge menge der Zulieferung
+	 */
 	public void zulieferungErstellen(int gesamtMenge) {
 		lVModel.erstellenZuBuchung(new Date(), gesamtMenge);
 	}
-	
+	/**
+	 * ändert den Namen des naktuellen Lagers
+	 * @param neuerName neuer Name
+	 */
 	public void aendereName(String neuerName) {
 		lVModel.umbenennenLager(aktuellesLager, neuerName);
 	}
-	
+	/**
+	 * löscht das aktuelle Lager
+	 */
 	public void loescheLager() {
 		lVModel.loesschenLager(aktuellesLager);
 	}
-	
+	/**
+	 * erstellt ein neues Unterlager
+	 * @param lagerName name des neuen Lagers
+	 * @param lagerKapazitaet Kapazität des neuen Lagers
+	 * @param oberLager gibt an ob ein Lager ObersterEbene erzeugt werden soll
+	 */
 	public void erstelleUnterLager(String lagerName, int lagerKapazitaet, boolean oberLager) {
 		if (!oberLager) {
 			lVModel.hinzufuegenLager(aktuellesLager, lagerKapazitaet, lagerName);
@@ -110,7 +132,10 @@ public class LagerVerwaltungsController extends Observable{
 		}
 		
 	}
-	
+	/**
+	 * bucht die mitgegebene Menge auf das aktuelle Lager
+	 * @param menge menge des Anteils
+	 */
 	public void bucheAnteil(int menge) {
 		Command command = new AnteilCommand(redoStack,lVModel,aktuellesLager,menge);
 		command.execute();
@@ -118,7 +143,9 @@ public class LagerVerwaltungsController extends Observable{
 		setChanged();
 		notifyObservers();
 	}
-	
+	/**
+	 * speichert das momentane Modell
+	 */
 	public void speichern() {
 		FileDialog fd = new FileDialog(view, "Choose a file", FileDialog.SAVE);
 		fd.setDirectory("C:\\Users\\"+System.getProperty("user.name").toUpperCase());
@@ -143,7 +170,9 @@ public class LagerVerwaltungsController extends Observable{
 			}
 		}
 	}
-	
+	/**
+	 * lädt ein LagerModell
+	 */
 	public void laden() {
 		FileDialog fd = new FileDialog(view, "Choose a file", FileDialog.LOAD);
 		fd.setDirectory("C:\\Users\\"+System.getProperty("user.name").toUpperCase());

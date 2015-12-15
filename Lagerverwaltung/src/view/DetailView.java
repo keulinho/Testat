@@ -113,7 +113,7 @@ public class DetailView extends JPanel implements Observer{
 		lagerInfoErstellen();
 		this.add(lagerInfo,BorderLayout.NORTH);
 
-		optionenPanel = new OptionenPanel(editName,controller);
+		optionenPanel = new OptionenPanel(controller);
 		optionenPanel.zeigeButton();
 		this.add(optionenPanel,BorderLayout.PAGE_END);
 	}
