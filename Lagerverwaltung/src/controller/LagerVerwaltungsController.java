@@ -95,15 +95,15 @@ public class LagerVerwaltungsController extends Observable{
 	/**
 	 * erstellt eine neue Auslieferung
 	 */
-	public void auslieferungErstellen() {
-		lVModel.erstellenAbBuchung(new Date());
+	public boolean auslieferungErstellen() {
+		return lVModel.erstellenAbBuchung(new Date());
 	}
 	/**
 	 * erstellt eine neue Zulieferung
 	 * @param gesamtMenge menge der Zulieferung
 	 */
-	public void zulieferungErstellen(int gesamtMenge) {
-		lVModel.erstellenZuBuchung(new Date(), gesamtMenge);
+	public boolean zulieferungErstellen(int gesamtMenge) {
+		return lVModel.erstellenZuBuchung(new Date(), gesamtMenge);
 	}
 	/**
 	 * ändert den Namen des naktuellen Lagers
