@@ -29,6 +29,8 @@ import javax.swing.border.LineBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import core.exception.ErrorHandler;
+import core.exception.ImageNotFoundException;
 import model.AnteilModel;
 import model.BuchungsModel;
 
@@ -77,7 +79,7 @@ public class ListenView extends JPanel{
 		    Image img = ImageIO.read(new File("src/icons/delete.png"));
 		    schliessen.setIcon(new ImageIcon(img));
 		  } catch (IOException ex) {
-			  ex.printStackTrace();
+			  ErrorHandler.HandleException(ErrorHandler.BILD_NICHT_GEFUNDEN, new ImageNotFoundException("Bilddatei mit dem Pfad \"src/icons/delete.png\" nicht gefunden",(Throwable) ex));
 		  }
 		schliessen.addActionListener(new ActionListener() {
 			

@@ -20,6 +20,8 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import controller.LagerVerwaltungsController;
+import core.exception.ErrorHandler;
+import core.exception.ImageNotFoundException;
 import core.utils.Rechner;
 
 public class OptionenPanel extends JPanel{
@@ -56,7 +58,7 @@ public class OptionenPanel extends JPanel{
 		    Image img = ImageIO.read(new File("src/icons/trash.png"));
 		    loeschen.setIcon(new ImageIcon(img));
 		  } catch (IOException ex) {
-			  ex.printStackTrace();
+			  ErrorHandler.HandleException(ErrorHandler.BILD_NICHT_GEFUNDEN, new ImageNotFoundException("Bilddatei mit dem Pfad \"src/icons/trash.png\" nicht gefunden",(Throwable) ex));
 		  }
 		loeschen.addActionListener(new ActionListener() {
 			
@@ -70,7 +72,7 @@ public class OptionenPanel extends JPanel{
 		    Image img = ImageIO.read(new File("src/icons/new.png"));
 		    neuesLager.setIcon(new ImageIcon(img));
 		  } catch (IOException ex) {
-			  ex.printStackTrace();
+			  ErrorHandler.HandleException(ErrorHandler.BILD_NICHT_GEFUNDEN, new ImageNotFoundException("Bilddatei mit dem Pfad \"src/icons/new.png\" nicht gefunden",(Throwable) ex));
 		  }
 		neuesLager.addActionListener(new ActionListener() {
 			
@@ -85,7 +87,7 @@ public class OptionenPanel extends JPanel{
 		    Image img = ImageIO.read(new File("src/icons/edit2.png"));
 		    umbenennen.setIcon(new ImageIcon(img));
 		  } catch (IOException ex) {
-			  ex.printStackTrace();
+			  ErrorHandler.HandleException(ErrorHandler.BILD_NICHT_GEFUNDEN, new ImageNotFoundException("Bilddatei mit dem Pfad \"src/icons/edit2.png\" nicht gefunden",(Throwable) ex));
 		  }
 		umbenennen.addActionListener(new ActionListener() {
 			
@@ -102,7 +104,7 @@ public class OptionenPanel extends JPanel{
 		    Image img = ImageIO.read(new File("src/icons/info.png"));
 		    infoText.setIcon(new ImageIcon(img));
 		  } catch (IOException ex) {
-			  ex.printStackTrace();
+			  ErrorHandler.HandleException(ErrorHandler.BILD_NICHT_GEFUNDEN, new ImageNotFoundException("Bilddatei mit dem Pfad \"src/icons/info.png\" nicht gefunden",(Throwable) ex));
 		  }
 		//Slider Modus bei offener Buchung und gewähltem Unterlager
 		menge= new JLabel("<html>absolute Menge: <br>relative Menge:</html>");
@@ -125,7 +127,7 @@ public class OptionenPanel extends JPanel{
 		    Image img = ImageIO.read(new File("src/icons/enterBuchung.png"));
 		    anteilBuchen.setIcon(new ImageIcon(img));
 		  } catch (IOException ex) {
-			  ex.printStackTrace();
+			  ErrorHandler.HandleException(ErrorHandler.BILD_NICHT_GEFUNDEN, new ImageNotFoundException("Bilddatei mit dem Pfad \"src/icons/enterBuchung.png\" nicht gefunden",(Throwable) ex));
 		  }
 		anteilBuchen.addActionListener(new ActionListener() {
 			

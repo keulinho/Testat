@@ -20,6 +20,8 @@ import javax.swing.JTable;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import core.exception.ErrorHandler;
+import core.exception.ImageNotFoundException;
 import core.utils.Rechner;
 import model.AbBuchungsModel;
 import model.BuchungsModel;
@@ -29,13 +31,11 @@ public class BuchungsView extends JPanel{
 	String[] columnNames;
 	Object[][] data;
 	Rechner rechner;
-	
 	/**
 	 * erstellt eine Ansicht in der alle Buchungen aufgelistet werden
 	 * @param listeBuchungen Liste mit allen Buchungen
 	 */
 	public BuchungsView(List<BuchungsModel> listeBuchungen) {
-		
 		this.setPreferredSize(new Dimension(815,400));
 		this.setLayout(new BorderLayout());
 		rechner=new Rechner();
@@ -73,7 +73,7 @@ public class BuchungsView extends JPanel{
 		    Image img = ImageIO.read(new File("src/icons/delete.png"));
 		    schliessen.setIcon(new ImageIcon(img));
 		  } catch (IOException ex) {
-			  ex.printStackTrace();
+			  ErrorHandler.HandleException(ErrorHandler.BILD_NICHT_GEFUNDEN, new ImageNotFoundException("Bilddatei mit dem Pfad \"src/icons/delete.png\" nicht gefunden",(Throwable) ex));
 		  }
 		schliessen.addActionListener(new ActionListener() {
 			

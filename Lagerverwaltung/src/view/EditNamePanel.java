@@ -19,6 +19,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import controller.LagerVerwaltungsController;
+import core.exception.ErrorHandler;
+import core.exception.ImageNotFoundException;
 
 public class EditNamePanel extends JPanel{
 	
@@ -32,7 +34,6 @@ public class EditNamePanel extends JPanel{
 	 * @param controller Controller an den Befehle weitergereicht werden
 	 */
 	public EditNamePanel(String lagerName, LagerVerwaltungsController controller){
-		
 		this.controller=controller;
 		this.setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
 		this.setPreferredSize(new Dimension(515,25));
@@ -81,7 +82,7 @@ public class EditNamePanel extends JPanel{
 		    Image img = ImageIO.read(new File("src/icons/edit.png"));
 		    editieren.setIcon(new ImageIcon(img));
 		  } catch (IOException ex) {
-			  ex.printStackTrace();
+			  ErrorHandler.HandleException(ErrorHandler.BILD_NICHT_GEFUNDEN, new ImageNotFoundException("Bilddatei mit dem Pfad \"src/icons/edit.png\" nicht gefunden",(Throwable) ex));
 		  }
 		editieren.setPreferredSize(new Dimension(20,30));
 		editieren.addMouseListener(new MouseListener() {
@@ -115,7 +116,7 @@ public class EditNamePanel extends JPanel{
 		    Image img = ImageIO.read(new File("src/icons/edit.png"));
 		    speichern.setIcon(new ImageIcon(img));
 		  } catch (IOException ex) {
-			  ex.printStackTrace();
+			  ErrorHandler.HandleException(ErrorHandler.BILD_NICHT_GEFUNDEN, new ImageNotFoundException("Bilddatei mit dem Pfad \"src/icons/edit.png\" nicht gefunden",(Throwable) ex));
 		  }
 		speichern.setPreferredSize(new Dimension(20,30));
 		speichern.addMouseListener(new MouseListener() {

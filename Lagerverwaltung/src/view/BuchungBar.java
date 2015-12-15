@@ -23,6 +23,8 @@ import javax.swing.JToolBar;
 import javax.swing.text.NumberFormatter;
 
 import controller.LagerVerwaltungsController;
+import core.exception.ErrorHandler;
+import core.exception.ImageNotFoundException;
 
 public class BuchungBar extends JToolBar implements Observer{
 	
@@ -32,13 +34,11 @@ public class BuchungBar extends JToolBar implements Observer{
 	JTextField lagerName;
 	LagerVerwaltungsController controller;
 	boolean oberLager;
-	
 	/**
 	 * erzeugt eine BuchungsBar
 	 * @param controller Controller an den alle Befehle runtergereicht werden
 	 */
 	public BuchungBar(LagerVerwaltungsController controller){
-		
 		this.controller=controller;
 		this.setFloatable(false);
 		
@@ -56,7 +56,7 @@ public class BuchungBar extends JToolBar implements Observer{
 		    Image img = ImageIO.read(new File("src/icons/undo.png"));
 		    undo.setIcon(new ImageIcon(img));
 		  } catch (IOException ex) {
-			  ex.printStackTrace();
+			  ErrorHandler.HandleException(ErrorHandler.BILD_NICHT_GEFUNDEN, new ImageNotFoundException("Bilddatei mit dem Pfad \"src/icons/undo.png\" nicht gefunden",(Throwable) ex));
 		  }
 		undo.addActionListener(new ActionListener() {
 			
@@ -71,7 +71,7 @@ public class BuchungBar extends JToolBar implements Observer{
 		    Image img = ImageIO.read(new File("src/icons/redo.png"));
 		    redo.setIcon(new ImageIcon(img));
 		  } catch (IOException ex) {
-			  ex.printStackTrace();
+			  ErrorHandler.HandleException(ErrorHandler.BILD_NICHT_GEFUNDEN, new ImageNotFoundException("Bilddatei mit dem Pfad \"src/icons/redo.png\" nicht gefunden",(Throwable) ex));
 		  }
 		redo.addActionListener(new ActionListener() {
 			
@@ -86,21 +86,21 @@ public class BuchungBar extends JToolBar implements Observer{
 		    Image img = ImageIO.read(new File("src/icons/exclamation.png"));
 		    laufendeZulieferung.setIcon(new ImageIcon(img));
 		  } catch (IOException ex) {
-			  ex.printStackTrace();
+			  ErrorHandler.HandleException(ErrorHandler.BILD_NICHT_GEFUNDEN, new ImageNotFoundException("Bilddatei mit dem Pfad \"src/icons/exclamation.png\" nicht gefunden",(Throwable) ex));
 		  }
 		laufendeAuslieferung = new JLabel();
 		try {
 		    Image img = ImageIO.read(new File("src/icons/exclamation.png"));
 		    laufendeAuslieferung.setIcon(new ImageIcon(img));
 		  } catch (IOException ex) {
-			  ex.printStackTrace();
+			  ErrorHandler.HandleException(ErrorHandler.BILD_NICHT_GEFUNDEN, new ImageNotFoundException("Bilddatei mit dem Pfad \"src/icons/exclamation.png\" nicht gefunden",(Throwable) ex));
 		  }
 		buchungVerwerfen= new JButton("Buchung verwerfen");
 		try {
 		    Image img = ImageIO.read(new File("src/icons/delete.png"));
 		    buchungVerwerfen.setIcon(new ImageIcon(img));
 		  } catch (IOException ex) {
-			  ex.printStackTrace();
+			  ErrorHandler.HandleException(ErrorHandler.BILD_NICHT_GEFUNDEN, new ImageNotFoundException("Bilddatei mit dem Pfad \"src/icons/delete.png\" nicht gefunden",(Throwable) ex));
 		  }
 		buchungVerwerfen.addActionListener(new ActionListener() {
 			
@@ -114,7 +114,7 @@ public class BuchungBar extends JToolBar implements Observer{
 		    Image img = ImageIO.read(new File("src/icons/check.png"));
 		    buchungAbschliessen.setIcon(new ImageIcon(img));
 		  } catch (IOException ex) {
-			  ex.printStackTrace();
+			  ErrorHandler.HandleException(ErrorHandler.BILD_NICHT_GEFUNDEN, new ImageNotFoundException("Bilddatei mit dem Pfad \"src/icons/check.png\" nicht gefunden",(Throwable) ex));
 		  }
 		buchungAbschliessen.addActionListener(new ActionListener() {
 			
@@ -168,7 +168,7 @@ public class BuchungBar extends JToolBar implements Observer{
 		    Image img = ImageIO.read(new File("src/icons/check.png"));
 		    auslieferungErstellen.setIcon(new ImageIcon(img));
 		  } catch (IOException ex) {
-			  ex.printStackTrace();
+			  ErrorHandler.HandleException(ErrorHandler.BILD_NICHT_GEFUNDEN, new ImageNotFoundException("Bilddatei mit dem Pfad \"src/icons/check.png\" nicht gefunden",(Throwable) ex));
 		  }
 		auslieferungErstellen.addActionListener(new ActionListener() {
 			
@@ -185,7 +185,7 @@ public class BuchungBar extends JToolBar implements Observer{
 		    Image img = ImageIO.read(new File("src/icons/check.png"));
 		    zulieferungErstellen.setIcon(new ImageIcon(img));
 		  } catch (IOException ex) {
-			  ex.printStackTrace();
+			  ErrorHandler.HandleException(ErrorHandler.BILD_NICHT_GEFUNDEN, new ImageNotFoundException("Bilddatei mit dem Pfad \"src/icons/check.png\" nicht gefunden",(Throwable) ex));
 		  }
 		zulieferungErstellen.addActionListener(new ActionListener() {
 			
@@ -266,7 +266,7 @@ public class BuchungBar extends JToolBar implements Observer{
 		    Image img = ImageIO.read(new File("src/icons/check.png"));
 		    neuesLagerErstellen.setIcon(new ImageIcon(img));
 		  } catch (IOException ex) {
-			  ex.printStackTrace();
+			  ErrorHandler.HandleException(ErrorHandler.BILD_NICHT_GEFUNDEN, new ImageNotFoundException("Bilddatei mit dem Pfad \"src/icons/check.png\" nicht gefunden",(Throwable) ex));
 		  }
 		neuesLagerErstellen.addActionListener(new ActionListener() {
 			

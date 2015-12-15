@@ -1,7 +1,6 @@
 package view;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,13 +15,13 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.JToolBar;
 
 import controller.LagerVerwaltungsController;
+import core.exception.ErrorHandler;
+import core.exception.ImageNotFoundException;
 import model.AbBuchungsModel;
 import model.BuchungsModel;
-import model.LagerModel;
 import model.LagerVerwaltungsModel;
 import model.ZuBuchungsModel;
 
@@ -48,10 +47,8 @@ public class VerwaltungsView extends JFrame implements Observer{
 		
 		this.controller=controller;
 		this.setTitle("Lagerverwaltung");
-		
 		restMenge=1000;
 		guiElementeErstellen();
-		
 		//Toolbar hinzufügen
 		toolbar = new JToolBar();
 		toolbar.add(speichern);
@@ -82,7 +79,7 @@ public class VerwaltungsView extends JFrame implements Observer{
 		    Image img = ImageIO.read(new File("src/icons/marke.png"));
 		    this.setIconImage(img);
 		  } catch (IOException ex) {
-			  ex.printStackTrace();
+			  ErrorHandler.HandleException(ErrorHandler.BILD_NICHT_GEFUNDEN, new ImageNotFoundException("Bilddatei mit dem Pfad \"src/icons/marke.png\" nicht gefunden",(Throwable) ex));
 		  }
 		this.setLocation(150, 100);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -101,7 +98,7 @@ public class VerwaltungsView extends JFrame implements Observer{
 		    Image img = ImageIO.read(new File("src/icons/save.png"));
 		    speichern.setIcon(new ImageIcon(img));
 		  } catch (IOException ex) {
-			  ex.printStackTrace();
+			  ErrorHandler.HandleException(ErrorHandler.BILD_NICHT_GEFUNDEN, new ImageNotFoundException("Bilddatei mit dem Pfad \"src/icons/save.png\" nicht gefunden",(Throwable) ex));
 		  }
 		speichern.addActionListener(new ActionListener() {
 			
@@ -115,7 +112,7 @@ public class VerwaltungsView extends JFrame implements Observer{
 		    Image img = ImageIO.read(new File("src/icons/open.png"));
 		    laden.setIcon(new ImageIcon(img));
 		  } catch (IOException ex) {
-			  ex.printStackTrace();
+			  ErrorHandler.HandleException(ErrorHandler.BILD_NICHT_GEFUNDEN, new ImageNotFoundException("Bilddatei mit dem Pfad \"src/icons/open.png\" nicht gefunden",(Throwable) ex));
 		  }
 		laden.addActionListener(new ActionListener() {
 			
@@ -129,7 +126,7 @@ public class VerwaltungsView extends JFrame implements Observer{
 		    Image img = ImageIO.read(new File("src/icons/zulieferung.png"));
 		    neueZulieferung.setIcon(new ImageIcon(img));
 		  } catch (IOException ex) {
-			  ex.printStackTrace();
+			  ErrorHandler.HandleException(ErrorHandler.BILD_NICHT_GEFUNDEN, new ImageNotFoundException("Bilddatei mit dem Pfad \"src/icons/zulieferung.png\" nicht gefunden",(Throwable) ex));
 		  }
 		neueZulieferung.addActionListener(new ActionListener() {
 			
@@ -148,7 +145,7 @@ public class VerwaltungsView extends JFrame implements Observer{
 		    Image img = ImageIO.read(new File("src/icons/auslieferung.png"));
 		    neueAuslieferung.setIcon(new ImageIcon(img));
 		  } catch (IOException ex) {
-			  ex.printStackTrace();
+			  ErrorHandler.HandleException(ErrorHandler.BILD_NICHT_GEFUNDEN, new ImageNotFoundException("Bilddatei mit dem Pfad \"src/icons/auslieferung.png\" nicht gefunden",(Throwable) ex));
 		  }
 		neueAuslieferung.addActionListener(new ActionListener() {
 			
@@ -167,7 +164,7 @@ public class VerwaltungsView extends JFrame implements Observer{
 		    Image img = ImageIO.read(new File("src/icons/alleBuchungen.png"));
 		    alleBuchungen.setIcon(new ImageIcon(img));
 		  } catch (IOException ex) {
-			  ex.printStackTrace();
+			  ErrorHandler.HandleException(ErrorHandler.BILD_NICHT_GEFUNDEN, new ImageNotFoundException("Bilddatei mit dem Pfad \"src/icons/alleBuchungen.png\" nicht gefunden",(Throwable) ex));
 		  }
 		alleBuchungen.addActionListener(new ActionListener() {
 			
@@ -190,7 +187,7 @@ public class VerwaltungsView extends JFrame implements Observer{
 		    Image img = ImageIO.read(new File("src/icons/Liste.png"));
 		    listeZeigen.setIcon(new ImageIcon(img));
 		  } catch (IOException ex) {
-			  ex.printStackTrace();
+			  ErrorHandler.HandleException(ErrorHandler.BILD_NICHT_GEFUNDEN, new ImageNotFoundException("Bilddatei mit dem Pfad \"src/icons/Liste.png\" nicht gefunden",(Throwable) ex));
 		  }
 		listeZeigen.addActionListener(new ActionListener() {
 			

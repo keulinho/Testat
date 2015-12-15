@@ -25,6 +25,8 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 
 import controller.LagerVerwaltungsController;
+import core.exception.ErrorHandler;
+import core.exception.ImageNotFoundException;
 import core.utils.AbsoluterAnteilAbsteigend;
 import core.utils.AbsoluterAnteilAufsteigend;
 import core.utils.GesamtMengeAbsteigend;
@@ -60,14 +62,12 @@ public class DetailView extends JPanel implements Observer{
 	List<BuchungsModel> listeBuchungen;
 	ImageIcon sort,sortAsc,sortDesc;
 	Rechner rechner;
-	
 
 	/**
 	 * erzeugt eine DetailView
 	 * @param controller Controller an den alle Befehle runtergereicht werden
 	 */
 	public DetailView(LagerVerwaltungsController controller) {
-		
 		this.controller=controller;
 		lagerName="";
 		rechner = new Rechner();
@@ -85,19 +85,19 @@ public class DetailView extends JPanel implements Observer{
 		    Image img = ImageIO.read(new File("src/icons/sort.png"));
 		    sort = new ImageIcon(img);
 		} catch (IOException ex) {
-			ex.printStackTrace();
+			  ErrorHandler.HandleException(ErrorHandler.BILD_NICHT_GEFUNDEN, new ImageNotFoundException("Bilddatei mit dem Pfad \"src/icons/sort.png\" nicht gefunden",(Throwable) ex));
 		}
 		try {
 		    Image img = ImageIO.read(new File("src/icons/sortAsc.png"));
 		    sortAsc = new ImageIcon(img);
 		} catch (IOException ex) {
-			ex.printStackTrace();
+			  ErrorHandler.HandleException(ErrorHandler.BILD_NICHT_GEFUNDEN, new ImageNotFoundException("Bilddatei mit dem Pfad \"src/icons/sortAsc.png\" nicht gefunden",(Throwable) ex));
 		}
 		try {
 		    Image img = ImageIO.read(new File("src/icons/sortDesc.png"));
 		    sortDesc = new ImageIcon(img);
 		} catch (IOException ex) {
-			ex.printStackTrace();
+			  ErrorHandler.HandleException(ErrorHandler.BILD_NICHT_GEFUNDEN, new ImageNotFoundException("Bilddatei mit dem Pfad \"src/icons/sortDesc.png\" nicht gefunden",(Throwable) ex));
 		}
 		tagHeader=new JLabel(columnNames[0],sort,JLabel.CENTER );
 		tagHeader.setBorder(new LineBorder(Color.lightGray));

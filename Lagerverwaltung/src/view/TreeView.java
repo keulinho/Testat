@@ -24,6 +24,8 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 
 import controller.LagerVerwaltungsController;
+import core.exception.ErrorHandler;
+import core.exception.ImageNotFoundException;
 import model.LagerModel;
 
 public class TreeView extends JPanel{
@@ -34,7 +36,6 @@ public class TreeView extends JPanel{
 	JScrollPane treeScrollPanel;
 	DefaultTreeModel model;
 	List<LagerBaumKnoten> knoten;
-	
 	/**
 	 * erzeugt eine neue TreeView
 	 * @param controller controller, an den Befehle runtergereicht werden
@@ -84,7 +85,7 @@ public class TreeView extends JPanel{
 		    Image img = ImageIO.read(new File("src/icons/new.png"));
 		    neuesOberLager.setIcon(new ImageIcon(img));
 		  } catch (IOException ex) {
-			  ex.printStackTrace();
+			  ErrorHandler.HandleException(ErrorHandler.BILD_NICHT_GEFUNDEN, new ImageNotFoundException("Bilddatei mit dem Pfad \"src/icons/new.png\" nicht gefunden",(Throwable) ex));
 		  }
 		
 		neuesOberLager.addActionListener(new ActionListener() {
