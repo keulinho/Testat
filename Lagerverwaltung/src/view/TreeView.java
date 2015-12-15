@@ -13,7 +13,6 @@ import java.util.List;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
@@ -21,6 +20,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 
 import controller.LagerVerwaltungsController;
@@ -58,6 +58,25 @@ public class TreeView extends JPanel{
 				}	
 			}
 		});
+	   
+	    DefaultTreeCellRenderer renderer = new DefaultTreeCellRenderer();
+	    
+	    //Branch-Icon setzen
+	    ImageIcon branchIcon = new ImageIcon("src/icons/home.png");
+ 	    if (branchIcon != null) {
+ 	        renderer.setClosedIcon(branchIcon);
+ 	        renderer.setOpenIcon(branchIcon);
+ 	        tree.setCellRenderer(renderer);
+ 	    	}
+	    	    
+	     //Leaf-Icon setzen
+	    	ImageIcon leafIcon = new ImageIcon("src/icons/truck.png");
+	 	    if (leafIcon != null) {
+	 	        renderer.setLeafIcon(leafIcon);
+	 	        tree.setCellRenderer(renderer);
+	 	    	}
+		    
+	   
 	    
 	    treeScrollPanel= new JScrollPane(tree);    
 	    treeScrollPanel.setPreferredSize(new Dimension(300, 350));
