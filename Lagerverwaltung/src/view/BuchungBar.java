@@ -174,8 +174,9 @@ public class BuchungBar extends JToolBar implements Observer{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				zeigeLaufendeAuslieferung(0);
-				controller.auslieferungErstellen();
+				if (controller.auslieferungErstellen()) {
+					zeigeLaufendeAuslieferung(0);
+				}
 				
 			}
 		});
@@ -189,9 +190,10 @@ public class BuchungBar extends JToolBar implements Observer{
 		zulieferungErstellen.addActionListener(new ActionListener() {
 			
 			@Override
-			public void actionPerformed(ActionEvent e) {
-				zeigeLaufendeZulieferung((int)menge.getValue());
-				controller.zulieferungErstellen((int)menge.getValue());
+			public void actionPerformed(ActionEvent e) {	
+				if (controller.zulieferungErstellen((int)menge.getValue())) {
+					zeigeLaufendeZulieferung((int)menge.getValue());
+				}
 				menge.setValue(null);
 			}
 		});
