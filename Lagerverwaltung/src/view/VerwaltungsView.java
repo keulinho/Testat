@@ -33,7 +33,7 @@ public class VerwaltungsView extends JFrame implements Observer{
 	JToolBar toolbar;
 	BuchungBar buchungBar;
 	DetailView detailPane;
-	TreeView1 treePane;
+	TreeView treePane;
 	LagerVerwaltungsModel lvModel;
 	LagerVerwaltungsController controller;
 	List<BuchungsModel> listeBuchungen;
@@ -68,7 +68,7 @@ public class VerwaltungsView extends JFrame implements Observer{
 		this.add(detailPane, BorderLayout.EAST);
 		
 		//TreePane hinzufügen
-		treePane = new TreeView1(null,controller);
+		treePane = new TreeView(null,controller);
 		this.add(treePane, BorderLayout.WEST);
 		
 		//BuchungsBar hinzufügen

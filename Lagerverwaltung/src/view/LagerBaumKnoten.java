@@ -10,9 +10,9 @@ import model.LagerModel;
 
 public class LagerBaumKnoten extends DefaultMutableTreeNode implements Observer{
 
-	TreeView1 tree;
+	TreeView tree;
 	
-	public LagerBaumKnoten(String lagerName, TreeView1 tree) {
+	public LagerBaumKnoten(String lagerName, TreeView tree) {
 		super(lagerName);
 		this.tree = tree;
 	}
