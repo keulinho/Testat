@@ -62,19 +62,26 @@ public class TreeView extends JPanel{
 	    DefaultTreeCellRenderer renderer = new DefaultTreeCellRenderer();
 	    
 	    //Branch-Icon setzen
-	    ImageIcon branchIcon = new ImageIcon("src/icons/home.png");
- 	    if (branchIcon != null) {
- 	        renderer.setClosedIcon(branchIcon);
- 	        renderer.setOpenIcon(branchIcon);
- 	        tree.setCellRenderer(renderer);
- 	    	}
-	    	    
+	    try{
+	    	Image branchIconImg = ImageIO.read(new File("src/icons/home.png"));
+	    	ImageIcon branchIcon = new ImageIcon(branchIconImg);
+    		renderer.setClosedIcon(branchIcon);
+    		renderer.setOpenIcon(branchIcon);
+    		tree.setCellRenderer(renderer);
+    	} catch(IOException ex){
+    		ex.printStackTrace();
+    	}
+    
 	    //Leaf-Icon setzen
-	    ImageIcon leafIcon = new ImageIcon("src/icons/truck.png");
-	 	if (leafIcon != null) {
-	 	    renderer.setLeafIcon(leafIcon);
-	 	    tree.setCellRenderer(renderer);
-	 	}
+	    try{
+	    	Image leafIconImg = ImageIO.read(new File("src/icons/truck.png"));
+	    	ImageIcon leafIcon = new ImageIcon(leafIconImg);
+    		renderer.setClosedIcon(leafIcon);
+    		renderer.setOpenIcon(leafIcon);
+    		tree.setCellRenderer(renderer);
+    	} catch(IOException ex){
+    		ex.printStackTrace();
+    	}
 
 	    treeScrollPanel= new JScrollPane(tree);    
 	    treeScrollPanel.setPreferredSize(new Dimension(300, 350));
