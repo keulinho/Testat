@@ -258,9 +258,10 @@ public class VerwaltungsView extends JFrame implements Observer{
 	 * löscht Listenansichten und wechselt zur Standardansicht mit buchungsdetails und Baum
 	 */
 	public void standardAnsicht() {
-		if (liste!=null&&liste.isVisible()) {
+		if (liste!=null) {
 			this.remove(liste);
-		} else {
+		} 
+		if (buchungsView!=null) {
 			this.remove(buchungsView);
 		}
 		this.add(treePane, BorderLayout.WEST);
