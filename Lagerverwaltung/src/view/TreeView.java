@@ -69,15 +69,13 @@ public class TreeView extends JPanel{
  	        tree.setCellRenderer(renderer);
  	    	}
 	    	    
-	     //Leaf-Icon setzen
-	    	ImageIcon leafIcon = new ImageIcon("src/icons/truck.png");
-	 	    if (leafIcon != null) {
-	 	        renderer.setLeafIcon(leafIcon);
-	 	        tree.setCellRenderer(renderer);
-	 	    	}
-		    
-	   
-	    
+	    //Leaf-Icon setzen
+	    ImageIcon leafIcon = new ImageIcon("src/icons/truck.png");
+	 	if (leafIcon != null) {
+	 	    renderer.setLeafIcon(leafIcon);
+	 	    tree.setCellRenderer(renderer);
+	 	}
+
 	    treeScrollPanel= new JScrollPane(tree);    
 	    treeScrollPanel.setPreferredSize(new Dimension(300, 350));
 	    this.add(treeScrollPanel,BorderLayout.NORTH);

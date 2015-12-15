@@ -129,9 +129,6 @@ public class DetailView extends JPanel implements Observer{
 		mengeKapazitaet=lModel.getMaxKapazitaet();
 		lagerName=lModel.getName();
 		verteilteMenge=lModel.getVerteilteMenge();
-		this.remove(lagerInfo);
-		lagerInfoErstellen();
-		this.add(lagerInfo,BorderLayout.NORTH);
 		if (!lModel.isUntersteEbene()) {
 			isUnterLager=false;
 			meldung.setText("Bei einem Oberlager gibt es keine Buchungen");
@@ -139,6 +136,9 @@ public class DetailView extends JPanel implements Observer{
 			isUnterLager=true;
 			meldung.setText("Es gibt noch keine Buchungen auf dieses Lager");
 		}
+		this.remove(lagerInfo);
+		lagerInfoErstellen();
+		this.add(lagerInfo,BorderLayout.NORTH);
 		if (buchungsModus) {
 			zeigeBuchungsOptionen(gesamtMenge, maximum, zulieferung);
 		}
@@ -190,14 +190,16 @@ public class DetailView extends JPanel implements Observer{
 	/**
 	 * erstellt alle variablen Texte der View mit den in den Klassenvariablen gespeicherten Werten neu
 	 */
-	public void lagerInfoAktualisieren(){
+	public void lagerInfoAktualisieren() {
 		editName = new EditNamePanel(lagerName,controller);
-		kapazitaet = new JLabel("Maximale Kapazität: "+mengeKapazitaet);
-		kapazitaet.revalidate();
-		kapazitaet.repaint();
-		bestand = new JLabel("Aktueller Bestand: "+(mengeBestand+verteilteMenge));
-		bestand.revalidate();
-		bestand.repaint();
+		if (isUnterLager) {
+			kapazitaet = new JLabel("Maximale Kapazität: "+mengeKapazitaet);
+			bestand = new JLabel("Aktueller Bestand: "+(mengeBestand+verteilteMenge));
+		} else {
+			kapazitaet = new JLabel("Kumulierte Kapazität der Unterlager: "+mengeKapazitaet);
+			bestand = new JLabel("Kumulierter Bestand der Unterlager: "+(mengeBestand+verteilteMenge));
+		}
+		
 		lagerInfo.revalidate();
 		lagerInfo.repaint();
 	}
