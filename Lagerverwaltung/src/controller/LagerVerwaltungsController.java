@@ -58,8 +58,12 @@ public class LagerVerwaltungsController {
 		lVModel.umbenennenLager(aktuellesLager, neuerName);
 	}
 	
+	public void loescheLagerRekursiv() {
+		lVModel.loesschenLager(aktuellesLager, true);
+	}
+	
 	public void loescheLager() {
-		lVModel.loesschenLager(aktuellesLager);
+		lVModel.loesschenLager(aktuellesLager, false);
 	}
 	
 	public void erstelleUnterLager(String lagerName, int lagerKapazitaet) {

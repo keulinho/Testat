@@ -113,6 +113,7 @@ public class LagerVerwaltungsModel extends Observable implements Serializable {
 	public LagerModel hinzufuegenLager(LagerModel oberLager, int kapazitaet, String name){
 		if(oberLager != null){
 			if(oberLager.getUnterLager().isEmpty() && oberLager.getBestand() <= kapazitaet){
+				//TODO Buchungen und Anteile mit rumschupsen
 				LagerModel lager = oberLager.addUnterlager(kapazitaet, name);
 				oberLager.aendernKapazitaet(kapazitaet-oberLager.getMaxKapazitaet());
 				oberLager.aendernOberlagerKapazitaet(kapazitaet);
@@ -159,7 +160,7 @@ public class LagerVerwaltungsModel extends Observable implements Serializable {
 	 * @return 	boolean			true wenn eine Buchung erstellt wurde sonst false
 	 */
 	public boolean erstellenZuBuchung(Date buchungsTag, int menge){
-		if(laufendeBuchung == null) {
+		if(laufendeBuchung == null && maxFreieKapazitaet >= menge) {
 			laufendeBuchung = new ZuBuchungsModel(buchungsTag, menge);
 			this.setChanged();
 			this.notifyObservers();
@@ -288,13 +289,43 @@ public class LagerVerwaltungsModel extends Observable implements Serializable {
 		laufendeBuchung.loeschenAlleAnteile();
 	}
 	
-	public void loesschenLager(LagerModel lager){
+	/**
+	 * A1
+	 *  - A1.1
+	 *   - A1.1.1
+	 *  - A1.2
+	 *   - A1.2.1
+	 *   - A1.2.2
+	 *  - A1.3
+	 *  - A1.4
+	 * 
+	 *  A1      löschen	--> alle gehen einen nach oben
+	 *  A1.1    löschen	--> A1.1.1 geht einen nach oben
+	 *  A1.1.1  löschen --> alles aus A1.1.1 geht nach oben Buchungen und Anteile auch
+	 *  A1.2    löschen	--> alle gehen eine Ebene nach oben
+	 *  A1.2.1  löschen	--> nur wenn es leer ist
+	 *  
+	 *  rekursives löschen
+	 *  	-> wenn Lager oberster Ebene dann müssen die Lager leer sein
+	 *  	-> Lager mit allen Unterlagern löschen
+	 */
+	public void loesschenLager(LagerModel lager, boolean rekursiv){
 		// TODO
-		/**
-		 * Wenn kein Lager auf gleicher Ebene dann geht alles eine Ebene nach oben -- was passiert mit Anteilen in Buchungen
-		 * befinden sich Lager auf gleicher Ebene findet eine Umbuchung statt
-		 * 		eine Buchung auf andere Lager so wie eine Abbuchung von dem zu löschenden Lager
-		 */
+		if(lager.getOberLager() != null){
+			if(lager.getUnterLager().isEmpty()){
+				if(lager.getOberLager().getUnterLager().size() > 1){
+					//A1.1.1 alle Anteile ändern undbestand hochgeben
+					
+				} else {
+					//A1.2.1
+				}
+			} else {
+				//A1.1 und A1.2 über alle Unterlager gehen und dann hochziehen
+			}
+		} else {
+			//A1
+		}
+		
 	}
 	
 	//TODO generell Umbuchung
