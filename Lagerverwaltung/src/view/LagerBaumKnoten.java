@@ -24,7 +24,7 @@ public class LagerBaumKnoten extends DefaultMutableTreeNode implements Observer{
 		if (lModel.hatUnterlager()) {
 			this.setUserObject(lModel.getName()+ " ("+rechner.rechneProzent(lModel.getBestand(), lModel.getMaxKapazitaet())+"%)");
 		} else {
-			this.setUserObject("<html>"+lModel.getName()+ " ("+rechner.rechneProzent(lModel.getBestand(), lModel.getMaxKapazitaet())+"%)<br> maximale Kapazität: "+ lModel.getMaxKapazitaet()+"<br>aktueller Bestand: "+(lModel.getBestand()+lModel.getVerteilteMenge())+"</html>");
+			this.setUserObject("<html>"+lModel.getName()+ " ("+rechner.rechneProzent(lModel.getBestand()+lModel.getVerteilteMenge(), lModel.getMaxKapazitaet())+"%)<br> maximale Kapazität: "+ lModel.getMaxKapazitaet()+"<br>aktueller Bestand: "+(lModel.getBestand()+lModel.getVerteilteMenge())+"</html>");
 		}
 		tree.revalidate();
 		tree.repaint();
