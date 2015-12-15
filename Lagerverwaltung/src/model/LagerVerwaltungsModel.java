@@ -7,7 +7,9 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.Vector;
 
+import core.exception.ErrorHandler;
 import core.exception.LagerUeberfuelltException;
+import core.exception.MaxFreieKapazitaetUeberschritten;
 import view.LagerBaumKnoten;
 
 public class LagerVerwaltungsModel extends Observable implements Serializable {
@@ -23,14 +25,18 @@ public class LagerVerwaltungsModel extends Observable implements Serializable {
 	public LagerVerwaltungsModel(){
 		lager = new Vector<LagerModel>();
 		buchungen = new Vector<BuchungsModel>();
-		initialBefuellung();
 		this.maxFreieKapazitaet = 0;
+		try {
+			initialBefuellung();
+		} catch(MaxFreieKapazitaetUeberschritten e){
+			ErrorHandler.HandleException(ErrorHandler.MAX_FREIE_KAPAZITAET_UEBERSCHRITTEN, e);
+		}
 		this.laufendeBuchung = null;
 	}
 	
 	//Methoden
 
-	public void initialBefuellung(){
+	public void initialBefuellung() throws MaxFreieKapazitaetUeberschritten{
 		//Lager
 		LagerModel lager1 = hinzufuegenLager(null, 0, "Deutschland");
 		LagerModel lager11 = hinzufuegenLager(lager1, 0, "Niedersachsen");
@@ -159,15 +165,15 @@ public class LagerVerwaltungsModel extends Observable implements Serializable {
 	 * @param 	menge			Menge der Buchung
 	 * @return 	boolean			true wenn eine Buchung erstellt wurde sonst false
 	 */
-	public boolean erstellenZuBuchung(Date buchungsTag, int menge){
+	public void erstellenZuBuchung(Date buchungsTag, int menge) throws MaxFreieKapazitaetUeberschritten{
 		if(laufendeBuchung == null && maxFreieKapazitaet >= menge) {
 			laufendeBuchung = new ZuBuchungsModel(buchungsTag, menge);
 			this.setChanged();
 			this.notifyObservers();
-			return true;
 		}
-		return false;
+		throw new MaxFreieKapazitaetUeberschritten("Die maximale freie Kapazität aller Lager beträgt nur " + maxFreieKapazitaet);
 	}
+	
 	/**
 	 * erstellt eine neue ABbuchung und setzt diese als laufende Buchung, wenn kein Buchung läuft
 	 * @param buchungsTag	Zeitpunkt der Buchung

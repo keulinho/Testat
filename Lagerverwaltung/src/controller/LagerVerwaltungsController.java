@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Observer;
 
+import core.exception.ErrorHandler;
+import core.exception.MaxFreieKapazitaetUeberschritten;
 import model.LagerModel;
 import model.LagerVerwaltungsModel;
 import view.LagerBaumKnoten;
@@ -51,7 +53,11 @@ public class LagerVerwaltungsController {
 	}
 	
 	public void zulieferungErstellen(int gesamtMenge) {
-		lVModel.erstellenZuBuchung(new Date(), gesamtMenge);
+		try {
+			lVModel.erstellenZuBuchung(new Date(), gesamtMenge);
+		} catch (MaxFreieKapazitaetUeberschritten e) {
+			ErrorHandler.HandleException(ErrorHandler.MAX_FREIE_KAPAZITAET_UEBERSCHRITTEN, e);
+		}
 	}
 	
 	public void aendereName(String neuerName) {
