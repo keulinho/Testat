@@ -1,19 +1,30 @@
 package view;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
+import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.border.LineBorder;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumnModel;
 
 import controller.LagerVerwaltungsController;
 import core.sortierer.AbsoluterAnteilAbsteigend;
@@ -36,7 +47,7 @@ public class DetailView extends JPanel implements Observer{
 	EditNamePanel editName;
 	OptionenPanel optionenPanel;
 	JPanel lagerInfo;
-	JLabel bestand, kapazitaet, meldung;
+	JLabel bestand, kapazitaet, meldung, tagHeader, mengeHeader, relativHeader, absolutHeader, artHeader;
 	JScrollPane buchungen;
 	JTable tabelle;
 	String[] columnNames;
@@ -48,6 +59,7 @@ public class DetailView extends JPanel implements Observer{
 	Sortierer sortierer;
 	LagerModel lModel;
 	List<BuchungsModel> listeBuchungen;
+	ImageIcon sort,sortAsc,sortDesc;
 	
 
 	/**
@@ -63,11 +75,40 @@ public class DetailView extends JPanel implements Observer{
 		this.setLayout(new BorderLayout());
 		
 		columnNames = new String []{"Buchungstag",
-				"Gesamte Menge",
-                "relativer Anteil",
-                "absoluter Anteil",
+				"Menge",
+                "<html>relativer<br>Anteil</html>",
+                "<html>absoluter<br>Anteil</html>",
                 "Art"};
 		meldung= new JLabel();
+
+		try {
+		    Image img = ImageIO.read(new File("src/icons/sort.png"));
+		    sort = new ImageIcon(img);
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+		try {
+		    Image img = ImageIO.read(new File("src/icons/sortAsc.png"));
+		    sortAsc = new ImageIcon(img);
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+		try {
+		    Image img = ImageIO.read(new File("src/icons/sortDesc.png"));
+		    sortDesc = new ImageIcon(img);
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+		tagHeader=new JLabel(columnNames[0],sort,JLabel.CENTER );
+		tagHeader.setBorder(new LineBorder(Color.lightGray));
+		mengeHeader=new JLabel(columnNames[1],sort,JLabel.CENTER );
+		mengeHeader.setBorder(new LineBorder(Color.lightGray));
+		relativHeader=new JLabel(columnNames[2],sort,JLabel.CENTER );
+	    relativHeader.setBorder(new LineBorder(Color.lightGray));
+	    absolutHeader=new JLabel(columnNames[3],sort,JLabel.CENTER );
+	    absolutHeader.setBorder(new LineBorder(Color.lightGray));
+		artHeader=new JLabel(columnNames[4],JLabel.CENTER );
+		artHeader.setBorder(new LineBorder(Color.lightGray));
 			
 		lagerInfoErstellen();
 		this.add(lagerInfo,BorderLayout.NORTH);
@@ -233,6 +274,18 @@ public class DetailView extends JPanel implements Observer{
 		}
 		
 		tabelle=new JTable(data, columnNames);
+		TableColumnModel columnModel=tabelle.getColumnModel();
+		TableCellRenderer renderer = new JComponentTableCellRenderer();
+		columnModel.getColumn(0).setHeaderRenderer(renderer);
+		columnModel.getColumn(0).setHeaderValue(tagHeader);
+		columnModel.getColumn(1).setHeaderRenderer(renderer);
+		columnModel.getColumn(1).setHeaderValue(mengeHeader);
+		columnModel.getColumn(2).setHeaderRenderer(renderer);
+		columnModel.getColumn(2).setHeaderValue(relativHeader);
+		columnModel.getColumn(3).setHeaderRenderer(renderer);
+		columnModel.getColumn(3).setHeaderValue(absolutHeader);
+		columnModel.getColumn(4).setHeaderRenderer(renderer);
+		columnModel.getColumn(4).setHeaderValue(artHeader);
 		tabelle.setEnabled(false);
 		tabelle.getTableHeader().setReorderingAllowed(false);
 		tabelle.getTableHeader().addMouseListener(new MouseListener() {
@@ -267,27 +320,48 @@ public class DetailView extends JPanel implements Observer{
 			     switch (spalte) {
 			     	case 0: if (sortierer!=null&&sortierer.getSort().getClass().equals(new TagAbsteigend().getClass())) {
 			     		sortierer=new Sortierer(new TagAufsteigend());
+			     		tagHeader.setIcon(sortAsc);
+			     		
 			     	} else {
 			     		sortierer=new Sortierer(new TagAbsteigend());
+			     		tagHeader.setIcon(sortDesc);
 			     	}
+			     	mengeHeader.setIcon(sort);
+		     		relativHeader.setIcon(sort);
+		     		absolutHeader.setIcon(sort);
 			     	break;
 			     	case 1: if (sortierer!=null&&sortierer.getSort().getClass().equals(new GesamtMengeAbsteigend().getClass())) {
 			     		sortierer=new Sortierer(new GesamtMengeAufsteigend());
+			     		mengeHeader.setIcon(sortAsc);
 			     	} else {
 			     		sortierer=new Sortierer(new GesamtMengeAbsteigend());
+			     		mengeHeader.setIcon(sortDesc);
 			     	}
+			     	tagHeader.setIcon(sort);
+			     	relativHeader.setIcon(sort);
+		     		absolutHeader.setIcon(sort);
 			     	break;
 			     	case 2: if (sortierer!=null&&sortierer.getSort().getClass().equals(new RelativerAnteilAbsteigend().getClass())) {
-			     		sortierer=new Sortierer(new RelativerAnteilAufsteigend());
+			     		sortierer=new Sortierer(new RelativerAnteilAufsteigend());	     		
+			     		relativHeader.setIcon(sortAsc);	
 			     	} else {
 			     		sortierer=new Sortierer(new RelativerAnteilAbsteigend());
+			     		relativHeader.setIcon(sortDesc);	
 			     	}
+			     	tagHeader.setIcon(sort);
+		     		mengeHeader.setIcon(sort);
+		     		absolutHeader.setIcon(sort);
 			     	break;
 			     	case 3: if (sortierer!=null&&sortierer.getSort().getClass().equals(new AbsoluterAnteilAbsteigend().getClass())) {
 			     		sortierer=new Sortierer(new AbsoluterAnteilAufsteigend());
+			     		absolutHeader.setIcon(sortAsc);
 			     	} else {
 			     		sortierer=new Sortierer(new AbsoluterAnteilAbsteigend());
+			     		absolutHeader.setIcon(sortDesc);
 			     	}
+			     	tagHeader.setIcon(sort);
+		     		mengeHeader.setIcon(sort);
+		     		relativHeader.setIcon(sort);
 			     	break;
 			     }
 			     bereiteBuchungenAuf();	
