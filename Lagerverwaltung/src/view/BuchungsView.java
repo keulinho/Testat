@@ -17,10 +17,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import core.utils.Rechner;
 import model.AbBuchungsModel;
 import model.BuchungsModel;
 
@@ -28,6 +28,7 @@ public class BuchungsView extends JPanel{
 
 	String[] columnNames;
 	Object[][] data;
+	Rechner rechner;
 	
 	/**
 	 * erstellt eine Ansicht in der alle Buchungen aufgelistet werden
@@ -37,7 +38,7 @@ public class BuchungsView extends JPanel{
 		
 		this.setPreferredSize(new Dimension(815,400));
 		this.setLayout(new BorderLayout());
-		
+		rechner=new Rechner();
 		//Überschrift erstellen und hinzufügen
 		JLabel ueberschrift= new JLabel("Alle Buchungen:");
 		ueberschrift.setFont(new Font(this.getFont().getName(),Font.BOLD,20));
@@ -121,11 +122,7 @@ public class BuchungsView extends JPanel{
 			for (int j = 0; j<listeBuchungen.get(i).getAnteile().size(); j++) { //Für jeden Anteil an der Buchung wird Lagername und relative Menge gespeichert
 				data[i][stelle]=listeBuchungen.get(i).getAnteile().get(j).getLager().getName();
 				stelle++;
-				double prozent = (Double.parseDouble(""+listeBuchungen.get(i).getAnteile().get(j).getAnteil())/(Double.parseDouble(""+ data[i][2]))*100.00);
-				prozent = (prozent*1000)+5;
-				int temp = (int) (prozent/10);
-				prozent = (double)temp/100.00;
-				data[i][stelle]=""+prozent+"%";
+				data[i][stelle]=""+rechner.rechneProzent(listeBuchungen.get(i).getAnteile().get(j).getAnteil(),(int)data[i][2])+"%";
 				stelle++;
 			}
 			for (int k = 0; k<(maxAnteile-listeBuchungen.get(i).getAnteile().size()); k++) { //Blanks werden eingesetzt wenn die Buchung weniger Anteile hat als die maximalen Anteile

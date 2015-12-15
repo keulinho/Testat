@@ -1,13 +1,12 @@
-package core.sortierer;
+package core.utils;
 
 import model.BuchungsModel;
 
-public class TagAufsteigend implements SortierStrategie{
+public class TagAbsteigend implements SortierStrategie{
 
 	@Override
 	public boolean sortiere(BuchungsModel a, BuchungsModel b) {
-	
-		if (a.getBuchungsTag().getTime()<=b.getBuchungsTag().getTime()) {
+		if (a.getBuchungsTag().getTime()>=b.getBuchungsTag().getTime()) {
 			return true;
 		} else {
 			return false;

@@ -1,4 +1,4 @@
-package core.sortierer;
+package core.utils;
 
 import java.util.List;
 

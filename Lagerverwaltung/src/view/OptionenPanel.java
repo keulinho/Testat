@@ -20,6 +20,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import controller.LagerVerwaltungsController;
+import core.utils.Rechner;
 
 public class OptionenPanel extends JPanel{
 	JButton loeschen, neuesLager, umbenennen, anteilBuchen;
@@ -27,9 +28,10 @@ public class OptionenPanel extends JPanel{
 	JSlider slider;
 	LagerVerwaltungsController controller;
 	int gesamtMenge, restMenge;
+	Rechner rechner;
 
 	public OptionenPanel(EditNamePanel editName, LagerVerwaltungsController controller){
-		
+		rechner=new Rechner();
 		this.controller=controller;
 		this.setPreferredSize(new Dimension(515,50));
 		
@@ -193,11 +195,7 @@ public class OptionenPanel extends JPanel{
 			} else {
 				gesamtMenge = this.gesamtMenge;
 			}
-			double prozent = (((double)slider.getValue()/gesamtMenge)*100.00);
-			prozent = (prozent*1000)+5;
-			int temp = (int) (prozent/10);
-			prozent = (double)temp/100.00;
-			return prozent;
+			return rechner.rechneProzent(slider.getValue(), gesamtMenge);
 		}	
 	}
 }

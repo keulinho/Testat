@@ -15,27 +15,26 @@ import java.util.Observer;
 
 import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.border.LineBorder;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 
 import controller.LagerVerwaltungsController;
-import core.sortierer.AbsoluterAnteilAbsteigend;
-import core.sortierer.AbsoluterAnteilAufsteigend;
-import core.sortierer.GesamtMengeAbsteigend;
-import core.sortierer.GesamtMengeAufsteigend;
-import core.sortierer.RelativerAnteilAbsteigend;
-import core.sortierer.RelativerAnteilAufsteigend;
-import core.sortierer.Sortierer;
-import core.sortierer.TagAbsteigend;
-import core.sortierer.TagAufsteigend;
+import core.utils.AbsoluterAnteilAbsteigend;
+import core.utils.AbsoluterAnteilAufsteigend;
+import core.utils.GesamtMengeAbsteigend;
+import core.utils.GesamtMengeAufsteigend;
+import core.utils.Rechner;
+import core.utils.RelativerAnteilAbsteigend;
+import core.utils.RelativerAnteilAufsteigend;
+import core.utils.Sortierer;
+import core.utils.TagAbsteigend;
+import core.utils.TagAufsteigend;
 import model.AbBuchungsModel;
 import model.BuchungsModel;
 import model.LagerModel;
@@ -60,6 +59,7 @@ public class DetailView extends JPanel implements Observer{
 	LagerModel lModel;
 	List<BuchungsModel> listeBuchungen;
 	ImageIcon sort,sortAsc,sortDesc;
+	Rechner rechner;
 	
 
 	/**
@@ -70,7 +70,7 @@ public class DetailView extends JPanel implements Observer{
 		
 		this.controller=controller;
 		lagerName="";
-		
+		rechner = new Rechner();
 		this.setPreferredSize(new Dimension(515,400));
 		this.setLayout(new BorderLayout());
 		
@@ -260,11 +260,7 @@ public class DetailView extends JPanel implements Observer{
 				}
 			
 			data[i][3]=bModel.getAnteile().get(j).getAnteil();
-			double prozent = (Double.parseDouble("" + data[i][3])/(Double.parseDouble(""+ data[i][1]))*100.00);
-			prozent = (prozent*1000)+5;
-			int temp = (int) (prozent/10);
-			prozent = (double)temp/100.00;
-			data[i][2]=""+prozent+"%";
+			data[i][2]=""+rechner.rechneProzent((int)data[i][3],(int)data[i][1])+"%";
 			if (bModel.getClass().equals(new AbBuchungsModel(null).getClass())) { //true bei Auslieferung
 				data[i][4]="Auslieferung";
 			} else {
@@ -292,26 +288,18 @@ public class DetailView extends JPanel implements Observer{
 			
 			@Override
 			public void mouseReleased(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-				
 			}
 			
 			@Override
 			public void mousePressed(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-				
 			}
 			
 			@Override
 			public void mouseExited(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-				
 			}
 			
 			@Override
-			public void mouseEntered(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-				
+			public void mouseEntered(MouseEvent arg0) {		
 			}
 			
 			@Override
