@@ -7,8 +7,11 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Set;
 import java.util.Stack;
 
 import core.command.AnteilCommand;
@@ -120,7 +123,15 @@ public class LagerVerwaltungsController extends Observable{
 	 */
 	public void loescheLager() {
 		try {
+			Iterator it = knotenZuLagerModel.entrySet().iterator();
+			while (it.hasNext()) {
+		    	 Map.Entry paar = (Map.Entry)it.next();
+		    	 if (paar.getValue().equals(aktuellesLager)) {
+		    		 it.remove();
+		    	 }
+		    }
 			lVModel.loesschenLager(aktuellesLager);
+
 		} catch (LagerNichtLoeschbarException e) {
 			ErrorHandler.HandleException(ErrorHandler.LAGER_IST_NICHT_LEER, e);
 		}
@@ -177,8 +188,7 @@ public class LagerVerwaltungsController extends Observable{
 				oos.writeObject(lVModel);
 				oos.close();
 			} catch (Exception e) {
-				//err.handleExcepion(1, e);
-				e.printStackTrace();
+				ErrorHandler.HandleException(ErrorHandler.FEHLER_DATEIVERARBEITUNG, e);
 			}
 		}
 	}
@@ -200,17 +210,21 @@ public class LagerVerwaltungsController extends Observable{
 				lVModel.addObserver(view);
 				view.neuesModel();
 			} catch (Exception e) {
-				//err.handleExcepion(2, e);
-				e.printStackTrace();
+				ErrorHandler.HandleException(ErrorHandler.FEHLER_DATEIVERARBEITUNG, e);
 			}
 			
 		}
 	}
 	
 	public void aktuellesLagerAendern(LagerBaumKnoten lBKnoten) {
-		aktuellesLager.deleteObserver(view.getDetailPane());
+		if (aktuellesLager!=null) {
+			aktuellesLager.deleteObserver(view.getDetailPane());
+		}
+
 		aktuellesLager=(LagerModel) knotenZuLagerModel.get(lBKnoten);
-		aktuellesLager.addObserver(view.getDetailPane());
+		if (aktuellesLager!=null) {
+			aktuellesLager.addObserver(view.getDetailPane());
+		}
 	}
 	
 	public void knotenLagerZuordnungAktualiseren(LagerBaumKnoten lBKnoten,LagerModel lModel) {
