@@ -48,10 +48,7 @@ abstract public class BuchungsModel implements Serializable {
 	 * Löscht alle Anteile der Buchung
 	 */
 	public void loeschenAlleAnteile() {
-		for(int i = anteile.size() -1 ; i > 0;i--){
-			anteile.get(i).getLager().aendernVerteilteMenge(-anteile.get(i).getAnteil());
-			anteile.remove(i);
-		}
+		anteile.clear();
 		verteilteMenge = 0;
 	}
 	

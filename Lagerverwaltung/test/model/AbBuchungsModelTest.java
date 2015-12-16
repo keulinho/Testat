@@ -31,7 +31,7 @@ public class AbBuchungsModelTest extends TestCase {
 	
 	public void testHinzufuegenAnteilWenigerAlsImLager(){
 		abBuchung.hinzufuegenAnteil(lager1, 50);
-		assertEquals(false, abBuchung.hinzufuegenAnteil(lager1, 500));
+		assertEquals(true, null==abBuchung.hinzufuegenAnteil(lager1, 500));
 	}
 	
 	public void testloeschenAnteile(){

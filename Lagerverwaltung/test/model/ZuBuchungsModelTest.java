@@ -29,7 +29,7 @@ public class ZuBuchungsModelTest extends TestCase{
 	
 	public void testHinzufuegenAnteilMehrAlsPlatzImLager(){
 		zuBuchung.hinzufuegenAnteil(lager1, 50);
-		assertEquals(false, zuBuchung.hinzufuegenAnteil(lager1, 500));
+		assertEquals(true, null==zuBuchung.hinzufuegenAnteil(lager1, 500));
 	}
 	
 	public void testloeschenAnteile(){
