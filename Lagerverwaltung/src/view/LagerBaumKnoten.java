@@ -11,12 +11,17 @@ import model.LagerModel;
 public class LagerBaumKnoten extends DefaultMutableTreeNode implements Observer{
 
 	TreeView tree;
-	
-	public LagerBaumKnoten(String lagerName, TreeView tree) {
-		super(lagerName);
+	/**
+	 * erstellt einen neuen Knoten
+	 * @param tree Baum dem der Knoten hinzugefügt werden soll
+	 */
+	public LagerBaumKnoten(TreeView tree) {
+		super();
 		this.tree = tree;
 	}
-	
+	/**
+	 * aktualisiert die Label, wenn sich das zugehörige Lager ändert
+	 */
 	@Override
 	public void update(Observable arg0, Object arg1) {
 		Rechner rechner = new Rechner();

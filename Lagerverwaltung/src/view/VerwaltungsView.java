@@ -277,19 +277,7 @@ public class VerwaltungsView extends JFrame implements Observer{
 	 */
 	public void neuesModel() {
 		treePane.aktualisiereBaum(lvModel.getLager(),true);
-		if ((buchungsView!=null)&&(buchungsView.isVisible())) {
-			this.remove(buchungsView);
-			this.add(treePane, BorderLayout.WEST);
-			this.add(detailPane, BorderLayout.EAST);
-		} 
-		if ((liste!=null)&&(liste.isVisible())) {
-			this.remove(liste);
-			this.add(treePane, BorderLayout.WEST);
-			this.add(detailPane, BorderLayout.EAST);
-		}
-		
-		this.revalidate();
-		this.repaint();
+		standardAnsicht();
 	}
 	/**
 	 * getter DetailPane

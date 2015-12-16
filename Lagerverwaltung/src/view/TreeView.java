@@ -45,7 +45,8 @@ public class TreeView extends JPanel{
 		this.setPreferredSize(new Dimension(300,400));
 		this.setLayout(new BorderLayout());
 		knoten = new ArrayList<LagerBaumKnoten>();
-	    root = new LagerBaumKnoten("Gesamtlager",this);
+		//tree erstellen und konfigurieren
+	    root = new LagerBaumKnoten(this);
 	    model = new DefaultTreeModel(root);
 	    tree = new JTree(model);
 	    tree.setExpandsSelectedPaths(true);
@@ -61,7 +62,6 @@ public class TreeView extends JPanel{
 		});
 	   
 	    DefaultTreeCellRenderer renderer = new DefaultTreeCellRenderer();
-	    
 	    //Branch-Icon setzen
 	    try{
 	    	Image branchIconImg = ImageIO.read(new File("src/icons/home.png"));
@@ -83,6 +83,7 @@ public class TreeView extends JPanel{
     		ErrorHandler.HandleException(ErrorHandler.BILD_NICHT_GEFUNDEN, new ImageNotFoundException("Bilddatei mit dem Pfad \"src/icons/truck.png\" nicht gefunden",(Throwable) ex));
     	}
 
+	    // JPanel füllen
 	    treeScrollPanel= new JScrollPane(tree);    
 	    treeScrollPanel.setPreferredSize(new Dimension(300, 350));
 	    this.add(treeScrollPanel,BorderLayout.NORTH);
@@ -115,7 +116,7 @@ public class TreeView extends JPanel{
 		if ((lagerListe!=null)&&(lagerListe.size()>0)) {
 			for (LagerModel lModel : lagerListe) {
 				lModel.deleteObservers();
-				LagerBaumKnoten lBKnoten= new LagerBaumKnoten(lModel.getName(),this);
+				LagerBaumKnoten lBKnoten= new LagerBaumKnoten(this);
 				lModel.addObserver(lBKnoten);
 				controller.knotenLagerZuordnungAktualiseren(lBKnoten, lModel);
 				DefaultTreeModel model = (DefaultTreeModel)tree.getModel();
@@ -154,7 +155,7 @@ public class TreeView extends JPanel{
 		for (LagerModel lModel : lagerListe) {
 			start+=getGroesseLagerList(lModel.getUnterLager());
 		}
-		start++;
+		start++; //hier wird auch beim ersten Aufruf +1 gerechnet, gedachte "Root" wird mitgezählt die aber nicht in der Liste ist, daher Ergebniss Anzahl Lager in Liste + 1
 		return start;
 	}
 	

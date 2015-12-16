@@ -108,7 +108,7 @@ public class BuchungsView extends JPanel{
 			columnNames[stelle]="Anteil "+i;
 			stelle++;
 		}
-		
+		//Daten wereden in Array aufbereitet
 		data=new Object[listeBuchungen.size()][3+(maxAnteile*2)];
 		for (int i = 0; i<listeBuchungen.size(); i++) { //pro Buchung wird ein Array mit den nötigen Infos gefüllt
 			data[i][0]=listeBuchungen.get(i).getBuchungsTag().toLocaleString();

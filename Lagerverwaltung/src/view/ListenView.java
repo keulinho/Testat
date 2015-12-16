@@ -1,7 +1,6 @@
 package view;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
@@ -13,7 +12,6 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
-import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -21,16 +19,15 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.ListCellRenderer;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import core.exception.ErrorHandler;
 import core.exception.ImageNotFoundException;
+import core.utils.Rechner;
 import model.AnteilModel;
 import model.BuchungsModel;
 
@@ -39,7 +36,7 @@ public class ListenView extends JPanel{
 	JList liste;
 	DefaultListModel model;
 	JPanel detailPanel;
-	int index;
+	Rechner rechner;
 	
 	/**
 	 * erstellt eine ListenView mit den mitgegebenen Einträgen
@@ -48,6 +45,8 @@ public class ListenView extends JPanel{
 	public ListenView(final List<BuchungsModel> buchungsListe) {
 		this.setLayout(new BorderLayout());
 		this.setPreferredSize(new Dimension(815,300));
+		rechner = new Rechner();
+		//liste erzeugen und konfigurieren
 		model=new DefaultListModel<String>();
 		for (BuchungsModel bModel : buchungsListe) {
 			model.addElement("<html>Buchungstag: " +bModel.getBuchungsTag().toLocaleString()+"<br>Gesamte Menge: " + bModel.getVerteilteMenge()+"</html>");
@@ -91,7 +90,6 @@ public class ListenView extends JPanel{
 			}
 		});
 		detailPanel=anteilDetailsErstellen(buchungsListe.get(0));
-		index=0;
 		this.add(detailPanel,BorderLayout.EAST);
 		
 		this.add(scrollListe, BorderLayout.WEST);
@@ -109,6 +107,7 @@ public class ListenView extends JPanel{
 		JPanel detailPanel = new JPanel();
 		detailPanel.setPreferredSize(new Dimension(515,350));
 		detailPanel.setLayout(new BoxLayout(detailPanel,BoxLayout.Y_AXIS));
+		//gesamt buchungdetails erstellen
 		JLabel bDetails = new JLabel("Buchungsdetails:");
 		bDetails.setFont(new Font(bDetails.getFont().getName(),Font.BOLD,20));
 		detailPanel.add(bDetails);
@@ -116,9 +115,11 @@ public class ListenView extends JPanel{
 		detailPanel.add(bTag);
 		JLabel bMenge = new JLabel("Gesamte Menge: "+buchung.getVerteilteMenge());
 		detailPanel.add(bMenge);
+		// anteile darstellen
 		JPanel anteilPanel = new JPanel();
 		anteilPanel.setLayout(new BoxLayout(anteilPanel,BoxLayout.Y_AXIS));
 		int i = 1;
+		// für jeden Anteil passende Label erstellen
 		for (AnteilModel aModel : buchung.getAnteile()) {
 			
 			JLabel lager = new JLabel("Lager " + i+": "+aModel.getLager().getName());
@@ -129,11 +130,7 @@ public class ListenView extends JPanel{
 			anteilPanel.add(lager);
 			JLabel absoluteMenge = new JLabel("absolute Menge: "+aModel.getAnteil());
 			anteilPanel.add(absoluteMenge);
-			double prozent = (Double.parseDouble(""+aModel.getAnteil())/(Double.parseDouble(""+ buchung.getVerteilteMenge()))*100.00);
-			prozent = (prozent*1000)+5;
-			int temp = (int) (prozent/10);
-			prozent = (double)temp/100.00;
-			JLabel relativeMenge = new JLabel("relative Menge: "+prozent+"%");
+			JLabel relativeMenge = new JLabel("relative Menge: "+rechner.rechneProzent(aModel.getAnteil(), buchung.getVerteilteMenge())+"%");
 			anteilPanel.add(relativeMenge);
 			i++;
 		}
