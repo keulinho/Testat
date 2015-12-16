@@ -38,7 +38,7 @@ public class VerwaltungsView extends JFrame implements Observer{
 	List<BuchungsModel> listeBuchungen;
 	BuchungsView buchungsView;
 	ListenView liste;
-	
+	boolean loescheDetailView=false;
 	
 	/**
 	 * erzeugt eine VerwaltungsView
@@ -237,6 +237,9 @@ public class VerwaltungsView extends JFrame implements Observer{
 		}
 		listeBuchungen=lvModel.getBuchungen(); //Liste wird bei jedem Update aktualisiert
 		treePane.aktualisiereBaum(lvModel.getLager(),false);
+		if (!lvModel.getLager().isEmpty()) {
+			loescheDetailView=false;
+		}
 		maxFreieKapazitaet=lvModel.getMaxFreieKapazitaet();
 	}
 	
@@ -264,7 +267,9 @@ public class VerwaltungsView extends JFrame implements Observer{
 			this.remove(buchungsView);
 		}
 		this.add(treePane, BorderLayout.WEST);
-		this.add(detailPane, BorderLayout.EAST);
+		if (!loescheDetailView) {
+			this.add(detailPane, BorderLayout.EAST);
+		}
 		neueZulieferung.setEnabled(true);
 		neueAuslieferung.setEnabled(true);
 		alleBuchungen.setEnabled(true);
@@ -278,6 +283,23 @@ public class VerwaltungsView extends JFrame implements Observer{
 	public void neuesModel() {
 		treePane.aktualisiereBaum(lvModel.getLager(),true);
 		standardAnsicht();
+	}
+	/**
+	 * loescht die DetailView wenn es kein Lager gibt
+	 */
+	public void loescheDetailView() {
+		loescheDetailView=true;
+		this.remove(detailPane);
+		this.revalidate();
+		this.repaint();
+	}
+	/**
+	 * fügt die DetailView wieder hinzu wenn es wieder ein Lager gibt
+	 */
+	public void zeigeDetailView() {
+		this.add(detailPane, BorderLayout.EAST);
+		this.revalidate();
+		this.repaint();
 	}
 	/**
 	 * getter DetailPane
