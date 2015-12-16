@@ -204,10 +204,17 @@ public class LagerModel extends Observable implements Serializable {
 		buchungen.clear();
 	}
 	
-	public void loeschenAnteile(){
+	/**
+	 * löscht alle Anteile in der Buchungen in denen das Lager drin ist und wenn es der letzte Anteil der Buchung war
+	 * dann wird die Buhung gelöscht
+	 */
+	public void loeschenAnteile(LagerVerwaltungsModel lagerVM){
 		for(BuchungsModel buchung: buchungen){
 			AnteilModel anteil = buchung.getAnteil(this);
 			buchung.loeschenAnteil(anteil);
+			if(buchung.anteile.isEmpty()){
+				lagerVM.loescheBuchung(buchung);
+			}
 		}
 	}
 	

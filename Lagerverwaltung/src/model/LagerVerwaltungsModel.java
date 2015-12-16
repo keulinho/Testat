@@ -369,7 +369,7 @@ public class LagerVerwaltungsModel extends Observable implements Serializable {
 			} else {
 				//A2
 				if(lager.getBestand() == 0){
-					lager.loeschenAnteile();
+					lager.loeschenAnteile(this);
 					lager.loeschenLager(this);
 				} else {
 					throw new LagerNichtLoeschbarException("Das Lager muss leer sein um gelöscht zu werden.\n"
@@ -379,6 +379,14 @@ public class LagerVerwaltungsModel extends Observable implements Serializable {
 		}
 		setChanged();
 		notifyObservers();
+	}
+	
+	/**
+	 * löscht eine Buchung aus der Liste der Buchungen
+	 * @param buchung die gelöscht werden soll
+	 */
+	public void loescheBuchung(BuchungsModel buchung){
+		buchungen.remove(buchung);
 	}
 	
 	//TODO generell Umbuchung
