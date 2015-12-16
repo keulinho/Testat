@@ -70,14 +70,14 @@ public class LagerVerwaltungsModel extends Observable implements Serializable {
 		hinzufuegenAnteil(lager3, 100);
 		abschliessenBuchung();
 		
-		erstellenZuBuchung(new Date(2), 2000);
+		erstellenZuBuchung(new Date(2000000000), 2000);
 		hinzufuegenAnteil(lager112, 1000);
 		hinzufuegenAnteil(lager12, 400);
 		hinzufuegenAnteil(lager14, 400);
 		hinzufuegenAnteil(lager15, 200);
 		abschliessenBuchung();
 		
-		erstellenZuBuchung(new Date(3), 10000);
+		erstellenZuBuchung(new Date(3000000), 10000);
 		hinzufuegenAnteil(lager16, 2000);
 		hinzufuegenAnteil(lager212, 1000);
 		hinzufuegenAnteil(lager222, 2500);
@@ -85,13 +85,13 @@ public class LagerVerwaltungsModel extends Observable implements Serializable {
 		hinzufuegenAnteil(lager3, 2000);
 		abschliessenBuchung();
 		
-		erstellenZuBuchung(new Date(4), 5000);
+		erstellenZuBuchung(new Date(400000000), 5000);
 		hinzufuegenAnteil(lager214, 2500);
 		hinzufuegenAnteil(lager17, 2000);
 		hinzufuegenAnteil(lager112, 500);
 		abschliessenBuchung();
 		
-		erstellenZuBuchung(new Date(5), 12500);
+		erstellenZuBuchung(new Date(500000000), 12500);
 		hinzufuegenAnteil(lager211, 3750);
 		hinzufuegenAnteil(lager16, 2500);
 		hinzufuegenAnteil(lager111, 1875);
@@ -279,6 +279,8 @@ public class LagerVerwaltungsModel extends Observable implements Serializable {
 	 */
 	public void loeschenAnteil(LagerModel lager, int menge){
 		laufendeBuchung.loeschenAnteil(lager, menge);
+		this.setChanged();
+		this.notifyObservers();
 	}
 	
 	/**
@@ -287,6 +289,8 @@ public class LagerVerwaltungsModel extends Observable implements Serializable {
 	 */
 	public void loeschenAnteile(LagerModel lager){
 		laufendeBuchung.loeschenAnteile(lager);
+		this.setChanged();
+		this.notifyObservers();
 	}
 	
 	/**
@@ -294,6 +298,8 @@ public class LagerVerwaltungsModel extends Observable implements Serializable {
 	 */
 	public void loeschenAlleAnteile() {
 		laufendeBuchung.loeschenAlleAnteile();
+		this.setChanged();
+		this.notifyObservers();
 	}
 	
 	/**

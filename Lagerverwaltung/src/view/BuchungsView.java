@@ -17,10 +17,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import core.exception.ErrorHandler;
+import core.exception.ImageNotFoundException;
+import core.utils.Rechner;
 import model.AbBuchungsModel;
 import model.BuchungsModel;
 
@@ -28,16 +30,15 @@ public class BuchungsView extends JPanel{
 
 	String[] columnNames;
 	Object[][] data;
-	
+	Rechner rechner;
 	/**
 	 * erstellt eine Ansicht in der alle Buchungen aufgelistet werden
 	 * @param listeBuchungen Liste mit allen Buchungen
 	 */
 	public BuchungsView(List<BuchungsModel> listeBuchungen) {
-		
-		this.setPreferredSize(new Dimension(515,400));
+		this.setPreferredSize(new Dimension(815,400));
 		this.setLayout(new BorderLayout());
-		
+		rechner=new Rechner();
 		//Überschrift erstellen und hinzufügen
 		JLabel ueberschrift= new JLabel("Alle Buchungen:");
 		ueberschrift.setFont(new Font(this.getFont().getName(),Font.BOLD,20));
@@ -72,14 +73,14 @@ public class BuchungsView extends JPanel{
 		    Image img = ImageIO.read(new File("src/icons/delete.png"));
 		    schliessen.setIcon(new ImageIcon(img));
 		  } catch (IOException ex) {
-			  ex.printStackTrace();
+			  ErrorHandler.HandleException(ErrorHandler.BILD_NICHT_GEFUNDEN, new ImageNotFoundException("Bilddatei mit dem Pfad \"src/icons/delete.png\" nicht gefunden",(Throwable) ex));
 		  }
 		schliessen.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				VerwaltungsView vView = (VerwaltungsView) SwingUtilities.getWindowAncestor(BuchungsView.this);
-				vView.zeigeDetailPane();
+				vView.standardAnsicht();
 			}
 		});
 		this.add(schliessen, BorderLayout.PAGE_END);
@@ -107,7 +108,7 @@ public class BuchungsView extends JPanel{
 			columnNames[stelle]="Anteil "+i;
 			stelle++;
 		}
-		
+		//Daten wereden in Array aufbereitet
 		data=new Object[listeBuchungen.size()][3+(maxAnteile*2)];
 		for (int i = 0; i<listeBuchungen.size(); i++) { //pro Buchung wird ein Array mit den nötigen Infos gefüllt
 			data[i][0]=listeBuchungen.get(i).getBuchungsTag().toLocaleString();
@@ -121,11 +122,7 @@ public class BuchungsView extends JPanel{
 			for (int j = 0; j<listeBuchungen.get(i).getAnteile().size(); j++) { //Für jeden Anteil an der Buchung wird Lagername und relative Menge gespeichert
 				data[i][stelle]=listeBuchungen.get(i).getAnteile().get(j).getLager().getName();
 				stelle++;
-				double prozent = (Double.parseDouble(""+listeBuchungen.get(i).getAnteile().get(j).getAnteil())/(Double.parseDouble(""+ data[i][2]))*100.00);
-				prozent = (prozent*1000)+5;
-				int temp = (int) (prozent/10);
-				prozent = (double)temp/100.00;
-				data[i][stelle]=""+prozent+"%";
+				data[i][stelle]=""+rechner.rechneProzent(listeBuchungen.get(i).getAnteile().get(j).getAnteil(),(int)data[i][2])+"%";
 				stelle++;
 			}
 			for (int k = 0; k<(maxAnteile-listeBuchungen.get(i).getAnteile().size()); k++) { //Blanks werden eingesetzt wenn die Buchung weniger Anteile hat als die maximalen Anteile

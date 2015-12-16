@@ -1,7 +1,6 @@
 package view;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,28 +15,30 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.JToolBar;
 
 import controller.LagerVerwaltungsController;
+import core.exception.ErrorHandler;
+import core.exception.ImageNotFoundException;
 import model.AbBuchungsModel;
 import model.BuchungsModel;
-import model.LagerModel;
 import model.LagerVerwaltungsModel;
 import model.ZuBuchungsModel;
 
 public class VerwaltungsView extends JFrame implements Observer{
 
-	int restMenge;
+	int restMenge, maxFreieKapazitaet;
 	JButton laden, neueZulieferung, speichern, neueAuslieferung,alleBuchungen, listeZeigen;
 	JToolBar toolbar;
 	BuchungBar buchungBar;
 	DetailView detailPane;
-	TreeView1 treePane;
+	TreeView treePane;
 	LagerVerwaltungsModel lvModel;
 	LagerVerwaltungsController controller;
 	List<BuchungsModel> listeBuchungen;
 	BuchungsView buchungsView;
+	ListenView liste;
+	
 	
 	/**
 	 * erzeugt eine VerwaltungsView
@@ -47,10 +48,8 @@ public class VerwaltungsView extends JFrame implements Observer{
 		
 		this.controller=controller;
 		this.setTitle("Lagerverwaltung");
-		
 		restMenge=1000;
 		guiElementeErstellen();
-		
 		//Toolbar hinzufügen
 		toolbar = new JToolBar();
 		toolbar.add(speichern);
@@ -67,21 +66,21 @@ public class VerwaltungsView extends JFrame implements Observer{
 		this.add(detailPane, BorderLayout.EAST);
 		
 		//TreePane hinzufügen
-		treePane = new TreeView1(null,controller);
-		//treePane.setBackground(Color.LIGHT_GRAY);
+		treePane = new TreeView(controller);
 		this.add(treePane, BorderLayout.WEST);
 		
 		//BuchungsBar hinzufügen
 		buchungBar = new BuchungBar(controller);
 		buchungBar.setVisible(false);
 		this.add(buchungBar, BorderLayout.PAGE_END);
+		controller.addObserver(buchungBar);
 		
 		//Frame-Einstellungen
 		try {
-		    Image img = ImageIO.read(new File("src/icons/icon.png"));
+		    Image img = ImageIO.read(new File("src/icons/marke.png"));
 		    this.setIconImage(img);
 		  } catch (IOException ex) {
-			  ex.printStackTrace();
+			  ErrorHandler.HandleException(ErrorHandler.BILD_NICHT_GEFUNDEN, new ImageNotFoundException("Bilddatei mit dem Pfad \"src/icons/marke.png\" nicht gefunden",(Throwable) ex));
 		  }
 		this.setLocation(150, 100);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -100,7 +99,7 @@ public class VerwaltungsView extends JFrame implements Observer{
 		    Image img = ImageIO.read(new File("src/icons/save.png"));
 		    speichern.setIcon(new ImageIcon(img));
 		  } catch (IOException ex) {
-			  ex.printStackTrace();
+			  ErrorHandler.HandleException(ErrorHandler.BILD_NICHT_GEFUNDEN, new ImageNotFoundException("Bilddatei mit dem Pfad \"src/icons/save.png\" nicht gefunden",(Throwable) ex));
 		  }
 		speichern.addActionListener(new ActionListener() {
 			
@@ -114,7 +113,7 @@ public class VerwaltungsView extends JFrame implements Observer{
 		    Image img = ImageIO.read(new File("src/icons/open.png"));
 		    laden.setIcon(new ImageIcon(img));
 		  } catch (IOException ex) {
-			  ex.printStackTrace();
+			  ErrorHandler.HandleException(ErrorHandler.BILD_NICHT_GEFUNDEN, new ImageNotFoundException("Bilddatei mit dem Pfad \"src/icons/open.png\" nicht gefunden",(Throwable) ex));
 		  }
 		laden.addActionListener(new ActionListener() {
 			
@@ -128,16 +127,18 @@ public class VerwaltungsView extends JFrame implements Observer{
 		    Image img = ImageIO.read(new File("src/icons/zulieferung.png"));
 		    neueZulieferung.setIcon(new ImageIcon(img));
 		  } catch (IOException ex) {
-			  ex.printStackTrace();
+			  ErrorHandler.HandleException(ErrorHandler.BILD_NICHT_GEFUNDEN, new ImageNotFoundException("Bilddatei mit dem Pfad \"src/icons/zulieferung.png\" nicht gefunden",(Throwable) ex));
 		  }
 		neueZulieferung.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				buchungBar.zeigeNeueBuchung(true);
+				buchungBar.zeigeNeueBuchung(true,maxFreieKapazitaet);
 				buchungBar.setVisible(true);
 				neueAuslieferung.setEnabled(false);
 				neueZulieferung.setEnabled(false);
+				alleBuchungen.setEnabled(false);
+				listeZeigen.setEnabled(false);
 			}
 		});
 		neueAuslieferung= new JButton("Neue Auslieferung");
@@ -145,16 +146,18 @@ public class VerwaltungsView extends JFrame implements Observer{
 		    Image img = ImageIO.read(new File("src/icons/auslieferung.png"));
 		    neueAuslieferung.setIcon(new ImageIcon(img));
 		  } catch (IOException ex) {
-			  ex.printStackTrace();
+			  ErrorHandler.HandleException(ErrorHandler.BILD_NICHT_GEFUNDEN, new ImageNotFoundException("Bilddatei mit dem Pfad \"src/icons/auslieferung.png\" nicht gefunden",(Throwable) ex));
 		  }
 		neueAuslieferung.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				buchungBar.zeigeNeueBuchung(false);
+				buchungBar.zeigeNeueBuchung(false,0);
 				buchungBar.setVisible(true);
 				neueAuslieferung.setEnabled(false);
 				neueZulieferung.setEnabled(false);
+				alleBuchungen.setEnabled(false);
+				listeZeigen.setEnabled(false);
 			}
 		});
 		alleBuchungen= new JButton("Alle Buchungen");
@@ -162,13 +165,22 @@ public class VerwaltungsView extends JFrame implements Observer{
 		    Image img = ImageIO.read(new File("src/icons/alleBuchungen.png"));
 		    alleBuchungen.setIcon(new ImageIcon(img));
 		  } catch (IOException ex) {
-			  ex.printStackTrace();
+			  ErrorHandler.HandleException(ErrorHandler.BILD_NICHT_GEFUNDEN, new ImageNotFoundException("Bilddatei mit dem Pfad \"src/icons/alleBuchungen.png\" nicht gefunden",(Throwable) ex));
 		  }
 		alleBuchungen.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				zeigeAlleBuchungen();
+				buchungsView=new BuchungsView(listeBuchungen);
+				VerwaltungsView.this.remove(treePane);
+				VerwaltungsView.this.remove(detailPane);
+				VerwaltungsView.this.add(buchungsView,BorderLayout.WEST);
+				VerwaltungsView.this.revalidate();
+				VerwaltungsView.this.repaint();
+				neueZulieferung.setEnabled(false);
+				neueAuslieferung.setEnabled(false);
+				alleBuchungen.setEnabled(false);
+				listeZeigen.setEnabled(false);
 			}
 		});
 		listeZeigen= new JButton("Buchungsliste");
@@ -176,18 +188,22 @@ public class VerwaltungsView extends JFrame implements Observer{
 		    Image img = ImageIO.read(new File("src/icons/Liste.png"));
 		    listeZeigen.setIcon(new ImageIcon(img));
 		  } catch (IOException ex) {
-			  ex.printStackTrace();
+			  ErrorHandler.HandleException(ErrorHandler.BILD_NICHT_GEFUNDEN, new ImageNotFoundException("Bilddatei mit dem Pfad \"src/icons/Liste.png\" nicht gefunden",(Throwable) ex));
 		  }
 		listeZeigen.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ListenView liste = new ListenView(listeBuchungen);
+				liste = new ListenView(listeBuchungen);
 				VerwaltungsView.this.remove(treePane);
 				VerwaltungsView.this.remove(detailPane);
 				VerwaltungsView.this.add(liste,BorderLayout.WEST);
 				VerwaltungsView.this.revalidate();
 				VerwaltungsView.this.repaint();
+				neueZulieferung.setEnabled(false);
+				neueAuslieferung.setEnabled(false);
+				alleBuchungen.setEnabled(false);
+				listeZeigen.setEnabled(false);
 			}
 		});
 	}
@@ -201,6 +217,8 @@ public class VerwaltungsView extends JFrame implements Observer{
 		if (lvModel.getLaufendeBuchung()!=null) {  //Es gibt eine nicht abgeschlossene Buchung
 			neueZulieferung.setEnabled(false);
 			neueAuslieferung.setEnabled(false);
+			alleBuchungen.setEnabled(false);
+			listeZeigen.setEnabled(false);
 			if (lvModel.getLaufendeBuchung().getClass().equals(new AbBuchungsModel(new Date()).getClass())) { //nicht abgeschlossene Buchung ist eine Abbuchung
 				buchungBar.zeigeLaufendeAuslieferung(lvModel.getLaufendeBuchung().getVerteilteMenge());
 				detailPane.zeigeBuchungsOptionen(lvModel.getLaufendeBuchung().getVerteilteMenge(), 0, false);
@@ -212,46 +230,60 @@ public class VerwaltungsView extends JFrame implements Observer{
 		} else { //es gibt keine laufende Buchung
 			neueZulieferung.setEnabled(true);
 			neueAuslieferung.setEnabled(true);
+			alleBuchungen.setEnabled(true);
+			listeZeigen.setEnabled(true);
 			detailPane.zeigeButton();
 			buchungBar.setVisible(false);
 		}
 		listeBuchungen=lvModel.getBuchungen(); //Liste wird bei jedem Update aktualisiert
-		treePane.aktualisiereBaum(lvModel.getLager());
+		treePane.aktualisiereBaum(lvModel.getLager(),false);
+		maxFreieKapazitaet=lvModel.getMaxFreieKapazitaet();
 	}
 	
 	/**
 	 * zeigt die BuchungsBar im neues Lager Modus
 	 */
-	public void zeigeNeuesLager() {
-		buchungBar.zeigeNeuesLager();
+	public void zeigeNeuesLager(boolean oberLager) {
+		buchungBar.zeigeNeuesLager(oberLager);
 		buchungBar.setVisible(true);
 	}
-	
 	/**
-	 * löscht die Ansicht aller Buchungen und zeigt die Details zu einem Lager
+	 * setzt die DetailPane in den EditName Modus
 	 */
-	public void zeigeDetailPane() {
-		VerwaltungsView.this.remove(buchungsView);
-		VerwaltungsView.this.add(detailPane,BorderLayout.EAST);
-		VerwaltungsView.this.revalidate();
-		VerwaltungsView.this.repaint();
-	}
-	/**
-	 * löscht die Ansicht der Details zu einem Lager und zeigt alle Buchungen
-	 */
-	public void zeigeAlleBuchungen() {
-		VerwaltungsView.this.remove(detailPane);
-		buchungsView=new BuchungsView(listeBuchungen);
-		VerwaltungsView.this.add(buchungsView,BorderLayout.EAST);
-		VerwaltungsView.this.revalidate();
-		VerwaltungsView.this.repaint();
-	}
-	
-	public DetailView getDetailPane() {
-		return detailPane;
-	}
-	
 	public void editName() {
 		detailPane.editName();
+	}
+	/**
+	 * löscht Listenansichten und wechselt zur Standardansicht mit buchungsdetails und Baum
+	 */
+	public void standardAnsicht() {
+		if (liste!=null) {
+			this.remove(liste);
+		} 
+		if (buchungsView!=null) {
+			this.remove(buchungsView);
+		}
+		this.add(treePane, BorderLayout.WEST);
+		this.add(detailPane, BorderLayout.EAST);
+		neueZulieferung.setEnabled(true);
+		neueAuslieferung.setEnabled(true);
+		alleBuchungen.setEnabled(true);
+		listeZeigen.setEnabled(true);
+		this.revalidate();
+		this.repaint();
+	}
+	/**
+	 * verdrahtet ein neues Model mit der alten View
+	 */
+	public void neuesModel() {
+		treePane.aktualisiereBaum(lvModel.getLager(),true);
+		standardAnsicht();
+	}
+	/**
+	 * getter DetailPane
+	 * @return detailPane
+	 */
+	public DetailView getDetailPane() {
+		return detailPane;
 	}
 }

@@ -5,6 +5,7 @@ import javax.swing.JOptionPane;
 public class ErrorHandler {
 	//TODO Fehlernummern hier als Konstanten definieren
 	public final static int LAGER_VOLL = 1;
+	public final static int BILD_NICHT_GEFUNDEN = 2;
 	public final static int MAX_FREIE_KAPAZITAET_UEBERSCHRITTEN = 3;
 	public final static int LAGER_IST_NICHT_LEER = 4;
 	

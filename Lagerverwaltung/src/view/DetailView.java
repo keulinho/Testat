@@ -1,20 +1,42 @@
 package view;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.util.Date;
+import java.awt.Image;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
+import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.border.LineBorder;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumnModel;
 
 import controller.LagerVerwaltungsController;
+import core.exception.ErrorHandler;
+import core.exception.ImageNotFoundException;
+import core.utils.AbsoluterAnteilAbsteigend;
+import core.utils.AbsoluterAnteilAufsteigend;
+import core.utils.GesamtMengeAbsteigend;
+import core.utils.GesamtMengeAufsteigend;
+import core.utils.Rechner;
+import core.utils.RelativerAnteilAbsteigend;
+import core.utils.RelativerAnteilAufsteigend;
+import core.utils.Sortierer;
+import core.utils.TagAbsteigend;
+import core.utils.TagAufsteigend;
 import model.AbBuchungsModel;
 import model.BuchungsModel;
 import model.LagerModel;
@@ -26,7 +48,7 @@ public class DetailView extends JPanel implements Observer{
 	EditNamePanel editName;
 	OptionenPanel optionenPanel;
 	JPanel lagerInfo;
-	JLabel bestand, kapazitaet, meldung;
+	JLabel bestand, kapazitaet, meldung, tagHeader, mengeHeader, relativHeader, absolutHeader, artHeader;
 	JScrollPane buchungen;
 	JTable tabelle;
 	String[] columnNames;
@@ -35,31 +57,63 @@ public class DetailView extends JPanel implements Observer{
 	boolean isUnterLager;
 	boolean buchungsModus;
 	LagerVerwaltungsController controller;
-	
+	Sortierer sortierer;
+	LagerModel lModel;
+	List<BuchungsModel> listeBuchungen;
+	ImageIcon sort,sortAsc,sortDesc;
+	Rechner rechner;
 
 	/**
 	 * erzeugt eine DetailView
 	 * @param controller Controller an den alle Befehle runtergereicht werden
 	 */
 	public DetailView(LagerVerwaltungsController controller) {
-		
 		this.controller=controller;
 		lagerName="";
-		
+		rechner = new Rechner();
 		this.setPreferredSize(new Dimension(515,400));
 		this.setLayout(new BorderLayout());
 		
 		columnNames = new String []{"Buchungstag",
-				"Gesamte Menge",
-                "relativer Anteil",
-                "absoluter Anteil",
+				"Menge",
+                "<html>relativer<br>Anteil</html>",
+                "<html>absoluter<br>Anteil</html>",
                 "Art"};
 		meldung= new JLabel();
+
+		try {
+		    Image img = ImageIO.read(new File("src/icons/sort.png"));
+		    sort = new ImageIcon(img);
+		} catch (IOException ex) {
+			  ErrorHandler.HandleException(ErrorHandler.BILD_NICHT_GEFUNDEN, new ImageNotFoundException("Bilddatei mit dem Pfad \"src/icons/sort.png\" nicht gefunden",(Throwable) ex));
+		}
+		try {
+		    Image img = ImageIO.read(new File("src/icons/sortAsc.png"));
+		    sortAsc = new ImageIcon(img);
+		} catch (IOException ex) {
+			  ErrorHandler.HandleException(ErrorHandler.BILD_NICHT_GEFUNDEN, new ImageNotFoundException("Bilddatei mit dem Pfad \"src/icons/sortAsc.png\" nicht gefunden",(Throwable) ex));
+		}
+		try {
+		    Image img = ImageIO.read(new File("src/icons/sortDesc.png"));
+		    sortDesc = new ImageIcon(img);
+		} catch (IOException ex) {
+			  ErrorHandler.HandleException(ErrorHandler.BILD_NICHT_GEFUNDEN, new ImageNotFoundException("Bilddatei mit dem Pfad \"src/icons/sortDesc.png\" nicht gefunden",(Throwable) ex));
+		}
+		tagHeader=new JLabel(columnNames[0],sort,JLabel.CENTER );
+		tagHeader.setBorder(new LineBorder(Color.lightGray));
+		mengeHeader=new JLabel(columnNames[1],sort,JLabel.CENTER );
+		mengeHeader.setBorder(new LineBorder(Color.lightGray));
+		relativHeader=new JLabel(columnNames[2],sort,JLabel.CENTER );
+	    relativHeader.setBorder(new LineBorder(Color.lightGray));
+	    absolutHeader=new JLabel(columnNames[3],sort,JLabel.CENTER );
+	    absolutHeader.setBorder(new LineBorder(Color.lightGray));
+		artHeader=new JLabel(columnNames[4],JLabel.CENTER );
+		artHeader.setBorder(new LineBorder(Color.lightGray));
 			
 		lagerInfoErstellen();
 		this.add(lagerInfo,BorderLayout.NORTH);
 
-		optionenPanel = new OptionenPanel(editName,controller);
+		optionenPanel = new OptionenPanel(controller);
 		optionenPanel.zeigeButton();
 		this.add(optionenPanel,BorderLayout.PAGE_END);
 	}
@@ -75,9 +129,6 @@ public class DetailView extends JPanel implements Observer{
 		mengeKapazitaet=lModel.getMaxKapazitaet();
 		lagerName=lModel.getName();
 		verteilteMenge=lModel.getVerteilteMenge();
-		this.remove(lagerInfo);
-		lagerInfoErstellen();
-		this.add(lagerInfo,BorderLayout.NORTH);
 		if (!lModel.isUntersteEbene()) {
 			isUnterLager=false;
 			meldung.setText("Bei einem Oberlager gibt es keine Buchungen");
@@ -85,11 +136,16 @@ public class DetailView extends JPanel implements Observer{
 			isUnterLager=true;
 			meldung.setText("Es gibt noch keine Buchungen auf dieses Lager");
 		}
+		this.remove(lagerInfo);
+		lagerInfoErstellen();
+		this.add(lagerInfo,BorderLayout.NORTH);
 		if (buchungsModus) {
 			zeigeBuchungsOptionen(gesamtMenge, maximum, zulieferung);
 		}
 		if ((lModel.getBuchungen()!=null) && (lModel.getBuchungen().size()>0)) { //True wenn es Buchungen zu diesem Lager gibt
-			bereiteBuchungenAuf(lModel.getBuchungen(),(LagerModel)o);
+			listeBuchungen=lModel.getBuchungen();
+			this.lModel = (LagerModel) o;
+			bereiteBuchungenAuf();
 		} else {
 			if ((buchungen!=null)&&(buchungen.isVisible())) {  //Wenn Buchungen angezeigt werden es aber keine gibt werden diese aus der Ansicht gelöscht und stattdessen eine Meldung angezeigt
 				this.remove(buchungen);
@@ -134,14 +190,16 @@ public class DetailView extends JPanel implements Observer{
 	/**
 	 * erstellt alle variablen Texte der View mit den in den Klassenvariablen gespeicherten Werten neu
 	 */
-	public void lagerInfoAktualisieren(){
+	public void lagerInfoAktualisieren() {
 		editName = new EditNamePanel(lagerName,controller);
-		kapazitaet = new JLabel("Maximale Kapazität: "+mengeKapazitaet);
-		kapazitaet.revalidate();
-		kapazitaet.repaint();
-		bestand = new JLabel("Aktueller Bestand: "+(mengeBestand+verteilteMenge));
-		bestand.revalidate();
-		bestand.repaint();
+		if (isUnterLager) {
+			kapazitaet = new JLabel("Maximale Kapazität: "+mengeKapazitaet);
+			bestand = new JLabel("Aktueller Bestand: "+(mengeBestand+verteilteMenge));
+		} else {
+			kapazitaet = new JLabel("Kumulierte Kapazität der Unterlager: "+mengeKapazitaet);
+			bestand = new JLabel("Kumulierter Bestand der Unterlager: "+(mengeBestand+verteilteMenge));
+		}
+		
 		lagerInfo.revalidate();
 		lagerInfo.repaint();
 	}
@@ -173,7 +231,7 @@ public class DetailView extends JPanel implements Observer{
 					optionenPanel.zeigeSlider(gesamtMenge,maximum); //wenn noch zu verteilende Menge kleiner als freie Kapazität ist zu verteilende Menge Maximum des Sliders
 				}	
 			} else {
-				optionenPanel.zeigeSlider(gesamtMenge,(mengeBestand+verteilteMenge)); //bei Abbuchungen ist der BEstand des Lagers Maximum des Sliders	 
+				optionenPanel.zeigeSlider(mengeBestand+verteilteMenge,(mengeBestand+verteilteMenge)); //bei Abbuchungen ist der BEstand des Lagers Maximum des Sliders	 
 			}
 				
 		} else {
@@ -186,7 +244,11 @@ public class DetailView extends JPanel implements Observer{
 	 * @param listeBuchungen Liste der Buchungen für das mitgegebene Lager
 	 * @param lModel Lager für das die Tabelle erzeugt wird
 	 */
-	public void bereiteBuchungenAuf(List<BuchungsModel> listeBuchungen, LagerModel lModel) {
+	public void bereiteBuchungenAuf() {
+		
+		if (sortierer!=null) {
+			listeBuchungen=sortierer.sortiere(listeBuchungen, lModel);
+		}
 		int i=0;
 		data = new Object[listeBuchungen.size()][5];
 		
@@ -200,11 +262,7 @@ public class DetailView extends JPanel implements Observer{
 				}
 			
 			data[i][3]=bModel.getAnteile().get(j).getAnteil();
-			double prozent = (Double.parseDouble("" + data[i][3])/(Double.parseDouble(""+ data[i][1]))*100.00);
-			prozent = (prozent*1000)+5;
-			int temp = (int) (prozent/10);
-			prozent = (double)temp/100.00;
-			data[i][2]=""+prozent+"%";
+			data[i][2]=""+rechner.rechneProzent((int)data[i][3],(int)data[i][1])+"%";
 			if (bModel.getClass().equals(new AbBuchungsModel(null).getClass())) { //true bei Auslieferung
 				data[i][4]="Auslieferung";
 			} else {
@@ -214,8 +272,91 @@ public class DetailView extends JPanel implements Observer{
 		}
 		
 		tabelle=new JTable(data, columnNames);
+		TableColumnModel columnModel=tabelle.getColumnModel();
+		TableCellRenderer renderer = new JComponentTableCellRenderer();
+		columnModel.getColumn(0).setHeaderRenderer(renderer);
+		columnModel.getColumn(0).setHeaderValue(tagHeader);
+		columnModel.getColumn(1).setHeaderRenderer(renderer);
+		columnModel.getColumn(1).setHeaderValue(mengeHeader);
+		columnModel.getColumn(2).setHeaderRenderer(renderer);
+		columnModel.getColumn(2).setHeaderValue(relativHeader);
+		columnModel.getColumn(3).setHeaderRenderer(renderer);
+		columnModel.getColumn(3).setHeaderValue(absolutHeader);
+		columnModel.getColumn(4).setHeaderRenderer(renderer);
+		columnModel.getColumn(4).setHeaderValue(artHeader);
 		tabelle.setEnabled(false);
 		tabelle.getTableHeader().setReorderingAllowed(false);
+		tabelle.getTableHeader().addMouseListener(new MouseListener() {
+			
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+			}
+			
+			@Override
+			public void mousePressed(MouseEvent arg0) {
+			}
+			
+			@Override
+			public void mouseExited(MouseEvent arg0) {
+			}
+			
+			@Override
+			public void mouseEntered(MouseEvent arg0) {		
+			}
+			
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				 int spalte = tabelle.columnAtPoint(arg0.getPoint());
+			     switch (spalte) {
+			     	case 0: if (sortierer!=null&&sortierer.getSort().getClass().equals(new TagAbsteigend().getClass())) {
+			     		sortierer=new Sortierer(new TagAufsteigend());
+			     		tagHeader.setIcon(sortAsc);
+			     		
+			     	} else {
+			     		sortierer=new Sortierer(new TagAbsteigend());
+			     		tagHeader.setIcon(sortDesc);
+			     	}
+			     	mengeHeader.setIcon(sort);
+		     		relativHeader.setIcon(sort);
+		     		absolutHeader.setIcon(sort);
+			     	break;
+			     	case 1: if (sortierer!=null&&sortierer.getSort().getClass().equals(new GesamtMengeAbsteigend().getClass())) {
+			     		sortierer=new Sortierer(new GesamtMengeAufsteigend());
+			     		mengeHeader.setIcon(sortAsc);
+			     	} else {
+			     		sortierer=new Sortierer(new GesamtMengeAbsteigend());
+			     		mengeHeader.setIcon(sortDesc);
+			     	}
+			     	tagHeader.setIcon(sort);
+			     	relativHeader.setIcon(sort);
+		     		absolutHeader.setIcon(sort);
+			     	break;
+			     	case 2: if (sortierer!=null&&sortierer.getSort().getClass().equals(new RelativerAnteilAbsteigend().getClass())) {
+			     		sortierer=new Sortierer(new RelativerAnteilAufsteigend());	     		
+			     		relativHeader.setIcon(sortAsc);	
+			     	} else {
+			     		sortierer=new Sortierer(new RelativerAnteilAbsteigend());
+			     		relativHeader.setIcon(sortDesc);	
+			     	}
+			     	tagHeader.setIcon(sort);
+		     		mengeHeader.setIcon(sort);
+		     		absolutHeader.setIcon(sort);
+			     	break;
+			     	case 3: if (sortierer!=null&&sortierer.getSort().getClass().equals(new AbsoluterAnteilAbsteigend().getClass())) {
+			     		sortierer=new Sortierer(new AbsoluterAnteilAufsteigend());
+			     		absolutHeader.setIcon(sortAsc);
+			     	} else {
+			     		sortierer=new Sortierer(new AbsoluterAnteilAbsteigend());
+			     		absolutHeader.setIcon(sortDesc);
+			     	}
+			     	tagHeader.setIcon(sort);
+		     		mengeHeader.setIcon(sort);
+		     		relativHeader.setIcon(sort);
+			     	break;
+			     }
+			     bereiteBuchungenAuf();	
+			}
+		});
 		if ((buchungen!=null)&&(buchungen.isVisible())) {
 			this.remove(buchungen);
 		}
@@ -228,7 +369,8 @@ public class DetailView extends JPanel implements Observer{
 			this.remove(meldung);
 			this.add(buchungen,BorderLayout.CENTER);
 		}
-		
+		this.revalidate();
+		this.repaint();
 	}
 	
 	public void editName() {

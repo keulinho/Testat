@@ -9,6 +9,8 @@ import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.IOException;
 import java.text.NumberFormat;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.imageio.ImageIO;
 import javax.swing.Box;
@@ -21,22 +23,22 @@ import javax.swing.JToolBar;
 import javax.swing.text.NumberFormatter;
 
 import controller.LagerVerwaltungsController;
+import core.exception.ErrorHandler;
+import core.exception.ImageNotFoundException;
 
-public class BuchungBar extends JToolBar{
+public class BuchungBar extends JToolBar implements Observer{
 	
 	JButton undo, redo, buchungVerwerfen,buchungAbschliessen,auslieferungErstellen,zulieferungErstellen, neuesLagerErstellen;
 	JLabel laufendeZulieferung, neueBuchung,laufendeAuslieferung, neuesLager, name, kapazitaet;
 	JFormattedTextField menge,lagerKapazitaet;
 	JTextField lagerName;
 	LagerVerwaltungsController controller;
-
-	
+	boolean oberLager;
 	/**
 	 * erzeugt eine BuchungsBar
 	 * @param controller Controller an den alle Befehle runtergereicht werden
 	 */
 	public BuchungBar(LagerVerwaltungsController controller){
-		
 		this.controller=controller;
 		this.setFloatable(false);
 		
@@ -54,7 +56,7 @@ public class BuchungBar extends JToolBar{
 		    Image img = ImageIO.read(new File("src/icons/undo.png"));
 		    undo.setIcon(new ImageIcon(img));
 		  } catch (IOException ex) {
-			  ex.printStackTrace();
+			  ErrorHandler.HandleException(ErrorHandler.BILD_NICHT_GEFUNDEN, new ImageNotFoundException("Bilddatei mit dem Pfad \"src/icons/undo.png\" nicht gefunden",(Throwable) ex));
 		  }
 		undo.addActionListener(new ActionListener() {
 			
@@ -63,13 +65,13 @@ public class BuchungBar extends JToolBar{
 				controller.undo();
 			}
 		});
-		
+		undo.setEnabled(false);
 		redo= new JButton("Redo");
 		try {
 		    Image img = ImageIO.read(new File("src/icons/redo.png"));
 		    redo.setIcon(new ImageIcon(img));
 		  } catch (IOException ex) {
-			  ex.printStackTrace();
+			  ErrorHandler.HandleException(ErrorHandler.BILD_NICHT_GEFUNDEN, new ImageNotFoundException("Bilddatei mit dem Pfad \"src/icons/redo.png\" nicht gefunden",(Throwable) ex));
 		  }
 		redo.addActionListener(new ActionListener() {
 			
@@ -78,26 +80,27 @@ public class BuchungBar extends JToolBar{
 				controller.redo();
 			}
 		});
+		redo.setEnabled(false);
 		laufendeZulieferung = new JLabel();
 		try {
 		    Image img = ImageIO.read(new File("src/icons/exclamation.png"));
 		    laufendeZulieferung.setIcon(new ImageIcon(img));
 		  } catch (IOException ex) {
-			  ex.printStackTrace();
+			  ErrorHandler.HandleException(ErrorHandler.BILD_NICHT_GEFUNDEN, new ImageNotFoundException("Bilddatei mit dem Pfad \"src/icons/exclamation.png\" nicht gefunden",(Throwable) ex));
 		  }
 		laufendeAuslieferung = new JLabel();
 		try {
 		    Image img = ImageIO.read(new File("src/icons/exclamation.png"));
 		    laufendeAuslieferung.setIcon(new ImageIcon(img));
 		  } catch (IOException ex) {
-			  ex.printStackTrace();
+			  ErrorHandler.HandleException(ErrorHandler.BILD_NICHT_GEFUNDEN, new ImageNotFoundException("Bilddatei mit dem Pfad \"src/icons/exclamation.png\" nicht gefunden",(Throwable) ex));
 		  }
 		buchungVerwerfen= new JButton("Buchung verwerfen");
 		try {
 		    Image img = ImageIO.read(new File("src/icons/delete.png"));
 		    buchungVerwerfen.setIcon(new ImageIcon(img));
 		  } catch (IOException ex) {
-			  ex.printStackTrace();
+			  ErrorHandler.HandleException(ErrorHandler.BILD_NICHT_GEFUNDEN, new ImageNotFoundException("Bilddatei mit dem Pfad \"src/icons/delete.png\" nicht gefunden",(Throwable) ex));
 		  }
 		buchungVerwerfen.addActionListener(new ActionListener() {
 			
@@ -111,7 +114,7 @@ public class BuchungBar extends JToolBar{
 		    Image img = ImageIO.read(new File("src/icons/check.png"));
 		    buchungAbschliessen.setIcon(new ImageIcon(img));
 		  } catch (IOException ex) {
-			  ex.printStackTrace();
+			  ErrorHandler.HandleException(ErrorHandler.BILD_NICHT_GEFUNDEN, new ImageNotFoundException("Bilddatei mit dem Pfad \"src/icons/check.png\" nicht gefunden",(Throwable) ex));
 		  }
 		buchungAbschliessen.addActionListener(new ActionListener() {
 			
@@ -126,7 +129,7 @@ public class BuchungBar extends JToolBar{
 	    NumberFormatter formatter = new NumberFormatter(format);
 	    formatter.setValueClass(Integer.class);
 	    formatter.setMinimum(0);
-	    formatter.setMaximum(Integer.MAX_VALUE);
+	    formatter.setMaximum(999999999);
 	    formatter.setAllowsInvalid(false);
 	    formatter.setCommitsOnValidEdit(true);
 	    menge = new JFormattedTextField(formatter);
@@ -165,14 +168,15 @@ public class BuchungBar extends JToolBar{
 		    Image img = ImageIO.read(new File("src/icons/check.png"));
 		    auslieferungErstellen.setIcon(new ImageIcon(img));
 		  } catch (IOException ex) {
-			  ex.printStackTrace();
+			  ErrorHandler.HandleException(ErrorHandler.BILD_NICHT_GEFUNDEN, new ImageNotFoundException("Bilddatei mit dem Pfad \"src/icons/check.png\" nicht gefunden",(Throwable) ex));
 		  }
 		auslieferungErstellen.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				zeigeLaufendeAuslieferung(0);
-				controller.auslieferungErstellen();
+				if (controller.auslieferungErstellen()) {
+					zeigeLaufendeAuslieferung(0);
+				}
 				
 			}
 		});
@@ -181,14 +185,15 @@ public class BuchungBar extends JToolBar{
 		    Image img = ImageIO.read(new File("src/icons/check.png"));
 		    zulieferungErstellen.setIcon(new ImageIcon(img));
 		  } catch (IOException ex) {
-			  ex.printStackTrace();
+			  ErrorHandler.HandleException(ErrorHandler.BILD_NICHT_GEFUNDEN, new ImageNotFoundException("Bilddatei mit dem Pfad \"src/icons/check.png\" nicht gefunden",(Throwable) ex));
 		  }
 		zulieferungErstellen.addActionListener(new ActionListener() {
 			
 			@Override
-			public void actionPerformed(ActionEvent e) {
-				zeigeLaufendeZulieferung((int)menge.getValue());
-				controller.zulieferungErstellen((int)menge.getValue());
+			public void actionPerformed(ActionEvent e) {	
+				if (controller.zulieferungErstellen((int)menge.getValue())) {
+					zeigeLaufendeZulieferung((int)menge.getValue());
+				}
 				menge.setValue(null);
 			}
 		});
@@ -210,7 +215,7 @@ public class BuchungBar extends JToolBar{
 					
 					neuesLagerErstellen.setEnabled(true);
 					if (arg0.getKeyCode() == KeyEvent.VK_ENTER) {
-						controller.erstelleUnterLager(lagerName.getText(),(int)lagerKapazitaet.getValue());
+						controller.erstelleUnterLager(lagerName.getText(),(int)lagerKapazitaet.getValue(),oberLager);
 					}
 				} else {
 					neuesLagerErstellen.setEnabled(false);
@@ -239,7 +244,7 @@ public class BuchungBar extends JToolBar{
 						
 						neuesLagerErstellen.setEnabled(true);
 						if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-							controller.erstelleUnterLager(lagerName.getText(),(int)lagerKapazitaet.getValue());
+							controller.erstelleUnterLager(lagerName.getText(),(int)lagerKapazitaet.getValue(),oberLager);
 						}
 					} else {
 						neuesLagerErstellen.setEnabled(false);
@@ -261,13 +266,13 @@ public class BuchungBar extends JToolBar{
 		    Image img = ImageIO.read(new File("src/icons/check.png"));
 		    neuesLagerErstellen.setIcon(new ImageIcon(img));
 		  } catch (IOException ex) {
-			  ex.printStackTrace();
+			  ErrorHandler.HandleException(ErrorHandler.BILD_NICHT_GEFUNDEN, new ImageNotFoundException("Bilddatei mit dem Pfad \"src/icons/check.png\" nicht gefunden",(Throwable) ex));
 		  }
 		neuesLagerErstellen.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				controller.erstelleUnterLager(lagerName.getText(), (int) lagerKapazitaet.getValue());
+				controller.erstelleUnterLager(lagerName.getText(), (int) lagerKapazitaet.getValue(),oberLager);
 				lagerName.setText("");
 				lagerKapazitaet.setValue(null);
 			}
@@ -318,10 +323,11 @@ public class BuchungBar extends JToolBar{
 	 * zeigt die BuchungBar im neue Buchung Modus
 	 * @param zulieferung true wenn neue Zulieferung erstellt werden soll
 	 */
-	public void zeigeNeueBuchung(boolean zulieferung){
+	public void zeigeNeueBuchung(boolean zulieferung, int maxFreieKapazitaet){
 		this.removeAll();
 		if (zulieferung) {
-			neueBuchung.setText("Neue Zulieferung erstellen: Bitte geben Sie die gewünschte Menge ein:");
+			neueBuchung.setText("<html>Neue Zulieferung erstellen: Bitte geben Sie die gewünschte Menge ein:<br>"
+					+ "Die maximal freie Kapazität beträgt: " + maxFreieKapazitaet + " Einheiten.</html>");
 			this.add(neueBuchung);
 			this.addSeparator(new Dimension(10,0));
 			this.add(menge);
@@ -355,7 +361,8 @@ public class BuchungBar extends JToolBar{
 	/**
 	 * zeigt die BuchungBar im neues Lager anlegen Modus
 	 */
-	public void zeigeNeuesLager(){
+	public void zeigeNeuesLager(boolean oberLager){
+		this.oberLager=oberLager;
 		this.removeAll();
 		this.add(neuesLager);
 		this.add(name);
@@ -372,4 +379,17 @@ public class BuchungBar extends JToolBar{
 		this.repaint();
 	}
 	
+	@Override
+	/**
+	 * aktualisiert die BuchungsBar, enabled/disabled die Redo/Undo-Button
+	 */
+	public void update(Observable arg0, Object arg1) {
+		LagerVerwaltungsController lVController = (LagerVerwaltungsController) arg0;
+		if (lVController.getRedoStack().isEmpty()) {
+			redo.setEnabled(false);
+		} else redo.setEnabled(true);
+		if (lVController.getUndoStack().isEmpty()) {
+			undo.setEnabled(false);
+		} else undo.setEnabled(true);
+	}
 }

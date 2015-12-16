@@ -20,6 +20,9 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import controller.LagerVerwaltungsController;
+import core.exception.ErrorHandler;
+import core.exception.ImageNotFoundException;
+import core.utils.Rechner;
 
 public class OptionenPanel extends JPanel{
 	JButton loeschen, neuesLager, umbenennen, anteilBuchen;
@@ -27,9 +30,14 @@ public class OptionenPanel extends JPanel{
 	JSlider slider;
 	LagerVerwaltungsController controller;
 	int gesamtMenge, restMenge;
-
-	public OptionenPanel(EditNamePanel editName, LagerVerwaltungsController controller){
-		
+	Rechner rechner;
+	
+	/**
+	 * erzeugt ein OptionenPanel im zeige Button Modus
+	 * @param controller controller an den Befehle weitergeleitet werden
+	 */
+	public OptionenPanel(LagerVerwaltungsController controller){
+		rechner=new Rechner();
 		this.controller=controller;
 		this.setPreferredSize(new Dimension(515,50));
 		
@@ -50,7 +58,7 @@ public class OptionenPanel extends JPanel{
 		    Image img = ImageIO.read(new File("src/icons/trash.png"));
 		    loeschen.setIcon(new ImageIcon(img));
 		  } catch (IOException ex) {
-			  ex.printStackTrace();
+			  ErrorHandler.HandleException(ErrorHandler.BILD_NICHT_GEFUNDEN, new ImageNotFoundException("Bilddatei mit dem Pfad \"src/icons/trash.png\" nicht gefunden",(Throwable) ex));
 		  }
 		loeschen.addActionListener(new ActionListener() {
 			
@@ -64,14 +72,14 @@ public class OptionenPanel extends JPanel{
 		    Image img = ImageIO.read(new File("src/icons/new.png"));
 		    neuesLager.setIcon(new ImageIcon(img));
 		  } catch (IOException ex) {
-			  ex.printStackTrace();
+			  ErrorHandler.HandleException(ErrorHandler.BILD_NICHT_GEFUNDEN, new ImageNotFoundException("Bilddatei mit dem Pfad \"src/icons/new.png\" nicht gefunden",(Throwable) ex));
 		  }
 		neuesLager.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				VerwaltungsView vView = (VerwaltungsView) SwingUtilities.getWindowAncestor(OptionenPanel.this);
-				vView.zeigeNeuesLager();
+				vView.zeigeNeuesLager(false);
 			}
 		});
 		umbenennen = new JButton("Lager umbennen");
@@ -79,7 +87,7 @@ public class OptionenPanel extends JPanel{
 		    Image img = ImageIO.read(new File("src/icons/edit2.png"));
 		    umbenennen.setIcon(new ImageIcon(img));
 		  } catch (IOException ex) {
-			  ex.printStackTrace();
+			  ErrorHandler.HandleException(ErrorHandler.BILD_NICHT_GEFUNDEN, new ImageNotFoundException("Bilddatei mit dem Pfad \"src/icons/edit2.png\" nicht gefunden",(Throwable) ex));
 		  }
 		umbenennen.addActionListener(new ActionListener() {
 			
@@ -96,7 +104,7 @@ public class OptionenPanel extends JPanel{
 		    Image img = ImageIO.read(new File("src/icons/info.png"));
 		    infoText.setIcon(new ImageIcon(img));
 		  } catch (IOException ex) {
-			  ex.printStackTrace();
+			  ErrorHandler.HandleException(ErrorHandler.BILD_NICHT_GEFUNDEN, new ImageNotFoundException("Bilddatei mit dem Pfad \"src/icons/info.png\" nicht gefunden",(Throwable) ex));
 		  }
 		//Slider Modus bei offener Buchung und gewähltem Unterlager
 		menge= new JLabel("<html>absolute Menge: <br>relative Menge:</html>");
@@ -119,7 +127,7 @@ public class OptionenPanel extends JPanel{
 		    Image img = ImageIO.read(new File("src/icons/enterBuchung.png"));
 		    anteilBuchen.setIcon(new ImageIcon(img));
 		  } catch (IOException ex) {
-			  ex.printStackTrace();
+			  ErrorHandler.HandleException(ErrorHandler.BILD_NICHT_GEFUNDEN, new ImageNotFoundException("Bilddatei mit dem Pfad \"src/icons/enterBuchung.png\" nicht gefunden",(Throwable) ex));
 		  }
 		anteilBuchen.addActionListener(new ActionListener() {
 			
@@ -169,6 +177,7 @@ public class OptionenPanel extends JPanel{
 		this.restMenge=maximum;
 		this.removeAll();
 		this.add(menge);
+		slider.setMinimum(0);
 		slider.setMaximum(maximum);
 		slider.setValue(slider.getMaximum()/2);
 		anteil.setText("<html>"+slider.getValue()+"<br>"+rechneProzent()+"%</html>");
@@ -192,11 +201,7 @@ public class OptionenPanel extends JPanel{
 			} else {
 				gesamtMenge = this.gesamtMenge;
 			}
-			double prozent = (((double)slider.getValue()/gesamtMenge)*100.00);
-			prozent = (prozent*1000)+5;
-			int temp = (int) (prozent/10);
-			prozent = (double)temp/100.00;
-			return prozent;
+			return rechner.rechneProzent(slider.getValue(), gesamtMenge);
 		}	
 	}
 }
