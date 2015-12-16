@@ -27,7 +27,7 @@ import model.ZuBuchungsModel;
 
 public class VerwaltungsView extends JFrame implements Observer{
 
-	int restMenge;
+	int restMenge, maxFreieKapazitaet;
 	JButton laden, neueZulieferung, speichern, neueAuslieferung,alleBuchungen, listeZeigen;
 	JToolBar toolbar;
 	BuchungBar buchungBar;
@@ -38,6 +38,7 @@ public class VerwaltungsView extends JFrame implements Observer{
 	List<BuchungsModel> listeBuchungen;
 	BuchungsView buchungsView;
 	ListenView liste;
+	
 	
 	/**
 	 * erzeugt eine VerwaltungsView
@@ -132,7 +133,7 @@ public class VerwaltungsView extends JFrame implements Observer{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				buchungBar.zeigeNeueBuchung(true);
+				buchungBar.zeigeNeueBuchung(true,maxFreieKapazitaet);
 				buchungBar.setVisible(true);
 				neueAuslieferung.setEnabled(false);
 				neueZulieferung.setEnabled(false);
@@ -151,7 +152,7 @@ public class VerwaltungsView extends JFrame implements Observer{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				buchungBar.zeigeNeueBuchung(false);
+				buchungBar.zeigeNeueBuchung(false,0);
 				buchungBar.setVisible(true);
 				neueAuslieferung.setEnabled(false);
 				neueZulieferung.setEnabled(false);
@@ -236,6 +237,7 @@ public class VerwaltungsView extends JFrame implements Observer{
 		}
 		listeBuchungen=lvModel.getBuchungen(); //Liste wird bei jedem Update aktualisiert
 		treePane.aktualisiereBaum(lvModel.getLager(),false);
+		maxFreieKapazitaet=lvModel.getMaxFreieKapazitaet();
 	}
 	
 	/**

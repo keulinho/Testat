@@ -323,10 +323,11 @@ public class BuchungBar extends JToolBar implements Observer{
 	 * zeigt die BuchungBar im neue Buchung Modus
 	 * @param zulieferung true wenn neue Zulieferung erstellt werden soll
 	 */
-	public void zeigeNeueBuchung(boolean zulieferung){
+	public void zeigeNeueBuchung(boolean zulieferung, int maxFreieKapazitaet){
 		this.removeAll();
 		if (zulieferung) {
-			neueBuchung.setText("Neue Zulieferung erstellen: Bitte geben Sie die gewünschte Menge ein:");
+			neueBuchung.setText("<html>Neue Zulieferung erstellen: Bitte geben Sie die gewünschte Menge ein:<br>"
+					+ "Die maximal freie Kapazität beträgt: " + maxFreieKapazitaet + " Einheiten.</html>");
 			this.add(neueBuchung);
 			this.addSeparator(new Dimension(10,0));
 			this.add(menge);
