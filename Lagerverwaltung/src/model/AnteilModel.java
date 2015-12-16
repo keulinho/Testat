@@ -26,6 +26,19 @@ public class AnteilModel implements Serializable {
 	public void erhoehenAnteil(int zusatz) {
 		this.anteil += zusatz;
 	}
+	
+	/**
+	 * ändert das Lager in dem Anteil auf das mitgegebene Lager
+	 * @param lager das dem Anteli zugeordnet wird
+	 */
+	public void verschiebeAnteil(LagerModel lager){
+		this.setLager(lager);
+	}
+	
+	//setter
+	public void setLager(LagerModel lager){
+		this.lager = lager;
+	}
 
 	//getter
 	/**

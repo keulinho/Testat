@@ -8,6 +8,7 @@ import java.util.Observer;
 import java.util.Vector;
 
 import core.exception.ErrorHandler;
+import core.exception.LagerNichtLoeschbarException;
 import core.exception.LagerUeberfuelltException;
 import core.exception.MaxFreieKapazitaetUeberschritten;
 import view.LagerBaumKnoten;
@@ -304,34 +305,58 @@ public class LagerVerwaltungsModel extends Observable implements Serializable {
 	 *   - A1.2.2
 	 *  - A1.3
 	 *  - A1.4
+	 * A2
 	 * 
 	 *  A1      löschen	--> alle gehen einen nach oben
 	 *  A1.1    löschen	--> A1.1.1 geht einen nach oben
 	 *  A1.1.1  löschen --> alles aus A1.1.1 geht nach oben Buchungen und Anteile auch
 	 *  A1.2    löschen	--> alle gehen eine Ebene nach oben
 	 *  A1.2.1  löschen	--> nur wenn es leer ist
+	 *  A2		löschen --> nur wenn es leer ist
 	 *  
 	 *  rekursives löschen
 	 *  	-> wenn Lager oberster Ebene dann müssen die Lager leer sein
 	 *  	-> Lager mit allen Unterlagern löschen
 	 */
-	public void loesschenLager(LagerModel lager, boolean rekursiv){
+	public void loesschenLager(LagerModel lager) throws LagerNichtLoeschbarException{
 		// TODO
 		if(lager.getOberLager() != null){
 			if(lager.getUnterLager().isEmpty()){
-				if(lager.getOberLager().getUnterLager().size() > 1){
-					//A1.1.1 alle Anteile ändern undbestand hochgeben
-					
+				if(lager.getOberLager().getUnterLager().size() == 1){
+					//A1.1.1 in alle Anteile das Lager ändern
+					lager.verschiebeAnteile();
+					lager.loeschenLager();
 				} else {
 					//A1.2.1
+					if(lager.getBestand() == 0){
+						lager.verschiebeAnteile();
+						lager.loeschenLager();
+					} else {
+						throw new LagerNichtLoeschbarException("Das Lager muss leer sein um gelöscht zu werden.\n"
+								+ lager.getName() + " enthält noch: " + lager.getBestand());
+					}
 				}
 			} else {
 				//A1.1 und A1.2 über alle Unterlager gehen und dann hochziehen
+				lager.verschiebeAnteile();
+				lager.loeschenLager();
 			}
 		} else {
-			//A1
+			if(!lager.getUnterLager().isEmpty()){
+				//A1
+				lager.verschiebeAnteile();
+				lager.loeschenLager();
+			} else {
+				//A2
+				if(lager.getBestand() == 0){
+					lager.loeschenAnteile();
+					lager.loeschenLager();
+				} else {
+					throw new LagerNichtLoeschbarException("Das Lager muss leer sein um gelöscht zu werden.\n"
+							+ lager.getName() + " enthält noch: " + lager.getBestand());
+				}
+			}
 		}
-		
 	}
 	
 	//TODO generell Umbuchung

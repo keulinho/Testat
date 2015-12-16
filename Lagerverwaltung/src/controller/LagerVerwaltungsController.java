@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Observer;
 
 import core.exception.ErrorHandler;
+import core.exception.LagerNichtLoeschbarException;
 import core.exception.MaxFreieKapazitaetUeberschritten;
 import model.LagerModel;
 import model.LagerVerwaltungsModel;
@@ -64,12 +65,13 @@ public class LagerVerwaltungsController {
 		lVModel.umbenennenLager(aktuellesLager, neuerName);
 	}
 	
-	public void loescheLagerRekursiv() {
-		lVModel.loesschenLager(aktuellesLager, true);
-	}
 	
 	public void loescheLager() {
-		lVModel.loesschenLager(aktuellesLager, false);
+		try {
+			lVModel.loesschenLager(aktuellesLager);
+		} catch (LagerNichtLoeschbarException e) {
+			ErrorHandler.HandleException(ErrorHandler.LAGER_IST_NICHT_LEER, e);
+		}
 	}
 	
 	public void erstelleUnterLager(String lagerName, int lagerKapazitaet) {

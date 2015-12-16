@@ -34,6 +34,11 @@ public class AbBuchungsModel extends BuchungsModel {
 		super.loeschenAnteil(lager, -menge);
 	}
 
+	//TODO JAVADOC
+	public void loeschenAnteil(AnteilModel anteil) {
+		loeschenAnteile(anteil.getLager());
+	}
+
 	//getter
 	/**
 	 * eine Abuchung ist dann fertig wenn sie mindestens einen Anteil enthält

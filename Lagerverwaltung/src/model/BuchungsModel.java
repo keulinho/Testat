@@ -33,6 +33,8 @@ abstract public class BuchungsModel implements Serializable {
 	//TODO JAVADOC
 	abstract public int getVerteilbareMenge(LagerModel lager);
 	
+	abstract public void loeschenAnteil(AnteilModel anteil);
+	
 	//Methoden
 	/**
 	 * Löscht alle Anteile der Buchung
@@ -101,5 +103,19 @@ abstract public class BuchungsModel implements Serializable {
 	 */
 	public int getVerteilteMenge(){
 		return this.verteilteMenge;
+	}
+	
+	/**
+	 * sucht aus einer Buchung der Anteil zu einem Lager hinaus und gibt diesen zurück
+	 * @param lager dessen Anteil gesucht wird
+	 * @return den Anteil der zu dem Lager gehört
+	 */
+	public AnteilModel getAnteil(LagerModel lager){
+		for(AnteilModel anteil: anteile){
+			if(anteil.getLager() == lager){
+				return anteil;
+			}
+		}
+		return null;
 	}
 }

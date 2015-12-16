@@ -33,6 +33,19 @@ public class ZuBuchungsModel extends BuchungsModel {
 		return null;
 	}
 
+	//TODO JAVADOC
+	public void loeschenAnteil(AnteilModel anteil) {
+		//Bestand ändern
+		setMenge(getMenge()-anteil.getAnteil());
+		//Anteil löschen
+		anteile.remove(anteil);
+	}
+	
+	//setter
+	public void setMenge(int menge){
+		this.menge = menge;
+	}
+
 	//getter
 	/**
 	 * gibt die noch zu verteilende Menge einer Buchung zurück

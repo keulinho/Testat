@@ -121,7 +121,6 @@ public class LagerModel extends Observable implements Serializable {
 	 * @param buchung
 	 */
 	public void addBuchung(BuchungsModel buchung){
-		//TODO evtl. Logik hierhin verschieben, wenn Buchung eingeht, wird hier alles gebucht
 		buchungen.add(buchung);
 		setChanged();
 		notifyObservers();
@@ -154,6 +153,38 @@ public class LagerModel extends Observable implements Serializable {
 		notifyObservers();
 	}
 	
+	public void loeschenLager(){
+		//Unterlager Umbiegen
+		for(LagerModel lager: unterLager){
+			lager.setOberLager(this.oberLager);
+		}
+		//Oberlager die Unterlager ändern
+		oberLager.getUnterLager().addAll(unterLager);
+		//Um Observer kümmern
+		this.deleteObservers();
+		//letzte Referenz entfernen
+		if(this.oberLager != null){
+			oberLager.getUnterLager().remove(this);
+		}
+	}
+	
+	/**
+	 * verschiebt aller Anteile und damit die Buchungen eines Lagers eine Ebene nach oben
+	 * die ist die Vorberietung zum Löschen
+	 */
+	public void verschiebeAnteile(){
+		for(BuchungsModel buchung: buchungen){
+			AnteilModel anteil = buchung.getAnteil(this);
+			anteil.verschiebeAnteil(oberLager);
+		}
+	}
+	public void loeschenAnteile(){
+		for(BuchungsModel buchung: buchungen){
+			AnteilModel anteil = buchung.getAnteil(this);
+			buchung.loeschenAnteil(anteil);
+		}
+	}
+	
 	//setter
 	/**
 	 * Setzt den Namen des Lagers
@@ -165,6 +196,10 @@ public class LagerModel extends Observable implements Serializable {
 		this.notifyObservers();
 	}
 	
+	public void setOberLager(LagerModel oberLager) {
+		this.oberLager = oberLager;
+	}
+
 	//getter
 	/**
 	 * Gibt den Namen des Lagers zurück
