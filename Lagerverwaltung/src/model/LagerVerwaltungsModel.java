@@ -36,7 +36,10 @@ public class LagerVerwaltungsModel extends Observable implements Serializable {
 	}
 	
 	//Methoden
-
+	/**
+	 * Erstellt Lager und füllt diese mit der in der Aufgabe gewünschten Menge
+	 * @throws MaxFreieKapazitaetUeberschritten
+	 */
 	public void initialBefuellung() throws MaxFreieKapazitaetUeberschritten{
 		//Lager
 		LagerModel lager1 = hinzufuegenLager(null, 0, "Deutschland");
@@ -100,11 +103,20 @@ public class LagerVerwaltungsModel extends Observable implements Serializable {
 		abschliessenBuchung();
 	}
 	
+	/**
+	 * fügt Observer zu dem LagerVerwaltungsModel hinzu und updatet sie initial
+	 */
 	public void addObserver(Observer o) {
 		super.addObserver(o);
 		setChanged();
 		notifyObservers();
 	}
+	
+	/**
+	 * fügt einem Lager einem Knoten aus der View als Observer hinzu
+	 * @param lager
+	 * @param knoten
+	 */
 	public void addObserverTo(LagerModel lager, LagerBaumKnoten knoten){
 		lager.addObserver(knoten);
 	}
@@ -177,7 +189,7 @@ public class LagerVerwaltungsModel extends Observable implements Serializable {
 	}
 	
 	/**
-	 * erstellt eine neue ABbuchung und setzt diese als laufende Buchung, wenn kein Buchung läuft
+	 * erstellt eine neue Abbuchung und setzt diese als laufende Buchung, wenn kein Buchung läuft
 	 * @param buchungsTag	Zeitpunkt der Buchung
 	 * @return				true wenn die erstelt wurde sonst false
 	 */
@@ -304,6 +316,8 @@ public class LagerVerwaltungsModel extends Observable implements Serializable {
 	}
 	
 	/**
+	 * löscht ein Lager aus der Lagerstruktur wie unten dargestellt
+	 * 
 	 * A1
 	 *  - A1.1
 	 *   - A1.1.1
@@ -320,13 +334,8 @@ public class LagerVerwaltungsModel extends Observable implements Serializable {
 	 *  A1.2    löschen	--> alle gehen eine Ebene nach oben
 	 *  A1.2.1  löschen	--> nur wenn es leer ist
 	 *  A2		löschen --> nur wenn es leer ist
-	 *  
-	 *  rekursives löschen
-	 *  	-> wenn Lager oberster Ebene dann müssen die Lager leer sein
-	 *  	-> Lager mit allen Unterlagern löschen
 	 */
 	public void loesschenLager(LagerModel lager) throws LagerNichtLoeschbarException{
-		// TODO
 		if(lager.getOberLager() != null){
 			if(lager.getUnterLager().isEmpty()){
 				if(lager.getOberLager().getUnterLager().size() == 1){
