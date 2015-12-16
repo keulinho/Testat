@@ -89,9 +89,10 @@ public class ListenView extends JPanel{
 				
 			}
 		});
-		detailPanel=anteilDetailsErstellen(buchungsListe.get(0));
-		this.add(detailPanel,BorderLayout.EAST);
-		
+		if (!buchungsListe.isEmpty()) {
+			detailPanel=anteilDetailsErstellen(buchungsListe.get(0));
+			this.add(detailPanel,BorderLayout.EAST);
+		}
 		this.add(scrollListe, BorderLayout.WEST);
 		this.add(schliessen, BorderLayout.PAGE_END);
 		this.revalidate();

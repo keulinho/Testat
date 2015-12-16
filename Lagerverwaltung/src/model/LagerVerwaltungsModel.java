@@ -69,7 +69,7 @@ public class LagerVerwaltungsModel extends Observable implements Serializable {
 		LagerModel lager3 = hinzufuegenLager(null, 15000, "Groﬂbritannien");
 		
 		//Buchungen
-		/*erstellenZuBuchung(new Date(1), 1000);
+		erstellenZuBuchung(new Date(1), 1000);
 		hinzufuegenAnteil(lager13, 500);
 		hinzufuegenAnteil(lager17, 200);
 		hinzufuegenAnteil(lager221, 100);
@@ -105,7 +105,6 @@ public class LagerVerwaltungsModel extends Observable implements Serializable {
 		hinzufuegenAnteil(lager13, 1875);
 		hinzufuegenAnteil(lager221, 2500);
 		abschliessenBuchung();
-		*/
 	}
 	
 	/**
