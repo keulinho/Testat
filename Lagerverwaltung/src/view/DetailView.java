@@ -145,6 +145,7 @@ public class DetailView extends JPanel implements Observer{
 		if ((lModel.getBuchungen()!=null) && (lModel.getBuchungen().size()>0)) { //True wenn es Buchungen zu diesem Lager gibt
 			listeBuchungen=lModel.getBuchungen();
 			this.lModel = (LagerModel) o;
+			System.out.println(lModel.getName());
 			bereiteBuchungenAuf();
 		} else {
 			if ((buchungen!=null)&&(buchungen.isVisible())) {  //Wenn Buchungen angezeigt werden es aber keine gibt werden diese aus der Ansicht gelöscht und stattdessen eine Meldung angezeigt

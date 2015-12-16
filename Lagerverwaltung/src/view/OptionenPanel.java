@@ -65,6 +65,8 @@ public class OptionenPanel extends JPanel{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				controller.loescheLager();
+				VerwaltungsView vView = (VerwaltungsView) SwingUtilities.getWindowAncestor(OptionenPanel.this);
+				vView.neuesModel();
 			}
 		});
 		neuesLager = new JButton("Unterlager erstellen");
