@@ -77,8 +77,7 @@ public class TreeView extends JPanel{
 	    try{
 	    	Image leafIconImg = ImageIO.read(new File("src/icons/truck.png"));
 	    	ImageIcon leafIcon = new ImageIcon(leafIconImg);
-    		renderer.setClosedIcon(leafIcon);
-    		renderer.setOpenIcon(leafIcon);
+    		renderer.setLeafIcon(leafIcon);
     		tree.setCellRenderer(renderer);
     	} catch(IOException ex){
     		ErrorHandler.HandleException(ErrorHandler.BILD_NICHT_GEFUNDEN, new ImageNotFoundException("Bilddatei mit dem Pfad \"src/icons/truck.png\" nicht gefunden",(Throwable) ex));
