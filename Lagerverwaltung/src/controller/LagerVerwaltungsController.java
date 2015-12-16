@@ -17,6 +17,7 @@ import java.util.Stack;
 import core.command.AnteilCommand;
 import core.command.Command;
 import core.exception.ErrorHandler;
+import core.exception.LagerHatZuKleineKapazitaet;
 import core.exception.LagerNichtLoeschbarException;
 import core.exception.MaxFreieKapazitaetUeberschritten;
 import model.LagerModel;
@@ -143,13 +144,17 @@ public class LagerVerwaltungsController extends Observable{
 	 * @param oberLager gibt an ob ein Lager ObersterEbene erzeugt werden soll
 	 */
 	public void erstelleUnterLager(String lagerName, int lagerKapazitaet, boolean oberLager) {
-		if (!oberLager) {
-			lVModel.hinzufuegenLager(aktuellesLager, lagerKapazitaet, lagerName);
-		} else {
-			lVModel.hinzufuegenLager(null, lagerKapazitaet, lagerName);
+		try {
+			if (!oberLager) {
+				lVModel.hinzufuegenLager(aktuellesLager, lagerKapazitaet, lagerName);
+			} else {
+				lVModel.hinzufuegenLager(null, lagerKapazitaet, lagerName);
+			}
+		} catch (LagerHatZuKleineKapazitaet e) {
+			ErrorHandler.HandleException(ErrorHandler.LAGER_MUSS_MIT_MEHR_KAPAZITAET_ERSTELLT_WERDEN, e);
 		}
-		
 	}
+	
 	/**
 	 * bucht die mitgegebene Menge auf das aktuelle Lager
 	 * @param menge menge des Anteils

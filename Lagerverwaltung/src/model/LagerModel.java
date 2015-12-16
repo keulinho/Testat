@@ -70,7 +70,6 @@ public class LagerModel extends Observable implements Serializable {
 		}
 	}
 	
-	//TODO Funktionen zusammenlegen
 	/**
 	 * passt den Bestand in allen Lager auf dem Weg zur Root an
 	 * funktioniert in Kombination mit veraendernBestand an
@@ -185,12 +184,26 @@ public class LagerModel extends Observable implements Serializable {
 	 * verschiebt aller Anteile und damit die Buchungen eines Lagers eine Ebene nach oben
 	 * die ist die Vorberietung zum Löschen
 	 */
-	public void verschiebeAnteile(){
+	public void verschiebeAnteileHoch(){
 		for(BuchungsModel buchung: buchungen){
 			AnteilModel anteil = buchung.getAnteil(this);
 			anteil.verschiebeAnteil(oberLager);
 		}
 	}
+	
+	/**
+	 * verschiebt aller Anteile und damit die Buchungen eines Lagers eine Ebene nach oben
+	 * die ist die Vorberietung zum Löschen
+	 */
+	public void verschiebeAnteileRunter(LagerModel lager){
+		for(BuchungsModel buchung: buchungen){
+			AnteilModel anteil = buchung.getAnteil(this);
+			anteil.verschiebeAnteil(lager);
+			lager.getBuchungen().add(buchung);
+		}
+		buchungen.clear();
+	}
+	
 	public void loeschenAnteile(){
 		for(BuchungsModel buchung: buchungen){
 			AnteilModel anteil = buchung.getAnteil(this);
