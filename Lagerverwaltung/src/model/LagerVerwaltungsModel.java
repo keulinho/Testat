@@ -244,18 +244,16 @@ public class LagerVerwaltungsModel extends Observable implements Serializable {
 					anteile.get(a).getLager().veraendernBestand(anteile.get(a).getAnteil());
 					anteile.get(a).getLager().addBuchung(laufendeBuchung);
 				} catch (LagerUeberfuelltException e) {
-					//TODO ErrorHandler
+					ErrorHandler.HandleException(ErrorHandler.LAGER_VOLL, e);
 					//bisher ausgeführten Anteile und die Buchung werden zurückgenommen
 					for(int i= anteile.indexOf(anteile.get(a))-1; i >= 0; i--){
 						try {
 							anteile.get(i).getLager().entfernenBuchung(laufendeBuchung);
 							anteile.get(i).getLager().veraendernBestand(-anteile.get(i).getAnteil());
 						} catch (LagerUeberfuelltException e1) {
-							//TODO ErrorHandler
 							e1.printStackTrace();
 						}
 					}
-					//TODO ErrorHandler
 					System.out.println("Fehler beim befüllen von den Lagern!!!");
 					e.printStackTrace();
 					break;
@@ -388,8 +386,6 @@ public class LagerVerwaltungsModel extends Observable implements Serializable {
 	public void loescheBuchung(BuchungsModel buchung){
 		buchungen.remove(buchung);
 	}
-	
-	//TODO generell Umbuchung
 	
 	//getter
 	/**
