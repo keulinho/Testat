@@ -92,6 +92,10 @@ public class ListenView extends JPanel{
 		if (!buchungsListe.isEmpty()) {
 			detailPanel=anteilDetailsErstellen(buchungsListe.get(0));
 			this.add(detailPanel,BorderLayout.EAST);
+		} else {
+			JLabel meldung= new JLabel("Noch keine Buchungen vorhanden!");
+			meldung.setFont(new Font(this.getFont().getName(),Font.BOLD,20));
+			this.add(meldung, BorderLayout.CENTER);
 		}
 		this.add(scrollListe, BorderLayout.WEST);
 		this.add(schliessen, BorderLayout.PAGE_END);
