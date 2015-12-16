@@ -140,8 +140,18 @@ public class TreeView extends JPanel{
 			}
 			knoten= new ArrayList<LagerBaumKnoten>();
 			baumEbeneErzeugen(lagerListe,root);
+			if (knoten.size()==1) {
+				controller.aktuellesLagerAendern(knoten.get(0));
+				VerwaltungsView vView = (VerwaltungsView) SwingUtilities.getWindowAncestor(TreeView.this);
+				vView.zeigeDetailView();
+			}
 			if (mussAktualisieren){
-				controller.aktuellesLagerAendern((LagerBaumKnoten) tree.getModel().getChild(tree.getModel().getRoot(), 0));
+				if (tree.getModel().getChildCount(tree.getModel().getRoot())!=0) {
+					controller.aktuellesLagerAendern((LagerBaumKnoten) tree.getModel().getChild(tree.getModel().getRoot(), 0));
+				} else {
+					VerwaltungsView vView = (VerwaltungsView) SwingUtilities.getWindowAncestor(TreeView.this);
+					vView.loescheDetailView();
+				}
 			}
 		}
 	}

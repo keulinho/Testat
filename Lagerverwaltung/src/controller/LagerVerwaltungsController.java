@@ -210,21 +210,30 @@ public class LagerVerwaltungsController extends Observable{
 			
 		}
 	}
-	
+	/**
+	 * ändert das aktuelle Lager auf das zugehörige Lager zu dem Knoten
+	 * @param lBKnoten
+	 */
 	public void aktuellesLagerAendern(LagerBaumKnoten lBKnoten) {
 		if (aktuellesLager!=null) {
 			aktuellesLager.deleteObserver(view.getDetailPane());
 		}
-
 		aktuellesLager=(LagerModel) knotenZuLagerModel.get(lBKnoten);
 		if (aktuellesLager!=null) {
 			aktuellesLager.addObserver(view.getDetailPane());
 		}
 	}
-	
+	/**
+	 * aktualisiert den Eintrag in der HashMap mit dem mitgegebenen Schlüssel
+	 * @param lBKnoten Schlüssel, dessen Wert geändert werden soll
+	 * @param lModel neuer Wert
+	 */
 	public void knotenLagerZuordnungAktualiseren(LagerBaumKnoten lBKnoten,LagerModel lModel) {
 		knotenZuLagerModel.put(lBKnoten, lModel);	
 	}
+	/**
+	 * fügt Observer hinzu und benachrichtigt diese
+	 */
 	public void addObserver(Observer o) {
 		super.addObserver(o);
 		setChanged();
