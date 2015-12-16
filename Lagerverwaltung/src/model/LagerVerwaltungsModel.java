@@ -171,8 +171,9 @@ public class LagerVerwaltungsModel extends Observable implements Serializable {
 			laufendeBuchung = new ZuBuchungsModel(buchungsTag, menge);
 			this.setChanged();
 			this.notifyObservers();
+		} else {
+			throw new MaxFreieKapazitaetUeberschritten("Die maximale freie Kapazität aller Lager beträgt nur " + maxFreieKapazitaet);
 		}
-		throw new MaxFreieKapazitaetUeberschritten("Die maximale freie Kapazität aller Lager beträgt nur " + maxFreieKapazitaet);
 	}
 	
 	/**
@@ -331,12 +332,12 @@ public class LagerVerwaltungsModel extends Observable implements Serializable {
 				if(lager.getOberLager().getUnterLager().size() == 1){
 					//A1.1.1 in alle Anteile das Lager ändern
 					lager.verschiebeAnteile();
-					lager.loeschenLager();
+					lager.loeschenLager(this);
 				} else {
 					//A1.2.1
 					if(lager.getBestand() == 0){
 						lager.verschiebeAnteile();
-						lager.loeschenLager();
+						lager.loeschenLager(this);
 					} else {
 						throw new LagerNichtLoeschbarException("Das Lager muss leer sein um gelöscht zu werden.\n"
 								+ lager.getName() + " enthält noch: " + lager.getBestand());
@@ -345,24 +346,26 @@ public class LagerVerwaltungsModel extends Observable implements Serializable {
 			} else {
 				//A1.1 und A1.2 über alle Unterlager gehen und dann hochziehen
 				lager.verschiebeAnteile();
-				lager.loeschenLager();
+				lager.loeschenLager(this);
 			}
 		} else {
 			if(!lager.getUnterLager().isEmpty()){
 				//A1
 				lager.verschiebeAnteile();
-				lager.loeschenLager();
+				lager.loeschenLager(this);
 			} else {
 				//A2
 				if(lager.getBestand() == 0){
 					lager.loeschenAnteile();
-					lager.loeschenLager();
+					lager.loeschenLager(this);
 				} else {
 					throw new LagerNichtLoeschbarException("Das Lager muss leer sein um gelöscht zu werden.\n"
 							+ lager.getName() + " enthält noch: " + lager.getBestand());
 				}
 			}
 		}
+		setChanged();
+		notifyObservers();
 	}
 	
 	//TODO generell Umbuchung

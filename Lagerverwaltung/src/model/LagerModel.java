@@ -153,18 +153,25 @@ public class LagerModel extends Observable implements Serializable {
 		notifyObservers();
 	}
 	
-	public void loeschenLager(){
-		//Unterlager Umbiegen
+	public void loeschenLager(LagerVerwaltungsModel lagerVM){
+		//Unterlager Umbiegen ggf. dem LagerVerwaltungsModel hinzufügen
 		for(LagerModel lager: unterLager){
-			lager.setOberLager(this.oberLager);
+			lager.setOberLager(oberLager);
+			if(oberLager == null){
+				lagerVM.lager.add(lager);
+			}
 		}
 		//Oberlager die Unterlager ändern
-		oberLager.getUnterLager().addAll(unterLager);
+		if(oberLager != null){
+			oberLager.getUnterLager().addAll(unterLager);
+		}
 		//Um Observer kümmern
 		this.deleteObservers();
-		//letzte Referenz entfernen
+		//letzte Referenz entfernen ggf. aus der LagerVerwaltungsModel entfernen
 		if(this.oberLager != null){
 			oberLager.getUnterLager().remove(this);
+		} else {
+			lagerVM.lager.remove(this);
 		}
 	}
 	

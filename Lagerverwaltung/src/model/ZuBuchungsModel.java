@@ -36,7 +36,7 @@ public class ZuBuchungsModel extends BuchungsModel {
 	//TODO JAVADOC
 	public void loeschenAnteil(AnteilModel anteil) {
 		//Bestand ändern
-		setMenge(getMenge()-anteil.getAnteil());
+		setMenge(menge-anteil.getAnteil());
 		//Anteil löschen
 		anteile.remove(anteil);
 	}
