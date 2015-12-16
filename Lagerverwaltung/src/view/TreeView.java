@@ -56,7 +56,6 @@ public class TreeView extends JPanel{
 			@Override
 			public void valueChanged(TreeSelectionEvent e) {
 				if (!e.getPath().getLastPathComponent().equals(root)) {
-					System.out.println(((LagerBaumKnoten)e.getPath().getLastPathComponent()).getUserObject());
 					controller.aktuellesLagerAendern((LagerBaumKnoten) e.getPath().getLastPathComponent());
 				}	
 			}
@@ -136,7 +135,6 @@ public class TreeView extends JPanel{
 	public void aktualisiereBaum(List<LagerModel> lagerListe, boolean mussAktualisieren) {
 		if ((getGroesseLagerList(lagerListe)-1!=knoten.size())||(mussAktualisieren)) {
 			for (LagerBaumKnoten node : knoten) {
-				System.out.println(node.getUserObject());
 				model.removeNodeFromParent(node);
 				model.nodeStructureChanged(node.getParent());
 			}
