@@ -2,7 +2,8 @@ package model;
 
 import org.junit.Test;
 import junit.framework.TestCase;
-
+/**@author Niklas Devenish
+**/
 public class AnteilModelTest extends TestCase {
 	LagerModel lager;
 	AnteilModel anteil;

@@ -7,6 +7,7 @@ import core.exception.MaxFreieKapazitaetUeberschritten;
 import junit.framework.TestCase;
 /**
  * Die Tests funktionieren nur, wenn die Initialbefüllung im Kontruktor auskommentiert ist 
+ * @author Niklas Devenish
  */
 public class LagerVerwaltungsModelTest extends TestCase{
 	LagerVerwaltungsModel lagerVerwaltungsModel;

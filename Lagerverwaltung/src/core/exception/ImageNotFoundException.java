@@ -1,5 +1,6 @@
 package core.exception;
-
+/**@author Marius Mamsch
+**/
 public class ImageNotFoundException extends Exception{
 	public ImageNotFoundException(){
 		super();

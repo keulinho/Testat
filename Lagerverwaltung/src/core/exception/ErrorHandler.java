@@ -1,7 +1,8 @@
 package core.exception;
 
 import javax.swing.JOptionPane;
-
+/**@author Marius Mamsch
+**/
 public class ErrorHandler {
 	//TODO Fehlernummern hier als Konstanten definieren
 	public final static int LAGER_VOLL = 1;

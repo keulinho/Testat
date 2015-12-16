@@ -25,7 +25,8 @@ import javax.swing.text.NumberFormatter;
 import controller.LagerVerwaltungsController;
 import core.exception.ErrorHandler;
 import core.exception.ImageNotFoundException;
-
+/**@author Jonas Elfering
+**/
 public class BuchungBar extends JToolBar implements Observer{
 	
 	JButton undo, redo, buchungVerwerfen,buchungAbschliessen,auslieferungErstellen,zulieferungErstellen, neuesLagerErstellen;

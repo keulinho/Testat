@@ -40,7 +40,8 @@ import core.utils.TagAufsteigend;
 import model.AbBuchungsModel;
 import model.BuchungsModel;
 import model.LagerModel;
-
+/**@author Jonas Elfering
+**/
 public class DetailView extends JPanel implements Observer{
 	
 	String lagerName;

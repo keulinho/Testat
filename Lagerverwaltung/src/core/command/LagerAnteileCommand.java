@@ -7,7 +7,8 @@ import model.AnteilModel;
 import model.BuchungsModel;
 import model.LagerModel;
 import model.LagerVerwaltungsModel;
-
+/**@author Marius Mamsch
+**/
 public class LagerAnteileCommand extends Command {
 	Vector<AnteilModel> anteile;
 	LagerVerwaltungsModel lagerVM;

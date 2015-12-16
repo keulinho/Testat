@@ -7,7 +7,8 @@ import javax.swing.tree.DefaultMutableTreeNode;
 
 import core.utils.Rechner;
 import model.LagerModel;
-
+/**@author Marius Mamsch
+**/
 public class LagerBaumKnoten extends DefaultMutableTreeNode implements Observer{
 
 	TreeView tree;

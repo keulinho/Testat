@@ -24,7 +24,8 @@ import model.AbBuchungsModel;
 import model.BuchungsModel;
 import model.LagerVerwaltungsModel;
 import model.ZuBuchungsModel;
-
+/**@author Jonas Elfering
+**/
 public class VerwaltungsView extends JFrame implements Observer{
 
 	int restMenge, maxFreieKapazitaet;

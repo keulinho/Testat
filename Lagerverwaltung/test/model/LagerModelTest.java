@@ -6,7 +6,8 @@ import org.junit.Test;
 
 import core.exception.LagerUeberfuelltException;
 import junit.framework.TestCase;
-
+/**@author Niklas Devenish
+**/
 public class LagerModelTest extends TestCase{
 	LagerModel lager1;
 	LagerModel lager2;

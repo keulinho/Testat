@@ -27,7 +27,8 @@ import controller.LagerVerwaltungsController;
 import core.exception.ErrorHandler;
 import core.exception.ImageNotFoundException;
 import model.LagerModel;
-
+/**@author Marius Mamsch
+**/
 public class TreeView extends JPanel{
 
 	JTree tree;

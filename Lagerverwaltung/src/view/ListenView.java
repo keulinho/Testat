@@ -30,7 +30,8 @@ import core.exception.ImageNotFoundException;
 import core.utils.Rechner;
 import model.AnteilModel;
 import model.BuchungsModel;
-
+/**@author Jonas Elfering
+**/
 public class ListenView extends JPanel{
 
 	JList liste;

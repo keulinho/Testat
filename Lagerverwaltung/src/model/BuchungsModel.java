@@ -4,7 +4,8 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.Vector;
-
+/**@author Niklas Devenish
+**/
 abstract public class BuchungsModel implements Serializable {
 	Date buchungsTag;
 	int verteilteMenge;

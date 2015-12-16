@@ -3,7 +3,8 @@ package model;
 import java.util.Date;
 
 import junit.framework.TestCase;
-
+/**@author Niklas Devenish
+**/
 public class AbBuchungsModelTest extends TestCase {
 	LagerModel lager1, lager2;
 	AnteilModel anteil;

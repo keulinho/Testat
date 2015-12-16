@@ -25,7 +25,8 @@ import core.exception.ImageNotFoundException;
 import core.utils.Rechner;
 import model.AbBuchungsModel;
 import model.BuchungsModel;
-
+/**@author Jonas Elfering
+**/
 public class BuchungsView extends JPanel{
 
 	String[] columnNames;
