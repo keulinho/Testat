@@ -34,7 +34,6 @@ public class AbBuchungsModel extends BuchungsModel {
 		super.loeschenAnteil(lager, -menge);
 	}
 
-	//TODO JAVADOC
 	public void loeschenAnteil(AnteilModel anteil) {
 		verteilteMenge -= anteil.getAnteil();
 		anteile.remove(anteil);

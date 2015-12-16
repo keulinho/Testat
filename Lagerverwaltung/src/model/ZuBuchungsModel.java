@@ -33,7 +33,6 @@ public class ZuBuchungsModel extends BuchungsModel {
 		return null;
 	}
 
-	//TODO JAVADOC
 	public void loeschenAnteil(AnteilModel anteil) {
 		//Bestand ändern
 		setMenge(menge-anteil.getAnteil());

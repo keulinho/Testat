@@ -18,8 +18,8 @@ abstract public class BuchungsModel implements Serializable {
 
 	//abstract Methoden
 	/**
-	 * gibt  zurück, ob eine Buchung bereit ist abgeschlossen zu werden
-	 * @ return true wenn die Menge einer Buchung voll verteilt ist
+	 * gibt zurück, ob eine Buchung bereit ist abgeschlossen zu werden
+	 * @ return true wenn die Buchung abgeschlossen werden kann
 	 */
 	abstract public boolean isFertig();
 	
@@ -30,9 +30,17 @@ abstract public class BuchungsModel implements Serializable {
 	 */
 	abstract public AnteilModel hinzufuegenAnteil(LagerModel lager, int anteil);
 	
-	//TODO JAVADOC
+	/**
+	 * gibt die die verteilbare Menge eines Lagers für die Buchung wieder
+	 * @param lager für das die verteilbare Menge ermittelt werden soll
+	 * @return int verteilbare Menge
+	 */
 	abstract public int getVerteilbareMenge(LagerModel lager);
 	
+	/**
+	 * löscht den Anteil aus der Buchung und passt die Buchung an
+	 * @param anteil
+	 */
 	abstract public void loeschenAnteil(AnteilModel anteil);
 	
 	//Methoden
@@ -61,8 +69,6 @@ abstract public class BuchungsModel implements Serializable {
 		}
 	}
 	
-	//TODO löschen eines bestimmten Anteils(über Lager und Menge) z.B. anteilLoeschen(LagerModel lager, int menge)
-	// und des Commands(auch über Lager und Menge nutzt funktion s. anteilLoeschen(lager, menge)); löschen des RedoStacks
 	/**
 	 * löscht den ersten Anteil, der ein bestimmtes Lager und eine bestimmte Menge beinhaltet
 	 * @param lager das in dem Anteil entalten sein soll

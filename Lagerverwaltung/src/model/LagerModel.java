@@ -70,8 +70,10 @@ public class LagerModel extends Observable implements Serializable {
 		}
 	}
 	
+	//TODO Funktionen zusammenlegen
 	/**
-	 * passt den Bestand in allen über einem Lager an
+	 * passt den Bestand in allen Lager auf dem Weg zur Root an
+	 * funktioniert in Kombination mit veraendernBestand an
 	 * @param menge die auf den Bestand addiert wird
 	 * @throws LagerUeberfuelltException 
 	 */
@@ -103,8 +105,8 @@ public class LagerModel extends Observable implements Serializable {
 	}
 	
 	/**
-	 * erzeugt ein neues Lager und fügt es dem Oberlafer hinzu
-	 * und gibt das erzeugte Lafer zurück
+	 * erzeugt ein neues Lager und fügt es dem Oberlager hinzu
+	 * und gibt das erzeugte Lager zurück
 	 * @param kapazitaet	des neuen Lagers
 	 * @param name			des neuen Lagers
 	 * @param oberLager		des neuen Lagers oder null
@@ -135,7 +137,7 @@ public class LagerModel extends Observable implements Serializable {
 	}
 	
 	/**
-	 * ändert die verteilte um den mitgegebenen Wert
+	 * ändert die verteilte Menge um den mitgegebenen Wert
 	 * @param menge int
 	 */
 	public void aendernVerteilteMenge(int menge){
@@ -153,6 +155,10 @@ public class LagerModel extends Observable implements Serializable {
 		notifyObservers();
 	}
 	
+	/**
+	 * löscht das Lager indem alle refenrenzen gekappt werden und Lager darum an die rictigen Positionen gebracht werden
+	 * @param lagerVM LagerVerwaltungsModel um evtl. Lager aus oder in die oberste Ebene zu bringen
+	 */
 	public void loeschenLager(LagerVerwaltungsModel lagerVM){
 		//Unterlager Umbiegen ggf. dem LagerVerwaltungsModel hinzufügen
 		for(LagerModel lager: unterLager){
