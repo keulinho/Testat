@@ -38,6 +38,7 @@ public class ZuBuchungsModel extends BuchungsModel {
 		//Bestand ändern
 		setMenge(menge-anteil.getAnteil());
 		//Anteil löschen
+		verteilteMenge -= anteil.getAnteil();
 		anteile.remove(anteil);
 	}
 	

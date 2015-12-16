@@ -36,7 +36,8 @@ public class AbBuchungsModel extends BuchungsModel {
 
 	//TODO JAVADOC
 	public void loeschenAnteil(AnteilModel anteil) {
-		loeschenAnteile(anteil.getLager());
+		verteilteMenge -= anteil.getAnteil();
+		anteile.remove(anteil);
 	}
 
 	//getter
