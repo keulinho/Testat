@@ -14,6 +14,8 @@ import java.util.Observer;
 import java.util.Set;
 import java.util.Stack;
 
+import javax.swing.JOptionPane;
+
 import core.command.AnteilCommand;
 import core.command.Command;
 import core.exception.ErrorHandler;
@@ -122,18 +124,22 @@ public class LagerVerwaltungsController extends Observable{
 	 * löscht das aktuelle Lager
 	 */
 	public void loescheLager() {
-		try {
-			Iterator it = knotenZuLagerModel.entrySet().iterator();
-			while (it.hasNext()) {
-		    	 Map.Entry paar = (Map.Entry)it.next();
-		    	 if (paar.getValue().equals(aktuellesLager)) {
-		    		 it.remove();
-		    	 }
-		    }
-			lVModel.loesschenLager(aktuellesLager);
-
-		} catch (LagerNichtLoeschbarException e) {
-			ErrorHandler.HandleException(ErrorHandler.LAGER_IST_NICHT_LEER, e);
+		int result = JOptionPane.showConfirmDialog(view, "Sind sie sicher, dass Sie das Lager " + aktuellesLager.getName() + "wirklich löschen wollen?");
+		System.out.println(result);
+		if(result == JOptionPane.OK_OPTION){
+			try {
+				Iterator it = knotenZuLagerModel.entrySet().iterator();
+				while (it.hasNext()) {
+			    	 Map.Entry paar = (Map.Entry)it.next();
+			    	 if (paar.getValue().equals(aktuellesLager)) {
+			    		 it.remove();
+			    	 }
+			    }
+				lVModel.loesschenLager(aktuellesLager);
+	
+			} catch (LagerNichtLoeschbarException e) {
+				ErrorHandler.HandleException(ErrorHandler.LAGER_IST_NICHT_LEER, e);
+			}
 		}
 	}
 	
