@@ -8,6 +8,7 @@ import java.util.Observer;
 import java.util.Vector;
 
 import core.exception.ErrorHandler;
+import core.exception.LagerHatZuKleineKapazitaet;
 import core.exception.LagerNichtLoeschbarException;
 import core.exception.LagerUeberfuelltException;
 import core.exception.MaxFreieKapazitaetUeberschritten;
@@ -31,6 +32,8 @@ public class LagerVerwaltungsModel extends Observable implements Serializable {
 			initialBefuellung();
 		} catch(MaxFreieKapazitaetUeberschritten e){
 			ErrorHandler.HandleException(ErrorHandler.MAX_FREIE_KAPAZITAET_UEBERSCHRITTEN, e);
+		} catch(LagerHatZuKleineKapazitaet e){
+			ErrorHandler.HandleException(ErrorHandler.LAGER_MUSS_MIT_MEHR_KAPAZITAET_ERSTELLT_WERDEN, e);
 		}
 		this.laufendeBuchung = null;
 	}
@@ -39,8 +42,9 @@ public class LagerVerwaltungsModel extends Observable implements Serializable {
 	/**
 	 * Erstellt Lager und füllt diese mit der in der Aufgabe gewünschten Menge
 	 * @throws MaxFreieKapazitaetUeberschritten
+	 * @throws LagerHatZuKleineKapazitaet 
 	 */
-	public void initialBefuellung() throws MaxFreieKapazitaetUeberschritten{
+	public void initialBefuellung() throws MaxFreieKapazitaetUeberschritten, LagerHatZuKleineKapazitaet{
 		//Lager
 		LagerModel lager1 = hinzufuegenLager(null, 0, "Deutschland");
 		LagerModel lager11 = hinzufuegenLager(lager1, 0, "Niedersachsen");
@@ -129,11 +133,11 @@ public class LagerVerwaltungsModel extends Observable implements Serializable {
 	 * @param name
 	 * @return true wenn das Lager erfolgreich erstellt wurde sonst false
 	 */
-	public LagerModel hinzufuegenLager(LagerModel oberLager, int kapazitaet, String name){
+	public LagerModel hinzufuegenLager(LagerModel oberLager, int kapazitaet, String name) throws LagerHatZuKleineKapazitaet{
 		if(oberLager != null){
 			if(oberLager.getUnterLager().isEmpty() && oberLager.getBestand() <= kapazitaet){
-				//TODO Buchungen und Anteile mit rumschupsen
 				LagerModel lager = oberLager.addUnterlager(kapazitaet, name);
+				oberLager.verschiebeAnteileRunter(lager);
 				oberLager.aendernKapazitaet(kapazitaet-oberLager.getMaxKapazitaet());
 				oberLager.aendernOberlagerKapazitaet(kapazitaet);
 				maxFreieKapazitaet += kapazitaet;
@@ -149,7 +153,7 @@ public class LagerVerwaltungsModel extends Observable implements Serializable {
 				notifyObservers();
 				return lager;
 			}
-			return null;
+			throw new LagerHatZuKleineKapazitaet("Die Kapazität für das neue Lager muss min.");
 		} else {
 			LagerModel newLager = new LagerModel(kapazitaet, name, oberLager);
 			lager.add(newLager);
@@ -340,12 +344,12 @@ public class LagerVerwaltungsModel extends Observable implements Serializable {
 			if(lager.getUnterLager().isEmpty()){
 				if(lager.getOberLager().getUnterLager().size() == 1){
 					//A1.1.1 in alle Anteile das Lager ändern
-					lager.verschiebeAnteile();
+					lager.verschiebeAnteileHoch();
 					lager.loeschenLager(this);
 				} else {
 					//A1.2.1
 					if(lager.getBestand() == 0){
-						lager.verschiebeAnteile();
+						lager.verschiebeAnteileHoch();
 						lager.loeschenLager(this);
 					} else {
 						throw new LagerNichtLoeschbarException("Das Lager muss leer sein um gelöscht zu werden.\n"
@@ -354,13 +358,13 @@ public class LagerVerwaltungsModel extends Observable implements Serializable {
 				}
 			} else {
 				//A1.1 und A1.2 über alle Unterlager gehen und dann hochziehen
-				lager.verschiebeAnteile();
+				lager.verschiebeAnteileHoch();
 				lager.loeschenLager(this);
 			}
 		} else {
 			if(!lager.getUnterLager().isEmpty()){
 				//A1
-				lager.verschiebeAnteile();
+				lager.verschiebeAnteileHoch();
 				lager.loeschenLager(this);
 			} else {
 				//A2
