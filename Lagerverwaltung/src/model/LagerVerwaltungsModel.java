@@ -29,13 +29,13 @@ public class LagerVerwaltungsModel extends Observable implements Serializable {
 		lager = new Vector<LagerModel>();
 		buchungen = new Vector<BuchungsModel>();
 		this.maxFreieKapazitaet = 0;
-		/*try {
+		try {
 			initialBefuellung();
 		} catch(MaxFreieKapazitaetUeberschritten e){
 			ErrorHandler.HandleException(ErrorHandler.MAX_FREIE_KAPAZITAET_UEBERSCHRITTEN, e);
 		} catch(LagerHatZuKleineKapazitaet e){
 			ErrorHandler.HandleException(ErrorHandler.LAGER_MUSS_MIT_MEHR_KAPAZITAET_ERSTELLT_WERDEN, e);
-		}*/
+		}
 		this.laufendeBuchung = null;
 	}
 	

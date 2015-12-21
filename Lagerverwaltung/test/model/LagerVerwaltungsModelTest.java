@@ -14,6 +14,10 @@ public class LagerVerwaltungsModelTest extends TestCase{
 	
 	public void setUp() {
 		lagerVerwaltungsModel = new LagerVerwaltungsModel();
+		lagerVerwaltungsModel.buchungen.clear();
+		lagerVerwaltungsModel.lager.clear();
+		lagerVerwaltungsModel.maxFreieKapazitaet = 0;
+		lagerVerwaltungsModel.laufendeBuchung = null;
 	}
 	
 	public void testHinzufuegenLagerOberlager() throws LagerHatZuKleineKapazitaet{
