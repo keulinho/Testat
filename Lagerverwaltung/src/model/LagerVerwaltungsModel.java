@@ -380,7 +380,7 @@ public class LagerVerwaltungsModel extends Observable implements Serializable {
 	
 	/**
 	 * löscht eine Buchung aus der Liste der Buchungen
-	 * @param buchung die gelöscht werden soll
+	 * @param buchung Buchung die gelöscht werden soll
 	 */
 	public void loescheBuchung(BuchungsModel buchung){
 		buchungen.remove(buchung);
@@ -413,7 +413,7 @@ public class LagerVerwaltungsModel extends Observable implements Serializable {
 	
 	/**
 	 * gibt die Liste aller Lager zurück, die auf der obersten Ebene sind
-	 * @return lager Lister der Lager oberster Ebene
+	 * @return lager Liste der Lager oberster Ebene
 	 */
 	public List<LagerModel> getLager(){
 		return this.lager;

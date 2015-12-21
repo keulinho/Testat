@@ -31,14 +31,12 @@ public class OptionenPanel extends JPanel{
 	JSlider slider;
 	LagerVerwaltungsController controller;
 	int gesamtMenge, restMenge;
-	Rechner rechner;
 	
 	/**
 	 * erzeugt ein OptionenPanel im zeige Button Modus
 	 * @param controller controller an den Befehle weitergeleitet werden
 	 */
 	public OptionenPanel(LagerVerwaltungsController controller){
-		rechner=new Rechner();
 		this.controller=controller;
 		this.setPreferredSize(new Dimension(515,50));
 		
@@ -204,7 +202,7 @@ public class OptionenPanel extends JPanel{
 			} else {
 				gesamtMenge = this.gesamtMenge;
 			}
-			return rechner.rechneProzent(slider.getValue(), gesamtMenge);
+			return Rechner.rechneProzent(slider.getValue(), gesamtMenge);
 		}	
 	}
 }

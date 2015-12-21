@@ -31,7 +31,6 @@ public class BuchungsView extends JPanel{
 
 	String[] columnNames;
 	Object[][] data;
-	Rechner rechner;
 	/**
 	 * erstellt eine Ansicht in der alle Buchungen aufgelistet werden
 	 * @param listeBuchungen Liste mit allen Buchungen
@@ -39,7 +38,6 @@ public class BuchungsView extends JPanel{
 	public BuchungsView(List<BuchungsModel> listeBuchungen) {
 		this.setPreferredSize(new Dimension(815,400));
 		this.setLayout(new BorderLayout());
-		rechner=new Rechner();
 		//Überschrift erstellen und hinzufügen
 		JLabel ueberschrift= new JLabel("Alle Buchungen:");
 		ueberschrift.setFont(new Font(this.getFont().getName(),Font.BOLD,20));
@@ -123,7 +121,7 @@ public class BuchungsView extends JPanel{
 			for (int j = 0; j<listeBuchungen.get(i).getAnteile().size(); j++) { //Für jeden Anteil an der Buchung wird Lagername und relative Menge gespeichert
 				data[i][stelle]=listeBuchungen.get(i).getAnteile().get(j).getLager().getName();
 				stelle++;
-				data[i][stelle]=""+rechner.rechneProzent(listeBuchungen.get(i).getAnteile().get(j).getAnteil(),(int)data[i][2])+"%";
+				data[i][stelle]=""+Rechner.rechneProzent(listeBuchungen.get(i).getAnteile().get(j).getAnteil(),(int)data[i][2])+"%";
 				stelle++;
 			}
 			for (int k = 0; k<(maxAnteile-listeBuchungen.get(i).getAnteile().size()); k++) { //Blanks werden eingesetzt wenn die Buchung weniger Anteile hat als die maximalen Anteile
