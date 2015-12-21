@@ -125,8 +125,7 @@ public class LagerVerwaltungsController extends Observable{
 	 * löscht das aktuelle Lager
 	 */
 	public void loescheLager() {
-		int result = JOptionPane.showConfirmDialog(view, "Sind sie sicher, dass Sie das Lager " + aktuellesLager.getName() + "wirklich löschen wollen?");
-		System.out.println(result);
+		int result = JOptionPane.showConfirmDialog(view, "Sind sie sicher, dass Sie das Lager " + aktuellesLager.getName() + " wirklich löschen wollen?");
 		if(result == JOptionPane.OK_OPTION){
 			try {
 				Iterator it = knotenZuLagerModel.entrySet().iterator();

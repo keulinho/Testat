@@ -62,7 +62,6 @@ public class DetailView extends JPanel implements Observer{
 	LagerModel lModel;
 	List<BuchungsModel> listeBuchungen;
 	ImageIcon sort,sortAsc,sortDesc;
-	Rechner rechner;
 
 	/**
 	 * erzeugt eine DetailView
@@ -71,7 +70,6 @@ public class DetailView extends JPanel implements Observer{
 	public DetailView(LagerVerwaltungsController controller) {
 		this.controller=controller;
 		lagerName="";
-		rechner = new Rechner();
 		this.setPreferredSize(new Dimension(515,400));
 		this.setLayout(new BorderLayout());
 		
@@ -263,7 +261,7 @@ public class DetailView extends JPanel implements Observer{
 				}
 			
 			data[i][3]=bModel.getAnteile().get(j).getAnteil();
-			data[i][2]=""+rechner.rechneProzent((int)data[i][3],(int)data[i][1])+"%";
+			data[i][2]=""+Rechner.rechneProzent((int)data[i][3],(int)data[i][1])+"%";
 			if (bModel.getClass().equals(new AbBuchungsModel(null).getClass())) { //true bei Auslieferung
 				data[i][4]="Auslieferung";
 			} else {

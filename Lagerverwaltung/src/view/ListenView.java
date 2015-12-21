@@ -37,7 +37,6 @@ public class ListenView extends JPanel{
 	JList liste;
 	DefaultListModel model;
 	JPanel detailPanel;
-	Rechner rechner;
 	
 	/**
 	 * erstellt eine ListenView mit den mitgegebenen Einträgen
@@ -46,7 +45,6 @@ public class ListenView extends JPanel{
 	public ListenView(final List<BuchungsModel> buchungsListe) {
 		this.setLayout(new BorderLayout());
 		this.setPreferredSize(new Dimension(815,300));
-		rechner = new Rechner();
 		//liste erzeugen und konfigurieren
 		model=new DefaultListModel<String>();
 		for (BuchungsModel bModel : buchungsListe) {
@@ -136,7 +134,7 @@ public class ListenView extends JPanel{
 			anteilPanel.add(lager);
 			JLabel absoluteMenge = new JLabel("absolute Menge: "+aModel.getAnteil());
 			anteilPanel.add(absoluteMenge);
-			JLabel relativeMenge = new JLabel("relative Menge: "+rechner.rechneProzent(aModel.getAnteil(), buchung.getVerteilteMenge())+"%");
+			JLabel relativeMenge = new JLabel("relative Menge: "+Rechner.rechneProzent(aModel.getAnteil(), buchung.getVerteilteMenge())+"%");
 			anteilPanel.add(relativeMenge);
 			i++;
 		}
