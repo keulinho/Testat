@@ -41,14 +41,18 @@ public class LagerVerwaltungsModelTest extends TestCase{
 		assertEquals("Lager 2", lagerVerwaltungsModel.getLager().get(index).getName());
 	}
 	
-	public void testErstellenZuBuchung(){
+	public void testErstellenZuBuchung() throws MaxFreieKapazitaetUeberschritten, LagerHatZuKleineKapazitaet{
+		LagerModel lager1 = lagerVerwaltungsModel.hinzufuegenLager(null, 100, "Oberlager1");
+		lagerVerwaltungsModel.erstellenZuBuchung(new Date(), 100);
 		assertEquals(true, lagerVerwaltungsModel.getLaufendeBuchung() != null);
 	}
 	
-	public void testErstellenZuBuchungMitLaufenderBuchung() throws MaxFreieKapazitaetUeberschritten{
-		assertEquals(false, lagerVerwaltungsModel.getLaufendeBuchung() == null);
+	public void testErstellenZuBuchungMitLaufenderBuchung() throws MaxFreieKapazitaetUeberschritten, LagerHatZuKleineKapazitaet{
+		lagerVerwaltungsModel.hinzufuegenLager(null, 100, "Oberlager1");
+		lagerVerwaltungsModel.hinzufuegenLager(null, 100, "Oberlager2");
+		assertEquals(true, lagerVerwaltungsModel.getLaufendeBuchung() == null);
 		lagerVerwaltungsModel.erstellenZuBuchung(new Date(1), 100);
-		assertEquals(false, lagerVerwaltungsModel.getLaufendeBuchung() != null);
+		assertEquals(true, lagerVerwaltungsModel.getLaufendeBuchung() != null);
 	}
 	
 	public void testErstellenAbBuchung(){
@@ -61,9 +65,9 @@ public class LagerVerwaltungsModelTest extends TestCase{
 	}
 	
 	public void testHinzufuegenAnteil() throws MaxFreieKapazitaetUeberschritten, LagerHatZuKleineKapazitaet{
-		lagerVerwaltungsModel.erstellenZuBuchung(new Date(1), 100);
 		LagerModel lager1 = lagerVerwaltungsModel.hinzufuegenLager(null, 100, "Oberlager1");
 		LagerModel lager2 = lagerVerwaltungsModel.hinzufuegenLager(null, 100, "Oberlager2");
+		lagerVerwaltungsModel.erstellenZuBuchung(new Date(1), 100);
 		assertEquals(true,
 				lagerVerwaltungsModel.hinzufuegenAnteil(lager1, 50) &&
 				lagerVerwaltungsModel.hinzufuegenAnteil(lager2, 50) &&
@@ -72,9 +76,9 @@ public class LagerVerwaltungsModelTest extends TestCase{
 	}
 	
 	public void testHinzufuegenAnteilMerhAlsBuchung() throws MaxFreieKapazitaetUeberschritten, LagerHatZuKleineKapazitaet{
-		lagerVerwaltungsModel.erstellenZuBuchung(new Date(1), 100);
 		LagerModel lager1 = lagerVerwaltungsModel.hinzufuegenLager(null, 100, "Oberlager1");
 		LagerModel lager2 = lagerVerwaltungsModel.hinzufuegenLager(null, 100, "Oberlager2");
+		lagerVerwaltungsModel.erstellenZuBuchung(new Date(1), 100);
 		assertEquals(true, lagerVerwaltungsModel.hinzufuegenAnteil(lager1, 50));
 		assertEquals(false, lagerVerwaltungsModel.hinzufuegenAnteil(lager2, 60));
 		assertEquals(true,
@@ -83,9 +87,9 @@ public class LagerVerwaltungsModelTest extends TestCase{
 	}
 	
 	public void testLoeschenAnteil() throws MaxFreieKapazitaetUeberschritten, LagerHatZuKleineKapazitaet{
-		lagerVerwaltungsModel.erstellenZuBuchung(new Date(1), 100);
 		LagerModel lager1 = lagerVerwaltungsModel.hinzufuegenLager(null, 100, "Oberlager1");
 		LagerModel lager2 = lagerVerwaltungsModel.hinzufuegenLager(null, 100, "Oberlager2");
+		lagerVerwaltungsModel.erstellenZuBuchung(new Date(1), 100);
 		lagerVerwaltungsModel.hinzufuegenAnteil(lager1, 50);
 		lagerVerwaltungsModel.hinzufuegenAnteil(lager2, 50);
 		lagerVerwaltungsModel.loeschenAnteil(lager1, 50);
@@ -95,9 +99,9 @@ public class LagerVerwaltungsModelTest extends TestCase{
 	}
 	
 	public void testAbschliessenZuBuchung() throws MaxFreieKapazitaetUeberschritten, LagerHatZuKleineKapazitaet{
-		lagerVerwaltungsModel.erstellenZuBuchung(new Date(1), 100);
 		LagerModel lager1 = lagerVerwaltungsModel.hinzufuegenLager(null, 100, "Oberlager1");
 		LagerModel lager2 = lagerVerwaltungsModel.hinzufuegenLager(null, 100, "Oberlager2");
+		lagerVerwaltungsModel.erstellenZuBuchung(new Date(1), 100);
 		lagerVerwaltungsModel.hinzufuegenAnteil(lager1, 50);
 		lagerVerwaltungsModel.hinzufuegenAnteil(lager2, 50);
 		assertEquals(true, lagerVerwaltungsModel.abschliessenBuchung() &&
@@ -110,9 +114,9 @@ public class LagerVerwaltungsModelTest extends TestCase{
 	}
 	
 	public void testAbschliessenZuBuchungNichtVollVerteilt() throws MaxFreieKapazitaetUeberschritten, LagerHatZuKleineKapazitaet{
-		lagerVerwaltungsModel.erstellenZuBuchung(new Date(1), 100);
 		LagerModel lager1 = lagerVerwaltungsModel.hinzufuegenLager(null, 100, "Oberlager1");
 		LagerModel lager2 = lagerVerwaltungsModel.hinzufuegenLager(null, 100, "Oberlager2");
+		lagerVerwaltungsModel.erstellenZuBuchung(new Date(1), 100);
 		lagerVerwaltungsModel.hinzufuegenAnteil(lager1, 50);
 		assertEquals(true, lagerVerwaltungsModel.abschliessenBuchung() == false &&
 				lagerVerwaltungsModel.getBuchungen().size() == 0 &&
@@ -122,9 +126,9 @@ public class LagerVerwaltungsModelTest extends TestCase{
 	}
 	
 	public void testAbschliessenAbBuchung() throws MaxFreieKapazitaetUeberschritten, LagerHatZuKleineKapazitaet{
-		lagerVerwaltungsModel.erstellenZuBuchung(new Date(1), 100);
 		LagerModel lager1 = lagerVerwaltungsModel.hinzufuegenLager(null, 100, "Oberlager1");
 		LagerModel lager2 = lagerVerwaltungsModel.hinzufuegenLager(null, 100, "Oberlager2");
+		lagerVerwaltungsModel.erstellenZuBuchung(new Date(1), 100);
 		lagerVerwaltungsModel.hinzufuegenAnteil(lager1, 50);
 		lagerVerwaltungsModel.hinzufuegenAnteil(lager2, 50);
 		lagerVerwaltungsModel.abschliessenBuchung();
@@ -138,12 +142,8 @@ public class LagerVerwaltungsModelTest extends TestCase{
 	}
 	
 	public void testAbschliessenAbBuchungOhneAnteil() throws MaxFreieKapazitaetUeberschritten, LagerHatZuKleineKapazitaet{
-		lagerVerwaltungsModel.erstellenZuBuchung(new Date(1), 100);
 		LagerModel lager1 = lagerVerwaltungsModel.hinzufuegenLager(null, 100, "Oberlager1");
 		LagerModel lager2 = lagerVerwaltungsModel.hinzufuegenLager(null, 100, "Oberlager2");
-		lagerVerwaltungsModel.hinzufuegenAnteil(lager1, 50);
-		lagerVerwaltungsModel.hinzufuegenAnteil(lager2, 50);
-		lagerVerwaltungsModel.abschliessenBuchung();
 		lagerVerwaltungsModel.erstellenAbBuchung(new Date(1));
 		assertEquals(false, lagerVerwaltungsModel.abschliessenBuchung());
 	}

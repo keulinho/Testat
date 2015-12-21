@@ -70,7 +70,15 @@ public class AbBuchungsModelTest extends TestCase {
 				abBuchung.getAnteile().get(0).getAnteil() == -50 && 
 				abBuchung.getAnteile().get(0).getLager() == lager2);
 		assertEquals(true, result);
-		
+	}
+	
+	public void testIsFetig(){
+		abBuchung.hinzufuegenAnteil(lager1, 10);
+		assertEquals(true, abBuchung.isFertig());
+	}
+	
+	public void testIsFertigBuchungLeer(){
+		assertEquals(false, abBuchung.isFertig());
 	}
 
 }
