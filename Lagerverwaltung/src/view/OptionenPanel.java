@@ -83,7 +83,7 @@ public class OptionenPanel extends JPanel{
 				vView.zeigeNeuesLager(false);
 			}
 		});
-		umbenennen = new JButton("Lager umbennen");
+		umbenennen = new JButton("umbenennen");
 		try {
 		    Image img = ImageIO.read(new File("src/icons/edit2.png"));
 		    umbenennen.setIcon(new ImageIcon(img));
