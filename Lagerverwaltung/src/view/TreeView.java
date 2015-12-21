@@ -166,7 +166,7 @@ public class TreeView extends JPanel{
 		for (LagerModel lModel : lagerListe) {
 			start+=getGroesseLagerList(lModel.getUnterLager());
 		}
-		start++; //hier wird auch beim ersten Aufruf +1 gerechnet, gedachte "Root" wird mitgezählt die aber nicht in der Liste ist, daher Ergebniss Anzahl Lager in Liste + 1
+		start++; //hier wird auch beim ersten Aufruf +1 gerechnet, gedachte "Root" wird mitgezählt die aber nicht in der Liste ist, daher Ergebnis Anzahl Lager in Liste + 1
 		return start;
 	}
 	
