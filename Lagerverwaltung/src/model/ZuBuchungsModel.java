@@ -1,7 +1,8 @@
 package model;
 
 import java.util.Date;
-
+/**@author Niklas Devenish
+**/
 public class ZuBuchungsModel extends BuchungsModel {
 	int menge;
 	

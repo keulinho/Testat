@@ -26,7 +26,8 @@ import model.LagerModel;
 import model.LagerVerwaltungsModel;
 import view.LagerBaumKnoten;
 import view.VerwaltungsView;
-
+ /**@author Jonas Elfering
+**/
 public class LagerVerwaltungsController extends Observable{
 	
 	VerwaltungsView view;

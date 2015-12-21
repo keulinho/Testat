@@ -10,6 +10,7 @@ import core.exception.LagerUeberfuelltException;
 
 /**
  * Diese Klasse stellt die Daten für ein Lager bereit und verarbeitet diese
+ * @author Niklas Devenish
  */
 public class LagerModel extends Observable implements Serializable {
 	int maxKapazitaet, bestand, verteilteMenge;

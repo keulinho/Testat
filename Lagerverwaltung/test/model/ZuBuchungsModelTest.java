@@ -5,7 +5,9 @@ import java.util.Date;
 import org.junit.Test;
 
 import junit.framework.TestCase;
-
+/**
+ * @author Niklas Devenish
+ */
 public class ZuBuchungsModelTest extends TestCase{
 	LagerModel lager1, lager2;
 	AnteilModel anteil;

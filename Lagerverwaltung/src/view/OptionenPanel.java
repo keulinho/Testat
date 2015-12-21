@@ -23,7 +23,8 @@ import controller.LagerVerwaltungsController;
 import core.exception.ErrorHandler;
 import core.exception.ImageNotFoundException;
 import core.utils.Rechner;
-
+/**@author Jonas Elfering
+**/
 public class OptionenPanel extends JPanel{
 	JButton loeschen, neuesLager, umbenennen, anteilBuchen;
 	JLabel infoText,menge, anteil;

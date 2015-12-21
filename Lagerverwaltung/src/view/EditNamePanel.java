@@ -21,7 +21,8 @@ import javax.swing.JTextField;
 import controller.LagerVerwaltungsController;
 import core.exception.ErrorHandler;
 import core.exception.ImageNotFoundException;
-
+/**@author Jonas Elfering
+**/
 public class EditNamePanel extends JPanel{
 	
 	JLabel editieren, name, speichern;

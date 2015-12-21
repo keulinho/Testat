@@ -1,7 +1,8 @@
 package model;
 
 import java.io.Serializable;
-
+/**@author Niklas Devenish
+**/
 public class AnteilModel implements Serializable {
 	int anteil;
 	LagerModel lager;

@@ -4,7 +4,8 @@ import java.util.Stack;
 
 import model.LagerModel;
 import model.LagerVerwaltungsModel;
-
+/**@author Marius Mamsch
+**/
 public class AnteilCommand extends Command {
 	LagerVerwaltungsModel lagerVM;
 	LagerModel lager;

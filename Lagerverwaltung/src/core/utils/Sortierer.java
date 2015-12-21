@@ -4,7 +4,8 @@ import java.util.List;
 
 import model.BuchungsModel;
 import model.LagerModel;
-
+/**@author Marius Mamsch
+**/
 public class Sortierer {
 
 	SortierStrategie sort;

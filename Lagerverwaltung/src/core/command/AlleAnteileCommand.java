@@ -9,7 +9,7 @@ import model.LagerVerwaltungsModel;
 
 /**
  * Command für das Löschen aller Anteile einer Buchung
- *
+ *@author Marius Mamsch
  */
 public class AlleAnteileCommand extends Command {
 	Vector<AnteilModel> anteile;

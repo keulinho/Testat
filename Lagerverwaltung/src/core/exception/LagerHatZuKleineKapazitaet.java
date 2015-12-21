@@ -1,5 +1,6 @@
 package core.exception;
-
+/**@author Marius Mamsch
+**/
 public class LagerHatZuKleineKapazitaet extends Exception {
 	public LagerHatZuKleineKapazitaet(){
 		super();

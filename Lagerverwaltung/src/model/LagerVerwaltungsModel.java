@@ -13,7 +13,8 @@ import core.exception.LagerNichtLoeschbarException;
 import core.exception.LagerUeberfuelltException;
 import core.exception.MaxFreieKapazitaetUeberschritten;
 import view.LagerBaumKnoten;
-
+/**@author Niklas Devenish
+**/
 public class LagerVerwaltungsModel extends Observable implements Serializable {
 	List<LagerModel> lager;
 	List<BuchungsModel> buchungen;

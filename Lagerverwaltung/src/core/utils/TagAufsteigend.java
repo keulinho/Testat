@@ -1,7 +1,8 @@
 package core.utils;
 
 import model.BuchungsModel;
-
+/**@author Marius Mamsch
+**/
 public class TagAufsteigend implements SortierStrategie{
 
 	@Override

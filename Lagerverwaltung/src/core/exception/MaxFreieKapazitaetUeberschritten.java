@@ -1,5 +1,6 @@
 package core.exception;
-
+/**@author Marius Mamsch
+**/
 public class MaxFreieKapazitaetUeberschritten extends Exception {
 
 	public MaxFreieKapazitaetUeberschritten(){

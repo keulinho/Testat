@@ -1,7 +1,8 @@
 package core.command;
 
 import java.util.Stack;
-
+/**@author Marius Mamsch
+**/
 public abstract class Command {
 	public Command(Stack<Command> commandStack)
 	{
