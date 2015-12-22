@@ -68,6 +68,20 @@ public class LagerVerwaltungsModelTest extends TestCase{
 		assertEquals(false, lagerVerwaltungsModel.erstellenAbBuchung(new Date(1)));
 	}
 	
+	public void testVerwerfenBuchungAb(){
+		lagerVerwaltungsModel.erstellenAbBuchung(new Date(1));
+		assertEquals(true, lagerVerwaltungsModel.getLaufendeBuchung()!= null);
+		lagerVerwaltungsModel.verwerfenBuchung();
+		assertEquals(true, lagerVerwaltungsModel.getLaufendeBuchung() == null);
+	}
+	
+	public void testVerwerfenBuchungZu() throws MaxFreieKapazitaetUeberschritten{
+		lagerVerwaltungsModel.erstellenZuBuchung(new Date(1), 0);
+		assertEquals(true, lagerVerwaltungsModel.getLaufendeBuchung()!= null);
+		lagerVerwaltungsModel.verwerfenBuchung();
+		assertEquals(true, lagerVerwaltungsModel.getLaufendeBuchung() == null);
+	}
+	
 	public void testHinzufuegenAnteil() throws MaxFreieKapazitaetUeberschritten, LagerHatZuKleineKapazitaet{
 		LagerModel lager1 = lagerVerwaltungsModel.hinzufuegenLager(null, 100, "Oberlager1");
 		LagerModel lager2 = lagerVerwaltungsModel.hinzufuegenLager(null, 100, "Oberlager2");
@@ -156,5 +170,5 @@ public class LagerVerwaltungsModelTest extends TestCase{
 		lagerVerwaltungsModel.initialBefuellung();
 		lagerVerwaltungsModel.hinzufuegenLager(null, 100, "hier debuggen!");
 	}
-
+	
 }
