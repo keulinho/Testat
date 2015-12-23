@@ -342,12 +342,11 @@ public class LagerVerwaltungsModel extends Observable implements Serializable {
 				if(lager.getOberLager().getUnterLager().size() == 1){
 					//A1.1.1 in alle Anteile das Lager ändern
 					lager.verschiebeAnteileHoch();
-					lager.loeschenLager(this);
+					lager.loeschenLager(this,false);
 				} else {
 					//A1.2.1
 					if(lager.getBestand() == 0){
-						lager.verschiebeAnteileHoch();
-						lager.loeschenLager(this);
+						lager.loeschenLager(this,true);
 					} else {
 						throw new LagerNichtLoeschbarException("Das Lager muss leer sein um gelöscht zu werden.\n"
 								+ lager.getName() + " enthält noch: " + lager.getBestand());
@@ -356,18 +355,18 @@ public class LagerVerwaltungsModel extends Observable implements Serializable {
 			} else {
 				//A1.1 und A1.2 über alle Unterlager gehen und dann hochziehen
 				lager.verschiebeAnteileHoch();
-				lager.loeschenLager(this);
+				lager.loeschenLager(this,false);
 			}
 		} else {
 			if(!lager.getUnterLager().isEmpty()){
 				//A1
 				lager.verschiebeAnteileHoch();
-				lager.loeschenLager(this);
+				lager.loeschenLager(this,false);
 			} else {
 				//A2
 				if(lager.getBestand() == 0){
 					lager.loeschenAnteile(this);
-					lager.loeschenLager(this);
+					lager.loeschenLager(this,false);
 				} else {
 					throw new LagerNichtLoeschbarException("Das Lager muss leer sein um gelöscht zu werden.\n"
 							+ lager.getName() + " enthält noch: " + lager.getBestand());

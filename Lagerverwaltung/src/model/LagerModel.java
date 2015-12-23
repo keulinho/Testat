@@ -159,7 +159,7 @@ public class LagerModel extends Observable implements Serializable {
 	 * löscht das Lager indem alle refenrenzen gekappt werden und Lager darum an die rictigen Positionen gebracht werden
 	 * @param lagerVM LagerVerwaltungsModel um evtl. Lager aus oder in die oberste Ebene zu bringen
 	 */
-	public void loeschenLager(LagerVerwaltungsModel lagerVM){
+	public void loeschenLager(LagerVerwaltungsModel lagerVM, boolean kapazitaetAnpassen){
 		//Unterlager Umbiegen ggf. dem LagerVerwaltungsModel hinzufügen
 		for(LagerModel lager: unterLager){
 			lager.setOberLager(oberLager);
@@ -173,9 +173,15 @@ public class LagerModel extends Observable implements Serializable {
 		}
 		//Um Observer kümmern
 		this.deleteObservers();
-		//letzte Referenz entfernen ggf. aus der LagerVerwaltungsModel entfernen
+		//letzte Referenz entfernen ggf. aus der LagerVerwaltungsModel entfernen und kapazität wird angepasst
 		if(this.oberLager != null){
 			oberLager.getUnterLager().remove(this);
+			LagerModel iterator = this;
+			int kapazitaet = this.getMaxKapazitaet();
+			while ((iterator.hatOberLager())&&(kapazitaetAnpassen)) {
+				iterator.getOberLager().aendernKapazitaet(-kapazitaet);
+				iterator=iterator.getOberLager();
+			}
 		} else {
 			lagerVM.lager.remove(this);
 		}
@@ -183,18 +189,19 @@ public class LagerModel extends Observable implements Serializable {
 	
 	/**
 	 * verschiebt aller Anteile und damit die Buchungen eines Lagers eine Ebene nach oben
-	 * die ist die Vorberietung zum Löschen
+	 * dies ist die Vorberietung zum Löschen
 	 */
 	public void verschiebeAnteileHoch(){
 		for(BuchungsModel buchung: buchungen){
 			AnteilModel anteil = buchung.getAnteil(this);
 			anteil.verschiebeAnteil(oberLager);
+			oberLager.addBuchung(buchung);
 		}
 	}
 	
 	/**
-	 * verschiebt aller Anteile und damit die Buchungen eines Lagers eine Ebene nach oben
-	 * die ist die Vorberietung zum Löschen
+	 * verschiebt aller Anteile und damit die Buchungen eines Lagers eine Ebene nach unten
+	 * dies ist die Vorberietung zum Löschen
 	 */
 	public void verschiebeAnteileRunter(LagerModel lager){
 		for(BuchungsModel buchung: buchungen){
